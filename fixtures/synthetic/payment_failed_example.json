@@ -1,0 +1,52 @@
+{
+  "_note": "SYNTHETIC, not captured from Razorpay. Shaped to the documented payment.failed schema and used to build and test the pipeline. Real captures belong in ../captured/.",
+  "entity": "event",
+  "event": "payment.failed",
+  "created_at": 1772607600,
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_SYNTHETIC000001",
+        "entity": "payment",
+        "amount": 400000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_SYNTHETIC00001",
+        "method": "card",
+        "amount_refunded": 0,
+        "captured": false,
+        "description": "Order from Blue Tokai Coffee",
+        "card_id": "card_SYNTHETIC0001",
+        "card": {
+          "id": "card_SYNTHETIC0001",
+          "entity": "card",
+          "name": "Aarav Sharma",
+          "last4": "1111",
+          "network": "Visa",
+          "type": "debit",
+          "issuer": "HDFC",
+          "international": false
+        },
+        "bank": null,
+        "wallet": null,
+        "vpa": null,
+        "email": "aarav@example.com",
+        "contact": "+919812345678",
+        "notes": {
+          "customer_name": "Aarav Sharma",
+          "language": "en",
+          "payday_days_json": "[1, 1, 28]",
+          "cart": "[{\"name\": \"Attikan Estate Coffee 250g\", \"price_paise\": 65000}, {\"name\": \"Ceramic Pour-Over Dripper\", \"price_paise\": 145000}]"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Your payment could not be completed as the card is disabled for online transactions.",
+        "error_source": "customer",
+        "error_step": "payment_authorization",
+        "error_reason": "card_disabled_for_online_payments",
+        "created_at": 1772607600
+      }
+    }
+  }
+}

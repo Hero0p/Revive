@@ -1,0 +1,3607 @@
+{
+  "seed": 42,
+  "note": "Hidden customer profiles used by the outcome oracle. These are assumptions, not measurements. The oracle never sees which policy produced an action.",
+  "intent_decay_units": "per hour",
+  "profiles": {
+    "case0000": {
+      "case_ref": "case0000",
+      "base_intent": 0.484,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.168,
+      "intent_decay": 0.0026,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0001": {
+      "case_ref": "case0001",
+      "base_intent": 0.563,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.228,
+      "intent_decay": 0.00216,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0002": {
+      "case_ref": "case0002",
+      "base_intent": 0.516,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.318,
+      "intent_decay": 0.00374,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0003": {
+      "case_ref": "case0003",
+      "base_intent": 0.471,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.181,
+      "intent_decay": 0.00406,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0004": {
+      "case_ref": "case0004",
+      "base_intent": 0.65,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.185,
+      "intent_decay": 0.00505,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0005": {
+      "case_ref": "case0005",
+      "base_intent": 0.332,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.197,
+      "intent_decay": 0.00348,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 18
+    },
+    "case0006": {
+      "case_ref": "case0006",
+      "base_intent": 0.787,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.169,
+      "intent_decay": 0.00387,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0007": {
+      "case_ref": "case0007",
+      "base_intent": 0.77,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.212,
+      "intent_decay": 0.00305,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0008": {
+      "case_ref": "case0008",
+      "base_intent": 0.757,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.191,
+      "intent_decay": 0.00494,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 20
+    },
+    "case0009": {
+      "case_ref": "case0009",
+      "base_intent": 0.635,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.293,
+      "intent_decay": 0.00512,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0010": {
+      "case_ref": "case0010",
+      "base_intent": 0.378,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.258,
+      "intent_decay": 0.00227,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0011": {
+      "case_ref": "case0011",
+      "base_intent": 0.707,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.316,
+      "intent_decay": 0.00476,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0012": {
+      "case_ref": "case0012",
+      "base_intent": 0.434,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.304,
+      "intent_decay": 0.00283,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0013": {
+      "case_ref": "case0013",
+      "base_intent": 0.685,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.277,
+      "intent_decay": 0.00387,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0014": {
+      "case_ref": "case0014",
+      "base_intent": 0.583,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.162,
+      "intent_decay": 0.00376,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0015": {
+      "case_ref": "case0015",
+      "base_intent": 0.353,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.19,
+      "intent_decay": 0.00458,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0016": {
+      "case_ref": "case0016",
+      "base_intent": 0.768,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.219,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0017": {
+      "case_ref": "case0017",
+      "base_intent": 0.783,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.186,
+      "intent_decay": 0.00213,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0018": {
+      "case_ref": "case0018",
+      "base_intent": 0.348,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.31,
+      "intent_decay": 0.00348,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0019": {
+      "case_ref": "case0019",
+      "base_intent": 0.731,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.27,
+      "intent_decay": 0.00486,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0020": {
+      "case_ref": "case0020",
+      "base_intent": 0.499,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.262,
+      "intent_decay": 0.00578,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0021": {
+      "case_ref": "case0021",
+      "base_intent": 0.701,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.165,
+      "intent_decay": 0.00541,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0022": {
+      "case_ref": "case0022",
+      "base_intent": 0.343,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.306,
+      "intent_decay": 0.00588,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0023": {
+      "case_ref": "case0023",
+      "base_intent": 0.504,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.18,
+      "intent_decay": 0.0051,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0024": {
+      "case_ref": "case0024",
+      "base_intent": 0.387,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.218,
+      "intent_decay": 0.00322,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0025": {
+      "case_ref": "case0025",
+      "base_intent": 0.783,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.264,
+      "intent_decay": 0.00385,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0026": {
+      "case_ref": "case0026",
+      "base_intent": 0.419,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.256,
+      "intent_decay": 0.00259,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0027": {
+      "case_ref": "case0027",
+      "base_intent": 0.655,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.184,
+      "intent_decay": 0.00219,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0028": {
+      "case_ref": "case0028",
+      "base_intent": 0.325,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.18,
+      "intent_decay": 0.00232,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0029": {
+      "case_ref": "case0029",
+      "base_intent": 0.369,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.168,
+      "intent_decay": 0.00338,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0030": {
+      "case_ref": "case0030",
+      "base_intent": 0.717,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.242,
+      "intent_decay": 0.00496,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 21
+    },
+    "case0031": {
+      "case_ref": "case0031",
+      "base_intent": 0.656,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.223,
+      "intent_decay": 0.00432,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0032": {
+      "case_ref": "case0032",
+      "base_intent": 0.675,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.313,
+      "intent_decay": 0.0043,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0033": {
+      "case_ref": "case0033",
+      "base_intent": 0.773,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.197,
+      "intent_decay": 0.00402,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0034": {
+      "case_ref": "case0034",
+      "base_intent": 0.596,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.292,
+      "intent_decay": 0.00295,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0035": {
+      "case_ref": "case0035",
+      "base_intent": 0.344,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.175,
+      "intent_decay": 0.00237,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0036": {
+      "case_ref": "case0036",
+      "base_intent": 0.567,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.282,
+      "intent_decay": 0.00593,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0037": {
+      "case_ref": "case0037",
+      "base_intent": 0.72,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.196,
+      "intent_decay": 0.0031,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0038": {
+      "case_ref": "case0038",
+      "base_intent": 0.33,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.17,
+      "intent_decay": 0.00466,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0039": {
+      "case_ref": "case0039",
+      "base_intent": 0.553,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.25,
+      "intent_decay": 0.00243,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0040": {
+      "case_ref": "case0040",
+      "base_intent": 0.748,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.274,
+      "intent_decay": 0.00419,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0041": {
+      "case_ref": "case0041",
+      "base_intent": 0.788,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.167,
+      "intent_decay": 0.00224,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0042": {
+      "case_ref": "case0042",
+      "base_intent": 0.547,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.249,
+      "intent_decay": 0.00212,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0043": {
+      "case_ref": "case0043",
+      "base_intent": 0.705,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.264,
+      "intent_decay": 0.00526,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0044": {
+      "case_ref": "case0044",
+      "base_intent": 0.606,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.291,
+      "intent_decay": 0.00305,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0045": {
+      "case_ref": "case0045",
+      "base_intent": 0.699,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.236,
+      "intent_decay": 0.00582,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0046": {
+      "case_ref": "case0046",
+      "base_intent": 0.308,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.208,
+      "intent_decay": 0.00227,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0047": {
+      "case_ref": "case0047",
+      "base_intent": 0.5,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.302,
+      "intent_decay": 0.00402,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 3
+    },
+    "case0048": {
+      "case_ref": "case0048",
+      "base_intent": 0.427,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.153,
+      "intent_decay": 0.00522,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0049": {
+      "case_ref": "case0049",
+      "base_intent": 0.437,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.215,
+      "intent_decay": 0.00434,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0050": {
+      "case_ref": "case0050",
+      "base_intent": 0.527,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.226,
+      "intent_decay": 0.00584,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0051": {
+      "case_ref": "case0051",
+      "base_intent": 0.536,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.184,
+      "intent_decay": 0.00267,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0052": {
+      "case_ref": "case0052",
+      "base_intent": 0.799,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.206,
+      "intent_decay": 0.00268,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0053": {
+      "case_ref": "case0053",
+      "base_intent": 0.63,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.224,
+      "intent_decay": 0.00285,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0054": {
+      "case_ref": "case0054",
+      "base_intent": 0.375,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.153,
+      "intent_decay": 0.00556,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0055": {
+      "case_ref": "case0055",
+      "base_intent": 0.756,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.157,
+      "intent_decay": 0.00361,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0056": {
+      "case_ref": "case0056",
+      "base_intent": 0.589,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.156,
+      "intent_decay": 0.00337,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0057": {
+      "case_ref": "case0057",
+      "base_intent": 0.479,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.248,
+      "intent_decay": 0.00512,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0058": {
+      "case_ref": "case0058",
+      "base_intent": 0.534,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.22,
+      "intent_decay": 0.0032,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 18
+    },
+    "case0059": {
+      "case_ref": "case0059",
+      "base_intent": 0.657,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.18,
+      "intent_decay": 0.00474,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0060": {
+      "case_ref": "case0060",
+      "base_intent": 0.45,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.172,
+      "intent_decay": 0.00398,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0061": {
+      "case_ref": "case0061",
+      "base_intent": 0.335,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.161,
+      "intent_decay": 0.0052,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 14
+    },
+    "case0062": {
+      "case_ref": "case0062",
+      "base_intent": 0.532,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.164,
+      "intent_decay": 0.00458,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0063": {
+      "case_ref": "case0063",
+      "base_intent": 0.355,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.308,
+      "intent_decay": 0.00533,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0064": {
+      "case_ref": "case0064",
+      "base_intent": 0.596,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.15,
+      "intent_decay": 0.00586,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0065": {
+      "case_ref": "case0065",
+      "base_intent": 0.519,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.313,
+      "intent_decay": 0.00531,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0066": {
+      "case_ref": "case0066",
+      "base_intent": 0.752,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.183,
+      "intent_decay": 0.00269,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0067": {
+      "case_ref": "case0067",
+      "base_intent": 0.744,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.141,
+      "intent_decay": 0.00433,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0068": {
+      "case_ref": "case0068",
+      "base_intent": 0.606,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.149,
+      "intent_decay": 0.00498,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0069": {
+      "case_ref": "case0069",
+      "base_intent": 0.763,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.168,
+      "intent_decay": 0.0022,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0070": {
+      "case_ref": "case0070",
+      "base_intent": 0.511,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.279,
+      "intent_decay": 0.00565,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0071": {
+      "case_ref": "case0071",
+      "base_intent": 0.687,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.315,
+      "intent_decay": 0.0045,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0072": {
+      "case_ref": "case0072",
+      "base_intent": 0.562,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.259,
+      "intent_decay": 0.00219,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0073": {
+      "case_ref": "case0073",
+      "base_intent": 0.591,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.235,
+      "intent_decay": 0.00567,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0074": {
+      "case_ref": "case0074",
+      "base_intent": 0.687,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.243,
+      "intent_decay": 0.00207,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 22
+    },
+    "case0075": {
+      "case_ref": "case0075",
+      "base_intent": 0.424,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.241,
+      "intent_decay": 0.00227,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0076": {
+      "case_ref": "case0076",
+      "base_intent": 0.377,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.14,
+      "intent_decay": 0.00458,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0077": {
+      "case_ref": "case0077",
+      "base_intent": 0.317,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.181,
+      "intent_decay": 0.00496,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0078": {
+      "case_ref": "case0078",
+      "base_intent": 0.62,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.157,
+      "intent_decay": 0.00402,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0079": {
+      "case_ref": "case0079",
+      "base_intent": 0.596,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.316,
+      "intent_decay": 0.00453,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0080": {
+      "case_ref": "case0080",
+      "base_intent": 0.785,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.27,
+      "intent_decay": 0.00506,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0081": {
+      "case_ref": "case0081",
+      "base_intent": 0.616,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.191,
+      "intent_decay": 0.00559,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0082": {
+      "case_ref": "case0082",
+      "base_intent": 0.682,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.215,
+      "intent_decay": 0.00486,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0083": {
+      "case_ref": "case0083",
+      "base_intent": 0.376,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.229,
+      "intent_decay": 0.00426,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0084": {
+      "case_ref": "case0084",
+      "base_intent": 0.657,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.178,
+      "intent_decay": 0.00507,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0085": {
+      "case_ref": "case0085",
+      "base_intent": 0.764,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.292,
+      "intent_decay": 0.00369,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0086": {
+      "case_ref": "case0086",
+      "base_intent": 0.439,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.184,
+      "intent_decay": 0.00254,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0087": {
+      "case_ref": "case0087",
+      "base_intent": 0.329,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.156,
+      "intent_decay": 0.00336,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0088": {
+      "case_ref": "case0088",
+      "base_intent": 0.377,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.238,
+      "intent_decay": 0.00358,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0089": {
+      "case_ref": "case0089",
+      "base_intent": 0.431,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.146,
+      "intent_decay": 0.00375,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0090": {
+      "case_ref": "case0090",
+      "base_intent": 0.55,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.286,
+      "intent_decay": 0.00216,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0091": {
+      "case_ref": "case0091",
+      "base_intent": 0.365,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.218,
+      "intent_decay": 0.00213,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0092": {
+      "case_ref": "case0092",
+      "base_intent": 0.687,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.146,
+      "intent_decay": 0.00498,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0093": {
+      "case_ref": "case0093",
+      "base_intent": 0.324,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.28,
+      "intent_decay": 0.00249,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0094": {
+      "case_ref": "case0094",
+      "base_intent": 0.557,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.235,
+      "intent_decay": 0.00219,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0095": {
+      "case_ref": "case0095",
+      "base_intent": 0.313,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.21,
+      "intent_decay": 0.00355,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0096": {
+      "case_ref": "case0096",
+      "base_intent": 0.704,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.285,
+      "intent_decay": 0.00423,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0097": {
+      "case_ref": "case0097",
+      "base_intent": 0.384,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.222,
+      "intent_decay": 0.00319,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0098": {
+      "case_ref": "case0098",
+      "base_intent": 0.521,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.277,
+      "intent_decay": 0.00292,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0099": {
+      "case_ref": "case0099",
+      "base_intent": 0.624,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.198,
+      "intent_decay": 0.00554,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 20
+    },
+    "case0100": {
+      "case_ref": "case0100",
+      "base_intent": 0.407,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.259,
+      "intent_decay": 0.00347,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0101": {
+      "case_ref": "case0101",
+      "base_intent": 0.319,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.168,
+      "intent_decay": 0.00208,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0102": {
+      "case_ref": "case0102",
+      "base_intent": 0.765,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.212,
+      "intent_decay": 0.00598,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0103": {
+      "case_ref": "case0103",
+      "base_intent": 0.76,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.2,
+      "intent_decay": 0.00494,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0104": {
+      "case_ref": "case0104",
+      "base_intent": 0.749,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.149,
+      "intent_decay": 0.00568,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0105": {
+      "case_ref": "case0105",
+      "base_intent": 0.786,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.192,
+      "intent_decay": 0.00521,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0106": {
+      "case_ref": "case0106",
+      "base_intent": 0.651,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.145,
+      "intent_decay": 0.00405,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0107": {
+      "case_ref": "case0107",
+      "base_intent": 0.495,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.289,
+      "intent_decay": 0.00596,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0108": {
+      "case_ref": "case0108",
+      "base_intent": 0.373,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.209,
+      "intent_decay": 0.00463,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0109": {
+      "case_ref": "case0109",
+      "base_intent": 0.765,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.164,
+      "intent_decay": 0.00503,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0110": {
+      "case_ref": "case0110",
+      "base_intent": 0.302,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.232,
+      "intent_decay": 0.00392,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0111": {
+      "case_ref": "case0111",
+      "base_intent": 0.499,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.26,
+      "intent_decay": 0.00332,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0112": {
+      "case_ref": "case0112",
+      "base_intent": 0.482,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.273,
+      "intent_decay": 0.00289,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0113": {
+      "case_ref": "case0113",
+      "base_intent": 0.443,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.237,
+      "intent_decay": 0.00497,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0114": {
+      "case_ref": "case0114",
+      "base_intent": 0.543,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.207,
+      "intent_decay": 0.00533,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0115": {
+      "case_ref": "case0115",
+      "base_intent": 0.472,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.279,
+      "intent_decay": 0.00207,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0116": {
+      "case_ref": "case0116",
+      "base_intent": 0.629,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.22,
+      "intent_decay": 0.0055,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0117": {
+      "case_ref": "case0117",
+      "base_intent": 0.468,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.249,
+      "intent_decay": 0.00512,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0118": {
+      "case_ref": "case0118",
+      "base_intent": 0.377,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.189,
+      "intent_decay": 0.00493,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 14
+    },
+    "case0119": {
+      "case_ref": "case0119",
+      "base_intent": 0.633,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.276,
+      "intent_decay": 0.00217,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0120": {
+      "case_ref": "case0120",
+      "base_intent": 0.43,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.147,
+      "intent_decay": 0.00492,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0121": {
+      "case_ref": "case0121",
+      "base_intent": 0.631,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.277,
+      "intent_decay": 0.00548,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0122": {
+      "case_ref": "case0122",
+      "base_intent": 0.71,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.254,
+      "intent_decay": 0.00589,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0123": {
+      "case_ref": "case0123",
+      "base_intent": 0.527,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.317,
+      "intent_decay": 0.00204,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0124": {
+      "case_ref": "case0124",
+      "base_intent": 0.762,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.175,
+      "intent_decay": 0.0051,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0125": {
+      "case_ref": "case0125",
+      "base_intent": 0.759,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.255,
+      "intent_decay": 0.00503,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0126": {
+      "case_ref": "case0126",
+      "base_intent": 0.395,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.275,
+      "intent_decay": 0.00342,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0127": {
+      "case_ref": "case0127",
+      "base_intent": 0.717,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.208,
+      "intent_decay": 0.00486,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0128": {
+      "case_ref": "case0128",
+      "base_intent": 0.418,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.269,
+      "intent_decay": 0.00555,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0129": {
+      "case_ref": "case0129",
+      "base_intent": 0.78,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.243,
+      "intent_decay": 0.00302,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0130": {
+      "case_ref": "case0130",
+      "base_intent": 0.703,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.193,
+      "intent_decay": 0.00211,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0131": {
+      "case_ref": "case0131",
+      "base_intent": 0.52,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.283,
+      "intent_decay": 0.00514,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0132": {
+      "case_ref": "case0132",
+      "base_intent": 0.455,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.218,
+      "intent_decay": 0.00552,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0133": {
+      "case_ref": "case0133",
+      "base_intent": 0.587,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.214,
+      "intent_decay": 0.00352,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0134": {
+      "case_ref": "case0134",
+      "base_intent": 0.702,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.223,
+      "intent_decay": 0.00467,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0135": {
+      "case_ref": "case0135",
+      "base_intent": 0.315,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.182,
+      "intent_decay": 0.00222,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0136": {
+      "case_ref": "case0136",
+      "base_intent": 0.348,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.185,
+      "intent_decay": 0.00259,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0137": {
+      "case_ref": "case0137",
+      "base_intent": 0.553,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.312,
+      "intent_decay": 0.00367,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 12
+    },
+    "case0138": {
+      "case_ref": "case0138",
+      "base_intent": 0.485,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.199,
+      "intent_decay": 0.00372,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0139": {
+      "case_ref": "case0139",
+      "base_intent": 0.671,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.28,
+      "intent_decay": 0.00225,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0140": {
+      "case_ref": "case0140",
+      "base_intent": 0.63,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.195,
+      "intent_decay": 0.0058,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0141": {
+      "case_ref": "case0141",
+      "base_intent": 0.564,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.217,
+      "intent_decay": 0.00375,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0142": {
+      "case_ref": "case0142",
+      "base_intent": 0.36,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.232,
+      "intent_decay": 0.00454,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0143": {
+      "case_ref": "case0143",
+      "base_intent": 0.486,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.193,
+      "intent_decay": 0.00235,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0144": {
+      "case_ref": "case0144",
+      "base_intent": 0.619,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.193,
+      "intent_decay": 0.00443,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0145": {
+      "case_ref": "case0145",
+      "base_intent": 0.342,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.212,
+      "intent_decay": 0.00221,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0146": {
+      "case_ref": "case0146",
+      "base_intent": 0.729,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.194,
+      "intent_decay": 0.00205,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0147": {
+      "case_ref": "case0147",
+      "base_intent": 0.391,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.209,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0148": {
+      "case_ref": "case0148",
+      "base_intent": 0.378,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.189,
+      "intent_decay": 0.00533,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 4
+    },
+    "case0149": {
+      "case_ref": "case0149",
+      "base_intent": 0.761,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.226,
+      "intent_decay": 0.00222,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0150": {
+      "case_ref": "case0150",
+      "base_intent": 0.492,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.244,
+      "intent_decay": 0.00218,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0151": {
+      "case_ref": "case0151",
+      "base_intent": 0.73,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.269,
+      "intent_decay": 0.00482,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0152": {
+      "case_ref": "case0152",
+      "base_intent": 0.789,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.303,
+      "intent_decay": 0.00402,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0153": {
+      "case_ref": "case0153",
+      "base_intent": 0.333,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.27,
+      "intent_decay": 0.0051,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0154": {
+      "case_ref": "case0154",
+      "base_intent": 0.756,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.239,
+      "intent_decay": 0.00222,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0155": {
+      "case_ref": "case0155",
+      "base_intent": 0.53,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.303,
+      "intent_decay": 0.00568,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0156": {
+      "case_ref": "case0156",
+      "base_intent": 0.479,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.255,
+      "intent_decay": 0.00285,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0157": {
+      "case_ref": "case0157",
+      "base_intent": 0.509,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.306,
+      "intent_decay": 0.00215,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0158": {
+      "case_ref": "case0158",
+      "base_intent": 0.452,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.314,
+      "intent_decay": 0.0056,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0159": {
+      "case_ref": "case0159",
+      "base_intent": 0.725,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.243,
+      "intent_decay": 0.00436,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0160": {
+      "case_ref": "case0160",
+      "base_intent": 0.35,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.197,
+      "intent_decay": 0.00305,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0161": {
+      "case_ref": "case0161",
+      "base_intent": 0.76,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.177,
+      "intent_decay": 0.00244,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0162": {
+      "case_ref": "case0162",
+      "base_intent": 0.582,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.172,
+      "intent_decay": 0.0025,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 3
+    },
+    "case0163": {
+      "case_ref": "case0163",
+      "base_intent": 0.649,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.212,
+      "intent_decay": 0.00467,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0164": {
+      "case_ref": "case0164",
+      "base_intent": 0.377,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.154,
+      "intent_decay": 0.00237,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0165": {
+      "case_ref": "case0165",
+      "base_intent": 0.659,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.27,
+      "intent_decay": 0.00213,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0166": {
+      "case_ref": "case0166",
+      "base_intent": 0.569,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.186,
+      "intent_decay": 0.00428,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0167": {
+      "case_ref": "case0167",
+      "base_intent": 0.64,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.166,
+      "intent_decay": 0.00371,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0168": {
+      "case_ref": "case0168",
+      "base_intent": 0.564,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.185,
+      "intent_decay": 0.00408,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0169": {
+      "case_ref": "case0169",
+      "base_intent": 0.79,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.158,
+      "intent_decay": 0.00418,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0170": {
+      "case_ref": "case0170",
+      "base_intent": 0.746,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.192,
+      "intent_decay": 0.0057,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0171": {
+      "case_ref": "case0171",
+      "base_intent": 0.423,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.215,
+      "intent_decay": 0.00393,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 3
+    },
+    "case0172": {
+      "case_ref": "case0172",
+      "base_intent": 0.627,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.251,
+      "intent_decay": 0.00596,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0173": {
+      "case_ref": "case0173",
+      "base_intent": 0.466,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.174,
+      "intent_decay": 0.00506,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0174": {
+      "case_ref": "case0174",
+      "base_intent": 0.35,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.261,
+      "intent_decay": 0.0023,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0175": {
+      "case_ref": "case0175",
+      "base_intent": 0.62,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.196,
+      "intent_decay": 0.00297,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0176": {
+      "case_ref": "case0176",
+      "base_intent": 0.412,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.21,
+      "intent_decay": 0.0053,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0177": {
+      "case_ref": "case0177",
+      "base_intent": 0.339,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.217,
+      "intent_decay": 0.00361,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0178": {
+      "case_ref": "case0178",
+      "base_intent": 0.653,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.21,
+      "intent_decay": 0.00272,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0179": {
+      "case_ref": "case0179",
+      "base_intent": 0.604,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.179,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0180": {
+      "case_ref": "case0180",
+      "base_intent": 0.794,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.259,
+      "intent_decay": 0.00235,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0181": {
+      "case_ref": "case0181",
+      "base_intent": 0.704,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.219,
+      "intent_decay": 0.00265,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0182": {
+      "case_ref": "case0182",
+      "base_intent": 0.77,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.298,
+      "intent_decay": 0.00581,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0183": {
+      "case_ref": "case0183",
+      "base_intent": 0.539,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.302,
+      "intent_decay": 0.00254,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0184": {
+      "case_ref": "case0184",
+      "base_intent": 0.311,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.173,
+      "intent_decay": 0.00299,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0185": {
+      "case_ref": "case0185",
+      "base_intent": 0.683,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.213,
+      "intent_decay": 0.00224,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0186": {
+      "case_ref": "case0186",
+      "base_intent": 0.488,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.173,
+      "intent_decay": 0.00361,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0187": {
+      "case_ref": "case0187",
+      "base_intent": 0.772,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.197,
+      "intent_decay": 0.00458,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0188": {
+      "case_ref": "case0188",
+      "base_intent": 0.486,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.254,
+      "intent_decay": 0.00225,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0189": {
+      "case_ref": "case0189",
+      "base_intent": 0.387,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.156,
+      "intent_decay": 0.0048,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0190": {
+      "case_ref": "case0190",
+      "base_intent": 0.571,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.299,
+      "intent_decay": 0.00416,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0191": {
+      "case_ref": "case0191",
+      "base_intent": 0.629,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.289,
+      "intent_decay": 0.00419,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0192": {
+      "case_ref": "case0192",
+      "base_intent": 0.795,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.214,
+      "intent_decay": 0.00557,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0193": {
+      "case_ref": "case0193",
+      "base_intent": 0.386,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.233,
+      "intent_decay": 0.00583,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0194": {
+      "case_ref": "case0194",
+      "base_intent": 0.341,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.182,
+      "intent_decay": 0.00252,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0195": {
+      "case_ref": "case0195",
+      "base_intent": 0.33,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.255,
+      "intent_decay": 0.00556,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 20
+    },
+    "case0196": {
+      "case_ref": "case0196",
+      "base_intent": 0.505,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.168,
+      "intent_decay": 0.00568,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0197": {
+      "case_ref": "case0197",
+      "base_intent": 0.37,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.315,
+      "intent_decay": 0.00303,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0198": {
+      "case_ref": "case0198",
+      "base_intent": 0.556,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.272,
+      "intent_decay": 0.00259,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0199": {
+      "case_ref": "case0199",
+      "base_intent": 0.349,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.269,
+      "intent_decay": 0.00443,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0200": {
+      "case_ref": "case0200",
+      "base_intent": 0.742,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.263,
+      "intent_decay": 0.00428,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0201": {
+      "case_ref": "case0201",
+      "base_intent": 0.661,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.143,
+      "intent_decay": 0.0026,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0202": {
+      "case_ref": "case0202",
+      "base_intent": 0.489,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.216,
+      "intent_decay": 0.00545,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0203": {
+      "case_ref": "case0203",
+      "base_intent": 0.591,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.155,
+      "intent_decay": 0.00397,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0204": {
+      "case_ref": "case0204",
+      "base_intent": 0.66,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.188,
+      "intent_decay": 0.00316,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0205": {
+      "case_ref": "case0205",
+      "base_intent": 0.741,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.306,
+      "intent_decay": 0.0053,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0206": {
+      "case_ref": "case0206",
+      "base_intent": 0.594,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.164,
+      "intent_decay": 0.00276,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0207": {
+      "case_ref": "case0207",
+      "base_intent": 0.513,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.303,
+      "intent_decay": 0.00449,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0208": {
+      "case_ref": "case0208",
+      "base_intent": 0.742,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.202,
+      "intent_decay": 0.00278,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0209": {
+      "case_ref": "case0209",
+      "base_intent": 0.446,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.184,
+      "intent_decay": 0.00244,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0210": {
+      "case_ref": "case0210",
+      "base_intent": 0.507,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.303,
+      "intent_decay": 0.00466,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0211": {
+      "case_ref": "case0211",
+      "base_intent": 0.391,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.265,
+      "intent_decay": 0.00336,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0212": {
+      "case_ref": "case0212",
+      "base_intent": 0.741,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.228,
+      "intent_decay": 0.00331,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0213": {
+      "case_ref": "case0213",
+      "base_intent": 0.556,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.189,
+      "intent_decay": 0.00353,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0214": {
+      "case_ref": "case0214",
+      "base_intent": 0.317,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.212,
+      "intent_decay": 0.00396,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0215": {
+      "case_ref": "case0215",
+      "base_intent": 0.562,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.244,
+      "intent_decay": 0.00286,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0216": {
+      "case_ref": "case0216",
+      "base_intent": 0.53,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.238,
+      "intent_decay": 0.00237,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0217": {
+      "case_ref": "case0217",
+      "base_intent": 0.585,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.156,
+      "intent_decay": 0.0056,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0218": {
+      "case_ref": "case0218",
+      "base_intent": 0.345,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.267,
+      "intent_decay": 0.00333,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0219": {
+      "case_ref": "case0219",
+      "base_intent": 0.434,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.215,
+      "intent_decay": 0.00352,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0220": {
+      "case_ref": "case0220",
+      "base_intent": 0.492,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.286,
+      "intent_decay": 0.00235,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0221": {
+      "case_ref": "case0221",
+      "base_intent": 0.44,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.285,
+      "intent_decay": 0.00583,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0222": {
+      "case_ref": "case0222",
+      "base_intent": 0.747,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.216,
+      "intent_decay": 0.00551,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0223": {
+      "case_ref": "case0223",
+      "base_intent": 0.779,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.266,
+      "intent_decay": 0.00464,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0224": {
+      "case_ref": "case0224",
+      "base_intent": 0.467,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.285,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0225": {
+      "case_ref": "case0225",
+      "base_intent": 0.646,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.214,
+      "intent_decay": 0.00533,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0226": {
+      "case_ref": "case0226",
+      "base_intent": 0.476,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.268,
+      "intent_decay": 0.0057,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0227": {
+      "case_ref": "case0227",
+      "base_intent": 0.745,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.271,
+      "intent_decay": 0.00246,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0228": {
+      "case_ref": "case0228",
+      "base_intent": 0.751,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.222,
+      "intent_decay": 0.00496,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0229": {
+      "case_ref": "case0229",
+      "base_intent": 0.508,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.266,
+      "intent_decay": 0.00562,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0230": {
+      "case_ref": "case0230",
+      "base_intent": 0.798,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.298,
+      "intent_decay": 0.00435,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0231": {
+      "case_ref": "case0231",
+      "base_intent": 0.367,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.148,
+      "intent_decay": 0.00388,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 4
+    },
+    "case0232": {
+      "case_ref": "case0232",
+      "base_intent": 0.501,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.226,
+      "intent_decay": 0.00275,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0233": {
+      "case_ref": "case0233",
+      "base_intent": 0.716,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.229,
+      "intent_decay": 0.00523,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0234": {
+      "case_ref": "case0234",
+      "base_intent": 0.608,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.255,
+      "intent_decay": 0.00569,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0235": {
+      "case_ref": "case0235",
+      "base_intent": 0.749,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.296,
+      "intent_decay": 0.00558,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0236": {
+      "case_ref": "case0236",
+      "base_intent": 0.593,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.304,
+      "intent_decay": 0.00538,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0237": {
+      "case_ref": "case0237",
+      "base_intent": 0.41,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.319,
+      "intent_decay": 0.00557,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0238": {
+      "case_ref": "case0238",
+      "base_intent": 0.674,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.185,
+      "intent_decay": 0.0025,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0239": {
+      "case_ref": "case0239",
+      "base_intent": 0.499,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.264,
+      "intent_decay": 0.00298,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0240": {
+      "case_ref": "case0240",
+      "base_intent": 0.676,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.266,
+      "intent_decay": 0.00595,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0241": {
+      "case_ref": "case0241",
+      "base_intent": 0.737,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.261,
+      "intent_decay": 0.00278,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0242": {
+      "case_ref": "case0242",
+      "base_intent": 0.425,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.299,
+      "intent_decay": 0.00566,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0243": {
+      "case_ref": "case0243",
+      "base_intent": 0.334,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.196,
+      "intent_decay": 0.00395,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0244": {
+      "case_ref": "case0244",
+      "base_intent": 0.628,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.146,
+      "intent_decay": 0.00251,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0245": {
+      "case_ref": "case0245",
+      "base_intent": 0.307,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.191,
+      "intent_decay": 0.0051,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0246": {
+      "case_ref": "case0246",
+      "base_intent": 0.581,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.171,
+      "intent_decay": 0.0027,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0247": {
+      "case_ref": "case0247",
+      "base_intent": 0.699,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.295,
+      "intent_decay": 0.00223,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0248": {
+      "case_ref": "case0248",
+      "base_intent": 0.477,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.311,
+      "intent_decay": 0.0033,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0249": {
+      "case_ref": "case0249",
+      "base_intent": 0.43,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.216,
+      "intent_decay": 0.00426,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0250": {
+      "case_ref": "case0250",
+      "base_intent": 0.378,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.284,
+      "intent_decay": 0.00466,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0251": {
+      "case_ref": "case0251",
+      "base_intent": 0.714,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.261,
+      "intent_decay": 0.00433,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0252": {
+      "case_ref": "case0252",
+      "base_intent": 0.643,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.295,
+      "intent_decay": 0.0059,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0253": {
+      "case_ref": "case0253",
+      "base_intent": 0.529,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.208,
+      "intent_decay": 0.00278,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0254": {
+      "case_ref": "case0254",
+      "base_intent": 0.313,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.143,
+      "intent_decay": 0.00487,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0255": {
+      "case_ref": "case0255",
+      "base_intent": 0.735,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.172,
+      "intent_decay": 0.00308,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0256": {
+      "case_ref": "case0256",
+      "base_intent": 0.433,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.17,
+      "intent_decay": 0.00392,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0257": {
+      "case_ref": "case0257",
+      "base_intent": 0.707,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.222,
+      "intent_decay": 0.00475,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0258": {
+      "case_ref": "case0258",
+      "base_intent": 0.441,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.143,
+      "intent_decay": 0.00201,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0259": {
+      "case_ref": "case0259",
+      "base_intent": 0.326,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.291,
+      "intent_decay": 0.00323,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0260": {
+      "case_ref": "case0260",
+      "base_intent": 0.338,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.225,
+      "intent_decay": 0.0032,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0261": {
+      "case_ref": "case0261",
+      "base_intent": 0.413,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.212,
+      "intent_decay": 0.00301,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0262": {
+      "case_ref": "case0262",
+      "base_intent": 0.345,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.265,
+      "intent_decay": 0.00391,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0263": {
+      "case_ref": "case0263",
+      "base_intent": 0.533,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.303,
+      "intent_decay": 0.00425,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0264": {
+      "case_ref": "case0264",
+      "base_intent": 0.374,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.223,
+      "intent_decay": 0.00311,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 12
+    },
+    "case0265": {
+      "case_ref": "case0265",
+      "base_intent": 0.391,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.192,
+      "intent_decay": 0.00454,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0266": {
+      "case_ref": "case0266",
+      "base_intent": 0.772,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.215,
+      "intent_decay": 0.0054,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0267": {
+      "case_ref": "case0267",
+      "base_intent": 0.708,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.309,
+      "intent_decay": 0.00523,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0268": {
+      "case_ref": "case0268",
+      "base_intent": 0.623,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.166,
+      "intent_decay": 0.00439,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0269": {
+      "case_ref": "case0269",
+      "base_intent": 0.618,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.275,
+      "intent_decay": 0.00288,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0270": {
+      "case_ref": "case0270",
+      "base_intent": 0.798,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.188,
+      "intent_decay": 0.00529,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0271": {
+      "case_ref": "case0271",
+      "base_intent": 0.375,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.183,
+      "intent_decay": 0.00579,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0272": {
+      "case_ref": "case0272",
+      "base_intent": 0.71,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.189,
+      "intent_decay": 0.00589,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0273": {
+      "case_ref": "case0273",
+      "base_intent": 0.737,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.197,
+      "intent_decay": 0.00255,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0274": {
+      "case_ref": "case0274",
+      "base_intent": 0.543,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.312,
+      "intent_decay": 0.00452,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0275": {
+      "case_ref": "case0275",
+      "base_intent": 0.624,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.225,
+      "intent_decay": 0.00249,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0276": {
+      "case_ref": "case0276",
+      "base_intent": 0.516,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.163,
+      "intent_decay": 0.00351,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 2
+    },
+    "case0277": {
+      "case_ref": "case0277",
+      "base_intent": 0.333,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.214,
+      "intent_decay": 0.00255,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0278": {
+      "case_ref": "case0278",
+      "base_intent": 0.369,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.16,
+      "intent_decay": 0.00443,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0279": {
+      "case_ref": "case0279",
+      "base_intent": 0.601,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.161,
+      "intent_decay": 0.00585,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0280": {
+      "case_ref": "case0280",
+      "base_intent": 0.481,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.296,
+      "intent_decay": 0.00569,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0281": {
+      "case_ref": "case0281",
+      "base_intent": 0.797,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.238,
+      "intent_decay": 0.00416,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0282": {
+      "case_ref": "case0282",
+      "base_intent": 0.777,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.174,
+      "intent_decay": 0.00576,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0283": {
+      "case_ref": "case0283",
+      "base_intent": 0.531,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.176,
+      "intent_decay": 0.0052,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0284": {
+      "case_ref": "case0284",
+      "base_intent": 0.624,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.175,
+      "intent_decay": 0.00543,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0285": {
+      "case_ref": "case0285",
+      "base_intent": 0.68,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.24,
+      "intent_decay": 0.00443,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0286": {
+      "case_ref": "case0286",
+      "base_intent": 0.691,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.304,
+      "intent_decay": 0.00318,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0287": {
+      "case_ref": "case0287",
+      "base_intent": 0.521,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.191,
+      "intent_decay": 0.00509,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0288": {
+      "case_ref": "case0288",
+      "base_intent": 0.778,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.169,
+      "intent_decay": 0.00501,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0289": {
+      "case_ref": "case0289",
+      "base_intent": 0.651,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.154,
+      "intent_decay": 0.00332,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0290": {
+      "case_ref": "case0290",
+      "base_intent": 0.777,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.301,
+      "intent_decay": 0.00287,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0291": {
+      "case_ref": "case0291",
+      "base_intent": 0.486,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.208,
+      "intent_decay": 0.00253,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0292": {
+      "case_ref": "case0292",
+      "base_intent": 0.38,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.302,
+      "intent_decay": 0.00427,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 20
+    },
+    "case0293": {
+      "case_ref": "case0293",
+      "base_intent": 0.336,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.25,
+      "intent_decay": 0.00458,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0294": {
+      "case_ref": "case0294",
+      "base_intent": 0.649,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.258,
+      "intent_decay": 0.00324,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0295": {
+      "case_ref": "case0295",
+      "base_intent": 0.491,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.141,
+      "intent_decay": 0.00471,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0296": {
+      "case_ref": "case0296",
+      "base_intent": 0.379,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.252,
+      "intent_decay": 0.00416,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0297": {
+      "case_ref": "case0297",
+      "base_intent": 0.473,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.185,
+      "intent_decay": 0.00594,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0298": {
+      "case_ref": "case0298",
+      "base_intent": 0.665,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.178,
+      "intent_decay": 0.00282,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0299": {
+      "case_ref": "case0299",
+      "base_intent": 0.66,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.281,
+      "intent_decay": 0.00205,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0300": {
+      "case_ref": "case0300",
+      "base_intent": 0.403,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.24,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0301": {
+      "case_ref": "case0301",
+      "base_intent": 0.659,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.235,
+      "intent_decay": 0.00498,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0302": {
+      "case_ref": "case0302",
+      "base_intent": 0.434,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.299,
+      "intent_decay": 0.00561,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 23
+    },
+    "case0303": {
+      "case_ref": "case0303",
+      "base_intent": 0.5,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.217,
+      "intent_decay": 0.00559,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0304": {
+      "case_ref": "case0304",
+      "base_intent": 0.566,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.296,
+      "intent_decay": 0.00588,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 16
+    },
+    "case0305": {
+      "case_ref": "case0305",
+      "base_intent": 0.556,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.273,
+      "intent_decay": 0.00307,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 3
+    },
+    "case0306": {
+      "case_ref": "case0306",
+      "base_intent": 0.78,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.16,
+      "intent_decay": 0.0053,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0307": {
+      "case_ref": "case0307",
+      "base_intent": 0.636,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.142,
+      "intent_decay": 0.00313,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0308": {
+      "case_ref": "case0308",
+      "base_intent": 0.327,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.293,
+      "intent_decay": 0.00526,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0309": {
+      "case_ref": "case0309",
+      "base_intent": 0.324,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.209,
+      "intent_decay": 0.00314,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0310": {
+      "case_ref": "case0310",
+      "base_intent": 0.365,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.175,
+      "intent_decay": 0.00356,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0311": {
+      "case_ref": "case0311",
+      "base_intent": 0.527,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.163,
+      "intent_decay": 0.00497,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0312": {
+      "case_ref": "case0312",
+      "base_intent": 0.654,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.189,
+      "intent_decay": 0.0035,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0313": {
+      "case_ref": "case0313",
+      "base_intent": 0.598,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.235,
+      "intent_decay": 0.00452,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0314": {
+      "case_ref": "case0314",
+      "base_intent": 0.323,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.21,
+      "intent_decay": 0.00502,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0315": {
+      "case_ref": "case0315",
+      "base_intent": 0.533,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.225,
+      "intent_decay": 0.00445,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0316": {
+      "case_ref": "case0316",
+      "base_intent": 0.495,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.223,
+      "intent_decay": 0.00366,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0317": {
+      "case_ref": "case0317",
+      "base_intent": 0.742,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.242,
+      "intent_decay": 0.00415,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0318": {
+      "case_ref": "case0318",
+      "base_intent": 0.334,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.235,
+      "intent_decay": 0.0058,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0319": {
+      "case_ref": "case0319",
+      "base_intent": 0.562,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.233,
+      "intent_decay": 0.00271,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0320": {
+      "case_ref": "case0320",
+      "base_intent": 0.375,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.194,
+      "intent_decay": 0.00436,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0321": {
+      "case_ref": "case0321",
+      "base_intent": 0.548,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.239,
+      "intent_decay": 0.00537,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0322": {
+      "case_ref": "case0322",
+      "base_intent": 0.454,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.287,
+      "intent_decay": 0.00322,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0323": {
+      "case_ref": "case0323",
+      "base_intent": 0.71,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.295,
+      "intent_decay": 0.00381,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0324": {
+      "case_ref": "case0324",
+      "base_intent": 0.518,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.296,
+      "intent_decay": 0.0044,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0325": {
+      "case_ref": "case0325",
+      "base_intent": 0.745,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.259,
+      "intent_decay": 0.00378,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0326": {
+      "case_ref": "case0326",
+      "base_intent": 0.325,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.292,
+      "intent_decay": 0.00344,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0327": {
+      "case_ref": "case0327",
+      "base_intent": 0.319,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.212,
+      "intent_decay": 0.00278,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0328": {
+      "case_ref": "case0328",
+      "base_intent": 0.459,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.178,
+      "intent_decay": 0.00295,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0329": {
+      "case_ref": "case0329",
+      "base_intent": 0.679,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.243,
+      "intent_decay": 0.00479,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0330": {
+      "case_ref": "case0330",
+      "base_intent": 0.467,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.221,
+      "intent_decay": 0.00444,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0331": {
+      "case_ref": "case0331",
+      "base_intent": 0.645,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.21,
+      "intent_decay": 0.0058,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 13
+    },
+    "case0332": {
+      "case_ref": "case0332",
+      "base_intent": 0.543,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.191,
+      "intent_decay": 0.0053,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0333": {
+      "case_ref": "case0333",
+      "base_intent": 0.538,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.205,
+      "intent_decay": 0.00489,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0334": {
+      "case_ref": "case0334",
+      "base_intent": 0.799,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.249,
+      "intent_decay": 0.00552,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0335": {
+      "case_ref": "case0335",
+      "base_intent": 0.462,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.219,
+      "intent_decay": 0.00594,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0336": {
+      "case_ref": "case0336",
+      "base_intent": 0.675,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.242,
+      "intent_decay": 0.00354,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0337": {
+      "case_ref": "case0337",
+      "base_intent": 0.726,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.208,
+      "intent_decay": 0.00369,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 16
+    },
+    "case0338": {
+      "case_ref": "case0338",
+      "base_intent": 0.424,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.314,
+      "intent_decay": 0.00423,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 2
+    },
+    "case0339": {
+      "case_ref": "case0339",
+      "base_intent": 0.66,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.241,
+      "intent_decay": 0.00379,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0340": {
+      "case_ref": "case0340",
+      "base_intent": 0.698,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.314,
+      "intent_decay": 0.00439,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0341": {
+      "case_ref": "case0341",
+      "base_intent": 0.552,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.297,
+      "intent_decay": 0.00593,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0342": {
+      "case_ref": "case0342",
+      "base_intent": 0.301,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.247,
+      "intent_decay": 0.00415,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0343": {
+      "case_ref": "case0343",
+      "base_intent": 0.404,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.264,
+      "intent_decay": 0.00545,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0344": {
+      "case_ref": "case0344",
+      "base_intent": 0.427,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.282,
+      "intent_decay": 0.00382,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0345": {
+      "case_ref": "case0345",
+      "base_intent": 0.774,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.267,
+      "intent_decay": 0.00255,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0346": {
+      "case_ref": "case0346",
+      "base_intent": 0.487,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.273,
+      "intent_decay": 0.0055,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0347": {
+      "case_ref": "case0347",
+      "base_intent": 0.617,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.277,
+      "intent_decay": 0.00501,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0348": {
+      "case_ref": "case0348",
+      "base_intent": 0.659,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.177,
+      "intent_decay": 0.00497,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0349": {
+      "case_ref": "case0349",
+      "base_intent": 0.452,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.142,
+      "intent_decay": 0.00397,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0350": {
+      "case_ref": "case0350",
+      "base_intent": 0.473,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.284,
+      "intent_decay": 0.00297,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0351": {
+      "case_ref": "case0351",
+      "base_intent": 0.305,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.161,
+      "intent_decay": 0.00219,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0352": {
+      "case_ref": "case0352",
+      "base_intent": 0.561,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.209,
+      "intent_decay": 0.00347,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0353": {
+      "case_ref": "case0353",
+      "base_intent": 0.633,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.235,
+      "intent_decay": 0.00544,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0354": {
+      "case_ref": "case0354",
+      "base_intent": 0.696,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.306,
+      "intent_decay": 0.00292,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0355": {
+      "case_ref": "case0355",
+      "base_intent": 0.49,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.245,
+      "intent_decay": 0.00512,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0356": {
+      "case_ref": "case0356",
+      "base_intent": 0.664,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.249,
+      "intent_decay": 0.00311,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0357": {
+      "case_ref": "case0357",
+      "base_intent": 0.685,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.31,
+      "intent_decay": 0.0042,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0358": {
+      "case_ref": "case0358",
+      "base_intent": 0.588,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.198,
+      "intent_decay": 0.0049,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 23
+    },
+    "case0359": {
+      "case_ref": "case0359",
+      "base_intent": 0.776,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.29,
+      "intent_decay": 0.00504,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 17
+    },
+    "case0360": {
+      "case_ref": "case0360",
+      "base_intent": 0.743,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.263,
+      "intent_decay": 0.00382,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0361": {
+      "case_ref": "case0361",
+      "base_intent": 0.55,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.225,
+      "intent_decay": 0.00587,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0362": {
+      "case_ref": "case0362",
+      "base_intent": 0.6,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.268,
+      "intent_decay": 0.00478,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0363": {
+      "case_ref": "case0363",
+      "base_intent": 0.472,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.269,
+      "intent_decay": 0.0059,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0364": {
+      "case_ref": "case0364",
+      "base_intent": 0.385,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.19,
+      "intent_decay": 0.00315,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0365": {
+      "case_ref": "case0365",
+      "base_intent": 0.771,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.15,
+      "intent_decay": 0.00438,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0366": {
+      "case_ref": "case0366",
+      "base_intent": 0.453,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.204,
+      "intent_decay": 0.0038,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0367": {
+      "case_ref": "case0367",
+      "base_intent": 0.446,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.27,
+      "intent_decay": 0.00293,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0368": {
+      "case_ref": "case0368",
+      "base_intent": 0.424,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.314,
+      "intent_decay": 0.00304,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0369": {
+      "case_ref": "case0369",
+      "base_intent": 0.316,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.29,
+      "intent_decay": 0.00522,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0370": {
+      "case_ref": "case0370",
+      "base_intent": 0.349,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.305,
+      "intent_decay": 0.00526,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0371": {
+      "case_ref": "case0371",
+      "base_intent": 0.795,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.215,
+      "intent_decay": 0.00339,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0372": {
+      "case_ref": "case0372",
+      "base_intent": 0.49,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.254,
+      "intent_decay": 0.00315,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0373": {
+      "case_ref": "case0373",
+      "base_intent": 0.428,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.147,
+      "intent_decay": 0.00453,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0374": {
+      "case_ref": "case0374",
+      "base_intent": 0.417,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.175,
+      "intent_decay": 0.002,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0375": {
+      "case_ref": "case0375",
+      "base_intent": 0.69,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.273,
+      "intent_decay": 0.00251,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 19
+    },
+    "case0376": {
+      "case_ref": "case0376",
+      "base_intent": 0.625,
+      "funds_available_on": "2026-03-07",
+      "email_response": 0.246,
+      "intent_decay": 0.00387,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0377": {
+      "case_ref": "case0377",
+      "base_intent": 0.444,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.304,
+      "intent_decay": 0.00467,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0378": {
+      "case_ref": "case0378",
+      "base_intent": 0.598,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.295,
+      "intent_decay": 0.00467,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0379": {
+      "case_ref": "case0379",
+      "base_intent": 0.582,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.257,
+      "intent_decay": 0.00297,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0380": {
+      "case_ref": "case0380",
+      "base_intent": 0.564,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.196,
+      "intent_decay": 0.00428,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0381": {
+      "case_ref": "case0381",
+      "base_intent": 0.561,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.176,
+      "intent_decay": 0.00576,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0382": {
+      "case_ref": "case0382",
+      "base_intent": 0.328,
+      "funds_available_on": "2026-03-25",
+      "email_response": 0.247,
+      "intent_decay": 0.0055,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0383": {
+      "case_ref": "case0383",
+      "base_intent": 0.378,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.247,
+      "intent_decay": 0.00329,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0384": {
+      "case_ref": "case0384",
+      "base_intent": 0.641,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.143,
+      "intent_decay": 0.00469,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0385": {
+      "case_ref": "case0385",
+      "base_intent": 0.647,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.152,
+      "intent_decay": 0.00203,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0386": {
+      "case_ref": "case0386",
+      "base_intent": 0.584,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.144,
+      "intent_decay": 0.00507,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0387": {
+      "case_ref": "case0387",
+      "base_intent": 0.53,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.228,
+      "intent_decay": 0.00267,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0388": {
+      "case_ref": "case0388",
+      "base_intent": 0.376,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.309,
+      "intent_decay": 0.00329,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0389": {
+      "case_ref": "case0389",
+      "base_intent": 0.638,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.266,
+      "intent_decay": 0.00468,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0390": {
+      "case_ref": "case0390",
+      "base_intent": 0.431,
+      "funds_available_on": "2026-04-02",
+      "email_response": 0.287,
+      "intent_decay": 0.00273,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 3
+    },
+    "case0391": {
+      "case_ref": "case0391",
+      "base_intent": 0.36,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.282,
+      "intent_decay": 0.00561,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0392": {
+      "case_ref": "case0392",
+      "base_intent": 0.347,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.259,
+      "intent_decay": 0.00311,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0393": {
+      "case_ref": "case0393",
+      "base_intent": 0.422,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.22,
+      "intent_decay": 0.00482,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0394": {
+      "case_ref": "case0394",
+      "base_intent": 0.519,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.206,
+      "intent_decay": 0.00214,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0395": {
+      "case_ref": "case0395",
+      "base_intent": 0.574,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.229,
+      "intent_decay": 0.00473,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 4
+    },
+    "case0396": {
+      "case_ref": "case0396",
+      "base_intent": 0.777,
+      "funds_available_on": "2026-03-30",
+      "email_response": 0.147,
+      "intent_decay": 0.00205,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0397": {
+      "case_ref": "case0397",
+      "base_intent": 0.501,
+      "funds_available_on": "2026-03-28",
+      "email_response": 0.251,
+      "intent_decay": 0.00463,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0398": {
+      "case_ref": "case0398",
+      "base_intent": 0.333,
+      "funds_available_on": "2026-03-05",
+      "email_response": 0.229,
+      "intent_decay": 0.00452,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0399": {
+      "case_ref": "case0399",
+      "base_intent": 0.643,
+      "funds_available_on": "2026-04-01",
+      "email_response": 0.161,
+      "intent_decay": 0.00421,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "entity": "event",
+  "account_id": "acc_TWHtgmDZs5C1xT",
+  "event": "payment.failed",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_TWihn5YJtT02fj",
+        "entity": "payment",
+        "amount": 210000,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_TWih0rzF7hntWB",
+        "international": true,
+        "method": "card",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "Attikan Estate Coffee 250g, Ceramic Pour-Over Dripper",
+        "card_id": "card_TWihnFSoIMODp0",
+        "card": {
+          "id": "card_TWihnFSoIMODp0",
+          "entity": "card",
+          "name": "nishant chaudhary",
+          "last4": "1111",
+          "network": "Visa",
+          "type": "debit",
+          "issuer": null,
+          "international": true,
+          "emi": false,
+          "sub_type": "consumer",
+          "token_iin": "411111111"
+        },
+        "email": "nishantchaudhary03115@gmail.com",
+        "contact": "+916265424813",
+        "notes": {
+          "cart": "[{\"name\": \"Attikan Estate Coffee 250g\", \"price_paise\": 65000}, {\"name\": \"Ceramic Pour-Over Dripper\", \"price_paise\": 145000}]",
+          "customer_name": "nishant chaudhary",
+          "language": "en"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Your payment could not be completed as this business accepts domestic (Indian) card payments only. Try another payment method.",
+        "error_source": "business",
+        "error_step": "payment_initiation",
+        "error_reason": "international_transaction_not_allowed",
+        "acquirer_data": {
+          "auth_code": null
+        },
+        "created_at": 1788254232
+      }
+    }
+  },
+  "created_at": 1788254232
+}

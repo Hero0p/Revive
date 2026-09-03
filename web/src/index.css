@@ -1,0 +1,63 @@
+@import 'tailwindcss';
+
+/* An operations console for a payments team. Restrained, semantic, no
+   gradients. Amber for money at risk, not red -- at risk, not lost. */
+@theme {
+  --color-paper: #fbfbf9;
+  --color-ink: #16181c;
+  --color-muted: #6e7480;
+  --color-rule: #e4e4df;
+  --color-recovered: #0f7b4f;
+  --color-atrisk: #b4690e;
+  --color-blocked: #8a8f98;
+  --color-halt: #b02a1e;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Every number aligns in its column. */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The audit trail is a log, so it reads as a log. */
+.log {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+::selection {
+  background: #e8e5db;
+}

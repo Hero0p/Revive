@@ -1,0 +1,527 @@
+{
+  "seed": 7,
+  "note": "Hidden customer profiles used by the outcome oracle. These are assumptions, not measurements. The oracle never sees which policy produced an action.",
+  "intent_decay_units": "per hour",
+  "profiles": {
+    "case0000": {
+      "case_ref": "case0000",
+      "base_intent": 0.668,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.377,
+        "email": 0.184,
+        "whatsapp": 0.679
+      },
+      "intent_decay": 0.00377,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0001": {
+      "case_ref": "case0001",
+      "base_intent": 0.444,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.473,
+        "email": 0.224,
+        "whatsapp": 0.708
+      },
+      "intent_decay": 0.00596,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0002": {
+      "case_ref": "case0002",
+      "base_intent": 0.503,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.451,
+        "email": 0.295,
+        "whatsapp": 0.467
+      },
+      "intent_decay": 0.00355,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0003": {
+      "case_ref": "case0003",
+      "base_intent": 0.746,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.541,
+        "email": 0.144,
+        "whatsapp": 0.498
+      },
+      "intent_decay": 0.00549,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0004": {
+      "case_ref": "case0004",
+      "base_intent": 0.573,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.348,
+        "email": 0.28,
+        "whatsapp": 0.513
+      },
+      "intent_decay": 0.0049,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0005": {
+      "case_ref": "case0005",
+      "base_intent": 0.398,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.344,
+        "email": 0.277,
+        "whatsapp": 0.629
+      },
+      "intent_decay": 0.00358,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0006": {
+      "case_ref": "case0006",
+      "base_intent": 0.379,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.46,
+        "email": 0.188,
+        "whatsapp": 0.455
+      },
+      "intent_decay": 0.00498,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0007": {
+      "case_ref": "case0007",
+      "base_intent": 0.509,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.447,
+        "email": 0.161,
+        "whatsapp": 0.649
+      },
+      "intent_decay": 0.00431,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0008": {
+      "case_ref": "case0008",
+      "base_intent": 0.623,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.446,
+        "email": 0.202,
+        "whatsapp": 0.679
+      },
+      "intent_decay": 0.00268,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0009": {
+      "case_ref": "case0009",
+      "base_intent": 0.407,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.451,
+        "email": 0.201,
+        "whatsapp": 0.704
+      },
+      "intent_decay": 0.00371,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0010": {
+      "case_ref": "case0010",
+      "base_intent": 0.339,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.476,
+        "email": 0.173,
+        "whatsapp": 0.521
+      },
+      "intent_decay": 0.00528,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0011": {
+      "case_ref": "case0011",
+      "base_intent": 0.491,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.476,
+        "email": 0.17,
+        "whatsapp": 0.7
+      },
+      "intent_decay": 0.0028,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0012": {
+      "case_ref": "case0012",
+      "base_intent": 0.346,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.513,
+        "email": 0.147,
+        "whatsapp": 0.491
+      },
+      "intent_decay": 0.00587,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0013": {
+      "case_ref": "case0013",
+      "base_intent": 0.314,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.379,
+        "email": 0.167,
+        "whatsapp": 0.693
+      },
+      "intent_decay": 0.00211,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0014": {
+      "case_ref": "case0014",
+      "base_intent": 0.599,
+      "funds_available_on": "2026-03-30",
+      "channel_response": {
+        "sms": 0.493,
+        "email": 0.149,
+        "whatsapp": 0.621
+      },
+      "intent_decay": 0.00399,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0015": {
+      "case_ref": "case0015",
+      "base_intent": 0.714,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.387,
+        "email": 0.215,
+        "whatsapp": 0.674
+      },
+      "intent_decay": 0.00395,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0016": {
+      "case_ref": "case0016",
+      "base_intent": 0.484,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.323,
+        "email": 0.293,
+        "whatsapp": 0.771
+      },
+      "intent_decay": 0.00293,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0017": {
+      "case_ref": "case0017",
+      "base_intent": 0.599,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.471,
+        "email": 0.306,
+        "whatsapp": 0.663
+      },
+      "intent_decay": 0.00586,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0018": {
+      "case_ref": "case0018",
+      "base_intent": 0.499,
+      "funds_available_on": "2026-04-02",
+      "channel_response": {
+        "sms": 0.375,
+        "email": 0.295,
+        "whatsapp": 0.498
+      },
+      "intent_decay": 0.0026,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0019": {
+      "case_ref": "case0019",
+      "base_intent": 0.436,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.519,
+        "email": 0.247,
+        "whatsapp": 0.506
+      },
+      "intent_decay": 0.00392,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0020": {
+      "case_ref": "case0020",
+      "base_intent": 0.694,
+      "funds_available_on": "2026-04-02",
+      "channel_response": {
+        "sms": 0.356,
+        "email": 0.148,
+        "whatsapp": 0.771
+      },
+      "intent_decay": 0.00277,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0021": {
+      "case_ref": "case0021",
+      "base_intent": 0.378,
+      "funds_available_on": "2026-03-07",
+      "channel_response": {
+        "sms": 0.419,
+        "email": 0.252,
+        "whatsapp": 0.704
+      },
+      "intent_decay": 0.00308,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0022": {
+      "case_ref": "case0022",
+      "base_intent": 0.676,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.388,
+        "email": 0.165,
+        "whatsapp": 0.547
+      },
+      "intent_decay": 0.00426,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0023": {
+      "case_ref": "case0023",
+      "base_intent": 0.538,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.337,
+        "email": 0.239,
+        "whatsapp": 0.696
+      },
+      "intent_decay": 0.00243,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 20
+    },
+    "case0024": {
+      "case_ref": "case0024",
+      "base_intent": 0.628,
+      "funds_available_on": "2026-04-02",
+      "channel_response": {
+        "sms": 0.446,
+        "email": 0.266,
+        "whatsapp": 0.69
+      },
+      "intent_decay": 0.00543,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0025": {
+      "case_ref": "case0025",
+      "base_intent": 0.553,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.406,
+        "email": 0.275,
+        "whatsapp": 0.462
+      },
+      "intent_decay": 0.00379,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 8
+    },
+    "case0026": {
+      "case_ref": "case0026",
+      "base_intent": 0.736,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.501,
+        "email": 0.16,
+        "whatsapp": 0.531
+      },
+      "intent_decay": 0.00481,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0027": {
+      "case_ref": "case0027",
+      "base_intent": 0.498,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.361,
+        "email": 0.156,
+        "whatsapp": 0.554
+      },
+      "intent_decay": 0.00321,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0028": {
+      "case_ref": "case0028",
+      "base_intent": 0.675,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.413,
+        "email": 0.26,
+        "whatsapp": 0.538
+      },
+      "intent_decay": 0.00417,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0029": {
+      "case_ref": "case0029",
+      "base_intent": 0.491,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.426,
+        "email": 0.16,
+        "whatsapp": 0.681
+      },
+      "intent_decay": 0.00205,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": 15
+    },
+    "case0030": {
+      "case_ref": "case0030",
+      "base_intent": 0.771,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.509,
+        "email": 0.143,
+        "whatsapp": 0.499
+      },
+      "intent_decay": 0.00387,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0031": {
+      "case_ref": "case0031",
+      "base_intent": 0.477,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.373,
+        "email": 0.197,
+        "whatsapp": 0.552
+      },
+      "intent_decay": 0.00312,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0032": {
+      "case_ref": "case0032",
+      "base_intent": 0.392,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.502,
+        "email": 0.225,
+        "whatsapp": 0.753
+      },
+      "intent_decay": 0.00414,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0033": {
+      "case_ref": "case0033",
+      "base_intent": 0.544,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.347,
+        "email": 0.248,
+        "whatsapp": 0.675
+      },
+      "intent_decay": 0.00537,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0034": {
+      "case_ref": "case0034",
+      "base_intent": 0.594,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.367,
+        "email": 0.284,
+        "whatsapp": 0.603
+      },
+      "intent_decay": 0.00527,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0035": {
+      "case_ref": "case0035",
+      "base_intent": 0.447,
+      "funds_available_on": "2026-03-05",
+      "channel_response": {
+        "sms": 0.488,
+        "email": 0.288,
+        "whatsapp": 0.675
+      },
+      "intent_decay": 0.00383,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0036": {
+      "case_ref": "case0036",
+      "base_intent": 0.736,
+      "funds_available_on": "2026-03-28",
+      "channel_response": {
+        "sms": 0.425,
+        "email": 0.236,
+        "whatsapp": 0.731
+      },
+      "intent_decay": 0.0025,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0037": {
+      "case_ref": "case0037",
+      "base_intent": 0.668,
+      "funds_available_on": "2026-03-30",
+      "channel_response": {
+        "sms": 0.402,
+        "email": 0.174,
+        "whatsapp": 0.468
+      },
+      "intent_decay": 0.00517,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    },
+    "case0038": {
+      "case_ref": "case0038",
+      "base_intent": 0.684,
+      "funds_available_on": "2026-04-01",
+      "channel_response": {
+        "sms": 0.334,
+        "email": 0.203,
+        "whatsapp": 0.551
+      },
+      "intent_decay": 0.00228,
+      "needs_correct_advice": true,
+      "self_recovers_after_minutes": null
+    },
+    "case0039": {
+      "case_ref": "case0039",
+      "base_intent": 0.605,
+      "funds_available_on": "2026-03-25",
+      "channel_response": {
+        "sms": 0.495,
+        "email": 0.167,
+        "whatsapp": 0.595
+      },
+      "intent_decay": 0.00564,
+      "needs_correct_advice": false,
+      "self_recovers_after_minutes": null
+    }
+  }
+}

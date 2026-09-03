@@ -1,0 +1,18 @@
+=== live breaker internals ===
+consecutive_failures: 0
+_opened_at          : None
+real wall time now  : 2026-09-03 14:22:53.017514
+
+=== actions ever blocked with a Razorpay-unavailable reason ===
+5 such actions
+  action #1  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #4  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #5  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #6  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #532  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  ...
+  action #1  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #4  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #5  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #6  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s
+  action #532  executed_at=None  reason=Razorpay unavailable: circuit breaker open after 22 failures, retrying in 29s

@@ -1,0 +1,37 @@
+{
+  "_note": "Captured from a real test-mode checkout using Razorpay's documented 'Insufficient Funds' test card (4100 2800 0008 0001). It does NOT return error_reason=insufficient_fund -- it returns the same payment_failed catch-all as everything else, but with error_source=gateway (not bank), so it does not match R9_BANK_DECLINED's corroboration either. The system correctly escalates this to the review queue rather than guessing. See fixtures/captured/README.md.",
+  "entity": "event",
+  "event": "payment.failed",
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_TXVDJdxTJhF1Ch",
+        "entity": "payment",
+        "order_id": "order_TXV8URPdgOj6Ad",
+        "amount": 210000,
+        "currency": "INR",
+        "status": "failed",
+        "method": "card",
+        "card": {
+          "id": "card_TXVDJuEysIc6PZ",
+          "entity": "card",
+          "name": "",
+          "last4": "0001",
+          "network": "Visa",
+          "type": "debit",
+          "issuer": "DCBL",
+          "international": false,
+          "emi": false,
+          "sub_type": "consumer",
+          "token_iin": "410028000"
+        },
+        "bank": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_reason": "payment_failed",
+        "error_source": "gateway",
+        "error_step": "payment_authorization",
+        "error_description": "Payment failed"
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "entity": "event",
+  "event": "payment.failed",
+  "created_at": 1788268557,
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_TWmlzwqhSzylsS",
+        "entity": "payment",
+        "amount": 210000,
+        "amount_captured": null,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_TWmlM4QmugEDV9",
+        "invoice_id": null,
+        "international": false,
+        "method": "netbanking",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": false,
+        "description": "Attikan Estate Coffee 250g, Ceramic Pour-Over Dripper",
+        "card_id": null,
+        "bank": "IBKL",
+        "wallet": null,
+        "vpa": null,
+        "email": "aarav@example.com",
+        "contact": "+919812345678",
+        "notes": {
+          "cart": "[{\"name\": \"Attikan Estate Coffee 250g\", \"price_paise\": 65000}, {\"name\": \"Ceramic Pour-Over Dripper\", \"price_paise\": 145000}]",
+          "customer_name": "Aarav Sharma",
+          "language": "en"
+        },
+        "fee": null,
+        "tax": null,
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Your payment didn't go through as it was declined by the bank. Try another payment method or contact your bank.",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "acquirer_data": {
+          "bank_transaction_id": null
+        },
+        "created_at": 1788268557
+      }
+    }
+  }
+}

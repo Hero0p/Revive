@@ -1,0 +1,168 @@
+138:cursor = <sqlite3.Cursor object at 0x0000021DD882E340>
+145:E       sqlite3.OperationalError: database or disk is full
+147:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+197:cursor = <sqlite3.Cursor object at 0x0000021DD882E340>
+204:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+220:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+354:cursor = <sqlite3.Cursor object at 0x0000021DD9235E40>
+361:E       sqlite3.OperationalError: database or disk is full
+363:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+413:cursor = <sqlite3.Cursor object at 0x0000021DD9235E40>
+420:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+436:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+570:cursor = <sqlite3.Cursor object at 0x0000021DD90106C0>
+577:E       sqlite3.OperationalError: database or disk is full
+579:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+629:cursor = <sqlite3.Cursor object at 0x0000021DD90106C0>
+636:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+652:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+786:cursor = <sqlite3.Cursor object at 0x0000021DD90B06C0>
+793:E       sqlite3.OperationalError: database or disk is full
+795:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+845:cursor = <sqlite3.Cursor object at 0x0000021DD90B06C0>
+852:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+868:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1002:cursor = <sqlite3.Cursor object at 0x0000021DD920C440>
+1009:E       sqlite3.OperationalError: database or disk is full
+1011:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1061:cursor = <sqlite3.Cursor object at 0x0000021DD920C440>
+1068:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+1084:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1218:cursor = <sqlite3.Cursor object at 0x0000021DD8DA8940>
+1225:E       sqlite3.OperationalError: database or disk is full
+1227:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1277:cursor = <sqlite3.Cursor object at 0x0000021DD8DA8940>
+1284:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+1300:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1434:cursor = <sqlite3.Cursor object at 0x0000021DD89C7A40>
+1441:E       sqlite3.OperationalError: database or disk is full
+1443:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1493:cursor = <sqlite3.Cursor object at 0x0000021DD89C7A40>
+1500:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+1516:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1650:cursor = <sqlite3.Cursor object at 0x0000021DD6BF1440>
+1657:E       sqlite3.OperationalError: database or disk is full
+1659:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1709:cursor = <sqlite3.Cursor object at 0x0000021DD6BF1440>
+1716:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+1732:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1866:cursor = <sqlite3.Cursor object at 0x0000021DD90FE040>
+1873:E       sqlite3.OperationalError: database or disk is full
+1875:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+1925:cursor = <sqlite3.Cursor object at 0x0000021DD90FE040>
+1932:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+1948:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2082:cursor = <sqlite3.Cursor object at 0x0000021DD951D440>
+2089:E       sqlite3.OperationalError: database or disk is full
+2091:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2141:cursor = <sqlite3.Cursor object at 0x0000021DD951D440>
+2148:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+2164:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2298:cursor = <sqlite3.Cursor object at 0x0000021DD94A8B40>
+2305:E       sqlite3.OperationalError: database or disk is full
+2307:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2357:cursor = <sqlite3.Cursor object at 0x0000021DD94A8B40>
+2364:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+2380:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2514:cursor = <sqlite3.Cursor object at 0x0000021DD90128C0>
+2521:E       sqlite3.OperationalError: database or disk is full
+2523:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2573:cursor = <sqlite3.Cursor object at 0x0000021DD90128C0>
+2580:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+2596:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2730:cursor = <sqlite3.Cursor object at 0x0000021DD8DAB340>
+2737:E       sqlite3.OperationalError: database or disk is full
+2739:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2789:cursor = <sqlite3.Cursor object at 0x0000021DD8DAB340>
+2796:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+2812:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+2946:cursor = <sqlite3.Cursor object at 0x0000021DD920C340>
+2953:E       sqlite3.OperationalError: database or disk is full
+2955:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3005:cursor = <sqlite3.Cursor object at 0x0000021DD920C340>
+3012:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+3028:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3162:cursor = <sqlite3.Cursor object at 0x0000021DD8D84BC0>
+3169:E       sqlite3.OperationalError: database or disk is full
+3171:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3221:cursor = <sqlite3.Cursor object at 0x0000021DD8D84BC0>
+3228:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+3244:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3378:cursor = <sqlite3.Cursor object at 0x0000021DD8E80AC0>
+3385:E       sqlite3.OperationalError: database or disk is full
+3387:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3437:cursor = <sqlite3.Cursor object at 0x0000021DD8E80AC0>
+3444:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+3460:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3594:cursor = <sqlite3.Cursor object at 0x0000021DD951CB40>
+3601:E       sqlite3.OperationalError: database or disk is full
+3603:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3653:cursor = <sqlite3.Cursor object at 0x0000021DD951CB40>
+3660:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+3676:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3810:cursor = <sqlite3.Cursor object at 0x0000021DD9254AC0>
+3817:E       sqlite3.OperationalError: database or disk is full
+3819:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+3869:cursor = <sqlite3.Cursor object at 0x0000021DD9254AC0>
+3876:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+3892:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4026:cursor = <sqlite3.Cursor object at 0x0000021DD9363140>
+4033:E       sqlite3.OperationalError: database or disk is full
+4035:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4085:cursor = <sqlite3.Cursor object at 0x0000021DD9363140>
+4092:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+4108:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4242:cursor = <sqlite3.Cursor object at 0x0000021DD8A13BC0>
+4249:E       sqlite3.OperationalError: database or disk is full
+4251:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4301:cursor = <sqlite3.Cursor object at 0x0000021DD8A13BC0>
+4308:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+4324:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4458:cursor = <sqlite3.Cursor object at 0x0000021DD89C5D40>
+4465:E       sqlite3.OperationalError: database or disk is full
+4467:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4517:cursor = <sqlite3.Cursor object at 0x0000021DD89C5D40>
+4524:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+4540:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4674:cursor = <sqlite3.Cursor object at 0x0000021DD882E4C0>
+4681:E       sqlite3.OperationalError: database or disk is full
+4683:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4733:cursor = <sqlite3.Cursor object at 0x0000021DD882E4C0>
+4740:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+4756:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4890:cursor = <sqlite3.Cursor object at 0x0000021DD8DA9B40>
+4897:E       sqlite3.OperationalError: database or disk is full
+4899:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+4949:cursor = <sqlite3.Cursor object at 0x0000021DD8DA9B40>
+4956:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+4972:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5106:cursor = <sqlite3.Cursor object at 0x0000021DD9362C40>
+5113:E       sqlite3.OperationalError: database or disk is full
+5115:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5165:cursor = <sqlite3.Cursor object at 0x0000021DD9362C40>
+5172:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+5188:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5322:cursor = <sqlite3.Cursor object at 0x0000021DD8AE86C0>
+5329:E       sqlite3.OperationalError: database or disk is full
+5331:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5381:cursor = <sqlite3.Cursor object at 0x0000021DD8AE86C0>
+5388:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+5404:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5538:cursor = <sqlite3.Cursor object at 0x0000021DD9010140>
+5545:E       sqlite3.OperationalError: database or disk is full
+5547:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5597:cursor = <sqlite3.Cursor object at 0x0000021DD9010140>
+5604:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+5620:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5754:cursor = <sqlite3.Cursor object at 0x0000021DD882E5C0>
+5761:E       sqlite3.OperationalError: database or disk is full
+5763:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5813:cursor = <sqlite3.Cursor object at 0x0000021DD882E5C0>
+5820:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+5836:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+5970:cursor = <sqlite3.Cursor object at 0x0000021DD880F740>
+5977:E       sqlite3.OperationalError: database or disk is full
+5979:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+6034:cursor = <sqlite3.Cursor object at 0x0000021DD880F740>
+6041:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+6045:.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError

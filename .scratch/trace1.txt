@@ -1,0 +1,30 @@
+145:E       sqlite3.OperationalError: database or disk is full
+204:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+205:E       [SQL: 
+206:E       CREATE TABLE raw_events (
+207:E       	id INTEGER NOT NULL, 
+208:E       	event_type VARCHAR, 
+209:E       	payload_json TEXT, 
+210:E       	signature VARCHAR, 
+211:E       	received_at DATETIME, 
+212:E       	processed_at DATETIME, 
+213:E       	error TEXT, 
+214:E       	PRIMARY KEY (id)
+215:E       )
+216:E       
+217:E       ]
+218:E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+361:E       sqlite3.OperationalError: database or disk is full
+420:E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database or disk is full
+421:E       [SQL: 
+422:E       CREATE TABLE raw_events (
+423:E       	id INTEGER NOT NULL, 
+424:E       	event_type VARCHAR, 
+425:E       	payload_json TEXT, 
+426:E       	signature VARCHAR, 
+427:E       	received_at DATETIME, 
+428:E       	processed_at DATETIME, 
+429:E       	error TEXT, 
+430:E       	PRIMARY KEY (id)
+431:E       )
+432:E       

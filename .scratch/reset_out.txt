@@ -1,0 +1,1 @@
+{"razorpay":{"mode":"live","breaker":"closed","consecutive_failures":0,"reopens_in_seconds":0,"chaos_razorpay_down":false,"calls":0},"llm_down":false,"llm_configured":true,"llm_model":"openai/gpt-oss-20b"}
