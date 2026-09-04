@@ -2,14 +2,28 @@ import { useEffect, useState } from 'react'
 import { COMPARISON_COUNT, COMPARISON_SEED, api, awaitJob, jobProgress, rupeesShort } from '../api'
 import { MessagesVersusRecovered, RecoveryByCause } from '../components/charts'
 import { Box, Button, Empty, Metric, Panel, Spinner } from '../components/ui'
+import published from '../data/comparison.json'
 
 const SEED = COMPARISON_SEED
 const COUNT = COMPARISON_COUNT
 
+/* The Overview opens with the results of a real, committed run
+ * (scripts/export_comparison.py) instead of an empty page.
+ *
+ * A deployed instance starts with an empty database and a 3,000-case
+ * comparison takes minutes, so the first visitor would otherwise be met by a
+ * "nothing here yet, please wait" screen. These are the simulator's own
+ * numbers, and the run is seeded -- pressing Re-run recomputes exactly them.
+ * Live results replace these as soon as this instance has any. */
+const bundled = published.seed === SEED && published.count === COUNT ? published : null
+
 export default function Overview({ tick, go }) {
-  const [data, setData] = useState(null)
-  const [causes, setCauses] = useState({ baseline: null, router: null })
-  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState(bundled ? { policies: bundled.policies } : null)
+  const [causes, setCauses] = useState(
+    bundled ? bundled.causes : { baseline: null, router: null },
+  )
+  const [live, setLive] = useState(false)
+  const [loading, setLoading] = useState(!bundled)
   const [running, setRunning] = useState(false)
   const [job, setJob] = useState(null)
   const [failed, setFailed] = useState(null)
@@ -17,14 +31,18 @@ export default function Overview({ tick, go }) {
   const load = async () => {
     try {
       const comparison = await api.compare(SEED, COUNT)
-      setData(comparison)
       if (comparison.policies.baseline && comparison.policies.router) {
+        setData(comparison)
+        setLive(true)
         const [b, r] = await Promise.all([
           api.byCause(`baseline-s${SEED}-n${COUNT}`),
           api.byCause(`router-s${SEED}-n${COUNT}`),
         ])
         setCauses({ baseline: b.causes, router: r.causes })
       }
+    } catch {
+      // A sleeping or empty instance keeps the committed run on screen rather
+      // than blanking a page that was already showing real numbers.
     } finally {
       setLoading(false)
     }
@@ -147,6 +165,18 @@ export default function Overview({ tick, go }) {
         <p className="mt-2 text-[12px] text-muted">
           Self-recoveries — customers who would have paid unprompted — are excluded from both
           policies&rsquo; recovered totals. {router.self_recovered_count} in this batch.
+        </p>
+        <p className="mt-1 text-[12px] text-muted">
+          {live ? (
+            <>Computed on this instance, seed {SEED}.</>
+          ) : (
+            <>
+              Published run from {published.generated_at}: seed {SEED},{' '}
+              {COUNT.toLocaleString('en-IN')} failures, produced by this simulator and committed to
+              the repository. The run is seeded, so <em>Re-run both policies</em> reproduces these
+              exact figures here.
+            </>
+          )}
         </p>
       </Panel>
 

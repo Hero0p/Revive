@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 241 tests, ~10 seconds
+pytest        # 251 tests, ~10 seconds
 ```
 
 ### Environment variables
@@ -551,8 +551,17 @@ the wiring.
    check, which is computed over the exact request bytes. Subscribe to
    `payment.failed` and `payment.captured`, and use the same secret as
    `RAZORPAY_WEBHOOK_SECRET`.
-3. Open the Vercel URL and press **Run both policies** to populate the
-   comparison.
+3. Open the Vercel URL. The Overview already shows results — see below.
+
+**The Overview never shows an empty page.** It opens with a committed run
+(`web/src/data/comparison.json`, exported by
+[`scripts/export_comparison.py`](scripts/export_comparison.py)) that ships
+inside the frontend bundle, so a first visitor sees the numbers immediately
+even though a fresh instance has an empty database. Those are the simulator's
+own figures read back out of a real run, not hand-written ones, and the run is
+seeded — pressing **Re-run both policies** recomputes exactly them on the
+instance, at which point the screen switches to live results and says so. The
+Compare screen is always live and never uses the committed copy.
 
 A run takes minutes, which is far longer than Vercel's proxy or the browser
 will hold a request open — so `POST /api/runs` returns `202` straight away, the
@@ -579,7 +588,7 @@ difference between a bug costing nothing and a bug emailing a stranger.
 
 ## Tests
 
-241 tests, ~10 seconds. The suite is hermetic: it forces simulated mode and
+251 tests, ~10 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
@@ -593,6 +602,7 @@ never make the tests bill a real account or change their outcome.
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |
 | `test_delivery.py` | every delivery refusal, including a non-email channel refused rather than rerouted |
 | `test_razorpay_breaker.py` | the breaker surviving the demo clock being advanced, jumped, or reset while open; a payment_link failure never opening the order breaker |
+| `test_published_comparison.py` | the committed run the Overview opens with still matches the figures this README quotes |
 | `test_runs_api.py` | a comparison is backgrounded, answers in under a second, keeps the API answerable, refuses a concurrent run, and reports a failure instead of hanging |
 | `test_clock_lint.py` | no `datetime.now()` outside `clock.py` |
 
