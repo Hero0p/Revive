@@ -157,3 +157,79 @@ class TestEverySubjectExists:
             low = subject.lower()
             for marker in URGENCY_MARKERS:
                 assert marker not in low, f"{intent} subject uses '{marker}'"
+
+
+class TestTheHttpsTransport:
+    """SMTP is unusable on hosting platforms that block outbound mail ports --
+    Render fails every send with "[Errno 101] Network is unreachable". An email
+    API over HTTPS is the transport a deployed instance needs."""
+
+    def _resend_mode(self, monkeypatch):
+        monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
+        monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", True)
+        monkeypatch.setattr(delivery, "EMAIL_TRANSPORT", "resend")
+        monkeypatch.setattr(delivery, "RESEND_API_KEY", "re_test_key")
+        monkeypatch.setattr(delivery, "DELIVERY_ALLOWLIST", [])
+
+    def test_it_posts_to_the_email_api_instead_of_opening_smtp(self, monkeypatch):
+        self._resend_mode(monkeypatch)
+        sent = {}
+
+        class Response:
+            status_code = 200
+
+            @staticmethod
+            def json():
+                return {"id": "resend-123"}
+
+        def fake_post(url, **kwargs):
+            sent["url"] = url
+            sent["json"] = kwargs["json"]
+            sent["auth"] = kwargs["headers"]["Authorization"]
+            return Response()
+
+        monkeypatch.setattr(delivery.httpx, "post", fake_post)
+        # Any attempt to open SMTP here is the bug this transport exists to avoid.
+        monkeypatch.setattr(
+            delivery.smtplib,
+            "SMTP",
+            lambda *a, **k: pytest.fail("SMTP must not be used when RESEND_API_KEY is set"),
+        )
+
+        action, case, customer = make()
+        customer.email = "someone@example.com"
+        status, provider_id, detail = delivery.deliver(action, case, customer)
+
+        assert status == "sent"
+        assert provider_id == "resend-123"
+        assert sent["url"] == "https://api.resend.com/emails"
+        assert sent["json"]["to"] == ["someone@example.com"]
+        assert sent["json"]["subject"]
+        assert sent["auth"] == "Bearer re_test_key"
+
+    def test_an_api_error_is_recorded_rather_than_raised(self, monkeypatch):
+        self._resend_mode(monkeypatch)
+
+        class Response:
+            status_code = 422
+            text = "domain not verified"
+
+        monkeypatch.setattr(delivery.httpx, "post", lambda url, **kw: Response())
+
+        action, case, customer = make()
+        customer.email = "someone@example.com"
+        status, _, detail = delivery.deliver(action, case, customer)
+
+        assert status == "failed"
+        assert "422" in detail and "domain not verified" in detail
+
+
+class TestTheDeliveryStatusExposesMisconfiguration:
+    def test_it_flags_a_localhost_link(self, monkeypatch):
+        """A message linking to localhost is useless to whoever gets it, and
+        that is invisible from the outbox alone."""
+        monkeypatch.setattr(delivery, "EMAIL_TRANSPORT", "smtp")
+        status = delivery.status()
+        assert "public_base_url" in status
+        assert "public_base_url_is_local" in status
+        assert status["transport"] in ("smtp", "resend")

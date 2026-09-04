@@ -28,8 +28,15 @@ services:
 
       # The public URL that appears in every recovery message link. Set this to
       # the Vercel domain, not this service -- the resume page is meant to look
-      # like the merchant's own site.
+      # like the merchant's own site. If left unset the app falls back to
+      # RENDER_EXTERNAL_URL, which Render provides, so links still work.
       - key: PUBLIC_BASE_URL
+        sync: false
+
+      # Render blocks outbound SMTP, so Gmail credentials cannot deliver from
+      # here -- every send fails with "Network is unreachable". Set this to
+      # deliver over HTTPS instead. Get a key at resend.com.
+      - key: RESEND_API_KEY
         sync: false
 
       # Set in the Render dashboard, never committed.

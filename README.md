@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 254 tests, ~17 seconds
+pytest        # 260 tests, ~17 seconds
 ```
 
 ### Environment variables
@@ -93,7 +93,8 @@ starts and the full dashboard works with an empty `.env`.
 | `RAZORPAY_WEBHOOK_SECRET` | Verifying real webhooks. **The webhook secret from Settings → Webhooks, not the key secret** | Verification still runs against a dev default, so the simulator works |
 | `GROQ_API_KEY` | LLM-written message bodies. Free key from [console.groq.com/keys](https://console.groq.com/keys) | Hand-written templates, labelled as such in the outbox |
 | `RESUME_TOKEN_SECRET` | Signing resume links | A dev default; set any random string before anything real |
-| `PUBLIC_BASE_URL` | The domain in message links | `http://localhost:5173` |
+| `PUBLIC_BASE_URL` | The domain in message links | Falls back to `RENDER_EXTERNAL_URL` when deployed, then `http://localhost:5173`. **A message linking to localhost is useless to whoever gets it** |
+| `RESEND_API_KEY` / `RESEND_FROM` | Delivering email over HTTPS instead of SMTP | SMTP. Fine locally, but hosting platforms block outbound SMTP ports, so a deployed instance fails every send with "Network is unreachable" |
 | `CORS_ORIGINS` | A dashboard served from another origin | localhost only |
 | `DATABASE_URL` | Another SQLite file | `recovery.db` in the project root |
 | `DELIVER_FOR_REAL` | Actually sending email | `false`. Messages render to the outbox only |
@@ -583,16 +584,30 @@ is for.
 ### Before turning on real email
 
 Set `DELIVERY_ALLOWLIST` to your own address **first**, then
-`DELIVER_FOR_REAL=true` with `SMTP_USER` and `SMTP_APP_PASSWORD` (Gmail: enable
-2-step verification, then create an
-[App Password](https://myaccount.google.com/apppasswords)). The allowlist is the
-difference between a bug costing nothing and a bug emailing a stranger.
+`DELIVER_FOR_REAL=true`. The allowlist is the difference between a bug costing
+nothing and a bug emailing a stranger.
+
+Then pick a transport:
+
+- **Locally**, SMTP is easiest: `SMTP_USER` and `SMTP_APP_PASSWORD` (Gmail:
+  enable 2-step verification, then create an
+  [App Password](https://myaccount.google.com/apppasswords)).
+- **Deployed**, SMTP will not work. Render — like most hosting platforms —
+  blocks outbound SMTP ports to keep spammers off its address space, so every
+  send fails with `[Errno 101] Network is unreachable` however correct the
+  credentials are. Set `RESEND_API_KEY` instead ([resend.com](https://resend.com),
+  free tier) and delivery goes over HTTPS, which nothing blocks. The default
+  sender `onboarding@resend.dev` needs no domain of your own, which is enough
+  to email yourself; sending to anyone else needs a verified domain.
+
+Whichever is configured, the outbox row and the audit trail are identical — only
+the delivery fields differ.
 
 ---
 
 ## Tests
 
-254 tests, ~17 seconds. The suite is hermetic: it forces simulated mode and
+260 tests, ~17 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
@@ -604,9 +619,10 @@ never make the tests bill a real account or change their outcome.
 | `test_llm.py` | schema validation, fallback on every failure mode, generated text breaking a trust rule being thrown away |
 | `test_gate.py` | all seven checks, priority order, baseline enforcement, the contact cap surviving a wound-back clock |
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |
-| `test_delivery.py` | every delivery refusal, including a non-email channel refused rather than rerouted |
+| `test_delivery.py` | every delivery refusal, the HTTPS transport being used instead of SMTP when configured, and an API error being recorded rather than raised |
 | `test_razorpay_breaker.py` | the breaker surviving the demo clock being advanced, jumped, or reset while open; a payment_link failure never opening the order breaker |
 | `test_runs_api.py` | a comparison is backgrounded, answers in under a second, keeps the API answerable, refuses a concurrent run, reports failures instead of hanging, and an empty database seeds itself while one with data is left alone |
+| `test_public_base_url.py` | an explicit setting wins, a Render deployment falls back to its own URL, and local development still points locally |
 | `test_published_comparison.py` | the committed run the Overview opens with still matches the figures this README quotes |
 | `test_clock_lint.py` | no `datetime.now()` outside `clock.py` |
 

@@ -10,11 +10,14 @@ from app import worker
 from app.clock import clock, iso
 from app.config import (
     CORS_ORIGINS,
+    DELIVER_FOR_REAL,
     DEMO_SEED_COUNT,
+    EMAIL_TRANSPORT,
     LIVE_RAZORPAY,
     LLM_ENABLED,
     LLM_MODEL,
     PUBLIC_BASE_URL,
+    PUBLIC_BASE_URL_IS_LOCAL,
 )
 from app.db import create_all
 from app.razorpay_client import client
@@ -29,6 +32,21 @@ async def lifespan(app: FastAPI):
     # Returns immediately; the run happens on its own thread.
     if runs.seed_demo_if_empty():
         print(f"[startup] empty database -- seeding {DEMO_SEED_COUNT} demo cases in the background")
+    if DELIVER_FOR_REAL and PUBLIC_BASE_URL_IS_LOCAL:
+        # Every message links to PUBLIC_BASE_URL. Sending real email whose only
+        # link points at localhost delivers a message the recipient cannot act
+        # on, and nothing downstream can tell that has happened.
+        print(
+            "[startup] WARNING: real delivery is on but PUBLIC_BASE_URL is "
+            f"{PUBLIC_BASE_URL!r}. Recovery messages will link somewhere the "
+            "recipient cannot open. Set PUBLIC_BASE_URL to the public address."
+        )
+    if DELIVER_FOR_REAL and EMAIL_TRANSPORT == "smtp":
+        print(
+            "[startup] note: delivering over SMTP. Most hosting platforms block "
+            "outbound SMTP ports -- set RESEND_API_KEY to deliver over HTTPS if "
+            "sends fail with 'Network is unreachable'."
+        )
     task = asyncio.create_task(worker.worker_loop())
     yield
     task.cancel()

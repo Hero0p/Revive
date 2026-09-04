@@ -1,7 +1,7 @@
 """Actually sending the message.
 
 Everything upstream of this file decides *what* to send and *when*. This file
-is the only place that talks to a mail server, and it refuses to send in six
+is the only place that sends anything, and it refuses to send in six
 situations:
 
   - delivery is switched off (the default)
@@ -11,25 +11,37 @@ situations:
     regressing, not a feature
   - the recipient is not on the allowlist, when one is set
   - there is no address, or no body
-  - email is not configured
+  - no email transport is configured
 
 A refusal is recorded on the action, not swallowed. The outbox row is written
 before this runs either way, so the audit trail is identical whether or not a
 real message left the building.
 
-Email is the only channel and the only transport, by design. Real SMS to
-Indian numbers needs DLT registration with a telecom operator, which is a
-commercial process rather than an API key, so it was never implemented.
+Email is the only channel, by design. Real SMS to Indian numbers needs DLT
+registration with a telecom operator, which is a commercial process rather
+than an API key, so it was never implemented.
+
+There are two transports for it. SMTP is the default and needs no third-party
+account, which is what makes a local demo easy. It is also unusable on most
+hosting platforms: Render and friends block outbound SMTP ports outright, so
+every send from a deployed instance fails with "Network is unreachable" no
+matter how correct the credentials are. Setting RESEND_API_KEY switches to an
+email API over HTTPS, which nothing blocks.
 """
 
 import smtplib
 from email.message import EmailMessage
 from email.utils import formataddr, make_msgid
 
+import httpx
+
 from app.config import (
     DELIVER_FOR_REAL,
     DELIVERY_ALLOWLIST,
     EMAIL_CONFIGURED,
+    EMAIL_TRANSPORT,
+    RESEND_API_KEY,
+    RESEND_FROM,
     SMTP_APP_PASSWORD,
     SMTP_FROM_NAME,
     SMTP_HOST,
@@ -78,7 +90,7 @@ def deliver(
         return "skipped", None, f"channel {action.channel!r} is not supported, email only"
 
     if not EMAIL_CONFIGURED:
-        return "skipped", None, "SMTP_USER / SMTP_APP_PASSWORD not set"
+        return "skipped", None, "no email transport configured (RESEND_API_KEY, or SMTP_USER / SMTP_APP_PASSWORD)"
 
     body = action.message_body or ""
     if not body:
@@ -100,8 +112,33 @@ def deliver(
 
 
 def _send_email(recipient: str, action: Action, body: str) -> str:
+    subject = SUBJECTS.get(action.message_intent, "About your recent order")
+    if EMAIL_TRANSPORT == "resend":
+        return _send_via_resend(recipient, subject, body)
+    return _send_via_smtp(recipient, subject, body)
+
+
+def _send_via_resend(recipient: str, subject: str, body: str) -> str:
+    """One HTTPS call. Raises on any non-2xx so deliver() records the reason."""
+    response = httpx.post(
+        "https://api.resend.com/emails",
+        headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+        json={
+            "from": formataddr((SMTP_FROM_NAME, RESEND_FROM)),
+            "to": [recipient],
+            "subject": subject,
+            "text": body,
+        },
+        timeout=TIMEOUT,
+    )
+    if response.status_code >= 300:
+        raise ConnectionError(f"resend {response.status_code}: {response.text}")
+    return response.json().get("id", "")
+
+
+def _send_via_smtp(recipient: str, subject: str, body: str) -> str:
     message = EmailMessage()
-    message["Subject"] = SUBJECTS.get(action.message_intent, "About your recent order")
+    message["Subject"] = subject
     message["From"] = formataddr((SMTP_FROM_NAME, SMTP_USER))
     message["To"] = recipient
     # Set explicitly: without it the audit trail records no usable id, and
@@ -119,9 +156,16 @@ def _send_email(recipient: str, action: Action, body: str) -> str:
 
 def status() -> dict:
     """What the dashboard shows about delivery configuration."""
+    from app.config import PUBLIC_BASE_URL, PUBLIC_BASE_URL_IS_LOCAL
+
     return {
         "deliver_for_real": DELIVER_FOR_REAL,
         "email_configured": EMAIL_CONFIGURED,
+        "transport": EMAIL_TRANSPORT,
         "allowlist": DELIVERY_ALLOWLIST,
-        "from_email": SMTP_USER or None,
+        "from_email": (RESEND_FROM if EMAIL_TRANSPORT == "resend" else SMTP_USER) or None,
+        "public_base_url": PUBLIC_BASE_URL,
+        # Surfaced because a link pointing at localhost is useless to whoever
+        # receives the message, and that is invisible from the outbox alone.
+        "public_base_url_is_local": PUBLIC_BASE_URL_IS_LOCAL,
     }

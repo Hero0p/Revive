@@ -14,7 +14,23 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
 RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "dev-webhook-secret")
 RESUME_TOKEN_SECRET = os.getenv("RESUME_TOKEN_SECRET", "dev-resume-secret")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://revive-eight-orpin.vercel.app/").rstrip("/")
+# The domain every recovery message links to.
+#
+# Falls back to RENDER_EXTERNAL_URL, which Render sets on its own, before
+# falling back to localhost -- a message whose only link points at localhost is
+# useless to whoever receives it, and that is exactly what a deployed instance
+# produced before this. Set PUBLIC_BASE_URL explicitly to the dashboard's own
+# domain; the Render fallback only exists so a deployment is never silently
+# broken, and the localhost default keeps local development pointing locally.
+PUBLIC_BASE_URL = (
+    os.getenv("PUBLIC_BASE_URL")
+    or os.getenv("RENDER_EXTERNAL_URL")
+    or "http://localhost:5173"
+).rstrip("/")
+
+PUBLIC_BASE_URL_IS_LOCAL = any(
+    host in PUBLIC_BASE_URL for host in ("localhost", "127.0.0.1", "0.0.0.0", "[::1]")
+)
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{ROOT / 'recovery.db'}")
 
@@ -86,4 +102,21 @@ SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_APP_PASSWORD = os.getenv("SMTP_APP_PASSWORD", "")
 SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "Blue Tokai Coffee")
 
-EMAIL_CONFIGURED = bool(SMTP_USER and SMTP_APP_PASSWORD)
+# Delivery over HTTPS instead of SMTP.
+#
+# Most hosting platforms block outbound SMTP (ports 25/465/587) to keep
+# spammers off their address space, and Render is one of them -- a deployed
+# instance fails every send with "[Errno 101] Network is unreachable" no matter
+# how correct the Gmail credentials are. An email API speaks HTTPS on 443,
+# which is never blocked, so that is the transport a deployment needs.
+#
+# SMTP stays the default because it needs no third-party account to demo
+# locally. Setting RESEND_API_KEY switches transports.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+# Resend's shared sender works with no domain of your own, which is enough for
+# a demo that emails its operator. A verified domain is needed to send to
+# anyone else.
+RESEND_FROM = os.getenv("RESEND_FROM", "onboarding@resend.dev")
+
+EMAIL_CONFIGURED = bool(RESEND_API_KEY) or bool(SMTP_USER and SMTP_APP_PASSWORD)
+EMAIL_TRANSPORT = "resend" if RESEND_API_KEY else "smtp"
