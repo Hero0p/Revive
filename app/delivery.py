@@ -106,7 +106,7 @@ def _send_email(recipient: str, action: Action, body: str) -> str:
     message["To"] = recipient
     # Set explicitly: without it the audit trail records no usable id, and
     # this is the only handle on the message once it has left.
-    message["Message-ID"] = make_msgid(domain="recovery-router.local")
+    message["Message-ID"] = make_msgid(domain="revive.local")
     message.set_content(body)
 
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=TIMEOUT) as server:

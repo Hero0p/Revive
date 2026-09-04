@@ -1,0 +1,57 @@
+# Render blueprint for the Revive API.
+#
+# The dashboard (web/) deploys separately to Vercel; see the README.
+#
+# Note on storage: this runs on SQLite, and Render's filesystem is ephemeral
+# unless you attach a paid persistent disk. Every deploy and every restart
+# therefore starts with an empty database, so the 3,000-case comparison has to
+# be re-run from the dashboard afterwards. Live cases created through the
+# Checkout screen do not survive a restart either. That is fine for a demo and
+# not fine for anything else -- see the README's deployment section.
+services:
+  - type: web
+    name: revive-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+
+      # The Vercel domain, so the dashboard can call this API from the browser.
+      # Not needed if the frontend proxies /api through vercel.json rewrites,
+      # which is the setup the README walks through.
+      - key: CORS_ORIGINS
+        sync: false
+
+      # The public URL that appears in every recovery message link. Set this to
+      # the Vercel domain, not this service -- the resume page is meant to look
+      # like the merchant's own site.
+      - key: PUBLIC_BASE_URL
+        sync: false
+
+      # Set in the Render dashboard, never committed.
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: RESUME_TOKEN_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false
+
+      # Real delivery stays off until you deliberately turn it on, and the
+      # allowlist is the difference between a bug costing nothing and a bug
+      # emailing a stranger.
+      - key: DELIVER_FOR_REAL
+        value: "false"
+      - key: DELIVERY_ALLOWLIST
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_APP_PASSWORD
+        sync: false

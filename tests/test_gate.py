@@ -200,10 +200,19 @@ class TestTheContactCapIsConfigurable:
     settable only because a live demo runs every test checkout through one
     phone number, so they are all one customer."""
 
-    def test_the_default_is_still_twenty_four_hours(self):
-        from app.config import MIN_HOURS_BETWEEN_CONTACTS
+    def test_the_shipped_default_is_still_twenty_four_hours(self):
+        """Read from .env.example, not from the loaded config: the config is
+        pinned by conftest, and what actually matters is that the value a new
+        clone gets -- the one every published result assumes -- has not been
+        quietly loosened."""
+        from pathlib import Path
 
-        assert MIN_HOURS_BETWEEN_CONTACTS == 24
+        shipped = Path(__file__).resolve().parents[1] / ".env.example"
+        line = next(
+            l for l in shipped.read_text(encoding="utf-8").splitlines()
+            if l.startswith("MIN_HOURS_BETWEEN_CONTACTS=")
+        )
+        assert line.split("=", 1)[1].strip() == "24"
 
     def test_zero_lets_back_to_back_messages_through(self, monkeypatch):
         monkeypatch.setattr("app.gate.MIN_HOURS_BETWEEN_CONTACTS", 0)

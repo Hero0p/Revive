@@ -18,6 +18,16 @@ PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:5173").rstrip("
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{ROOT / 'recovery.db'}")
 
+# Browser origins allowed to call the API. The local dev server is always
+# allowed; a deployed frontend on another origin (Vercel) has to be named here.
+# Not needed when the frontend proxies /api to the backend on its own domain,
+# which is what vercel.json does -- the browser then sees one origin.
+CORS_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+] + ["http://localhost:5173", "http://127.0.0.1:5173"]
+
 LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
 # Only meaningful for reasoning models. Blank it when pointing LLM_MODEL at a
 # model that rejects the parameter.

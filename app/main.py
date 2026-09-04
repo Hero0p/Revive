@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import worker
 from app.clock import clock, iso
-from app.config import LIVE_RAZORPAY, LLM_ENABLED, LLM_MODEL, PUBLIC_BASE_URL
+from app.config import CORS_ORIGINS, LIVE_RAZORPAY, LLM_ENABLED, LLM_MODEL, PUBLIC_BASE_URL
 from app.db import create_all
 from app.razorpay_client import client
 from app.routes import cases, orders, runs, sim, webhooks
@@ -26,7 +26,7 @@ app = FastAPI(title="Revive", version="1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

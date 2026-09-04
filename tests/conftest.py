@@ -7,7 +7,7 @@ from pathlib import Path
 # directory, which on a dev machine with a full system drive raises
 # "database or disk is full" for a database that is a few KB. Keeping it
 # beside the project ties it to whichever drive the project itself is on.
-TEST_DB = Path(__file__).resolve().parents[1] / ".pytest_tmp" / "recovery_router_test.db"
+TEST_DB = Path(__file__).resolve().parents[1] / ".pytest_tmp" / "revive_test.db"
 TEST_DB.parent.mkdir(exist_ok=True)
 if TEST_DB.exists():
     TEST_DB.unlink()
@@ -30,3 +30,9 @@ os.environ["RAZORPAY_KEY_SECRET"] = "test-key-secret"
 for _key in ("DELIVERY_ALLOWLIST", "SMTP_USER", "SMTP_APP_PASSWORD"):
     os.environ[_key] = ""
 os.environ["DELIVER_FOR_REAL"] = "false"
+
+# Pinned to the product default. This one is loosened to 0 in a local .env to
+# demo back-to-back checkouts through a single phone number, and the gate tests
+# assert the shipped 24-hour behaviour -- they must not start passing or
+# failing based on how someone last set up their demo.
+os.environ["MIN_HOURS_BETWEEN_CONTACTS"] = "24"
