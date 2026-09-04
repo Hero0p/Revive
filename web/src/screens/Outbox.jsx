@@ -82,6 +82,21 @@ export default function Outbox({ tick, onOpenCase }) {
                 <span>{m.order_id}</span>
                 <span>{m.message_intent}</span>
                 {m.message_source && <span>written by {m.message_source}</span>}
+                {/* "sent" here means the outbox row was written, which is not
+                    the same as a mail server accepting it. Without this, a
+                    message refused by the allowlist reads as delivered. */}
+                {m.status === 'sent' && (
+                  <span
+                    className={
+                      { sent: 'text-recovered', failed: 'text-halt' }[m.delivery_status] ||
+                      'text-atrisk'
+                    }
+                  >
+                    {m.delivery_status === 'sent'
+                      ? 'delivered'
+                      : `not delivered — ${m.delivery_detail || 'rendered to the outbox only'}`}
+                  </span>
+                )}
                 {m.suggests_alt_method && (
                   <span className="text-recovered">offers another payment method</span>
                 )}

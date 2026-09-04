@@ -31,6 +31,16 @@ LLM_ENABLED = bool(GROQ_API_KEY)
 SEED = 42
 LIVE_RAZORPAY = bool(RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET)
 
+# The gate's per-customer contact cap, in hours. 24 is the product default and
+# what every published result uses -- one message per customer per day, across
+# all of their cases, is the whole anti-spam position.
+#
+# It is configurable only because repeated live test checkouts all share one
+# phone number, so they are all one customer, and every checkout after the
+# first is correctly deferred a full day. Set it to 0 to demo back-to-back
+# checkouts. Leave it alone for anything you intend to quote.
+MIN_HOURS_BETWEEN_CONTACTS = float(os.getenv("MIN_HOURS_BETWEEN_CONTACTS", "24"))
+
 # --- Real delivery -------------------------------------------------------
 # Off by default, and deliberately so: with this on, advancing the clock sends
 # real messages to real people. Synthetic runs never deliver regardless.

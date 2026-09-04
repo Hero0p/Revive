@@ -7,7 +7,7 @@ failure. Nothing in this codebase calls a send API without an outbox row.
 import json
 from datetime import datetime
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.gate import GateResult
@@ -103,14 +103,6 @@ def mark_blocked(session: Session, action: Action, reason: str, now: datetime) -
     session.flush()
 
 
-def mark_failed(session: Session, action: Action, reason: str, now: datetime) -> None:
-    """Left pending-with-an-error so the worker retries when the breaker closes."""
-    action.status = "failed"
-    action.blocked_reason = reason
-    action.executed_at = now
-    session.flush()
-
-
 def defer(session: Session, action: Action, until: datetime, reason: str) -> None:
     action.scheduled_for = until
     action.blocked_reason = reason
@@ -140,11 +132,13 @@ def attach_message_meta(
 
 
 def sent_count(session: Session, case_id: int) -> int:
-    return len(
-        session.scalars(
-            select(Action).where(Action.case_id == case_id, Action.status == "sent")
-        ).all()
-    )
+    """COUNT(*), not len(list). This runs once per action executed, so loading
+    whole Action rows just to count them is pure waste at batch sizes."""
+    return session.scalar(
+        select(func.count())
+        .select_from(Action)
+        .where(Action.case_id == case_id, Action.status == "sent")
+    ) or 0
 
 
 def due_actions(session: Session, now: datetime, run_id: str | None = None) -> list[Action]:

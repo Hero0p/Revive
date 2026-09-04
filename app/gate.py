@@ -8,11 +8,11 @@ not just what it did.
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 
+from app.config import MIN_HOURS_BETWEEN_CONTACTS
 from app.models import Action, Case, Customer
 
 QUIET_START_HOUR = 21  # 21:00 IST
 QUIET_END_HOUR = 9  # 09:00 IST
-MIN_HOURS_BETWEEN_CONTACTS = 24
 MAX_DISCOUNT_PAISE = 50_000  # INR 500
 MAX_DISCOUNT_FRACTION = 0.05  # 5% of the order
 
@@ -128,9 +128,24 @@ def check(
         elapsed = now - customer.last_contacted_at
         too_soon = elapsed < timedelta(hours=MIN_HOURS_BETWEEN_CONTACTS)
         if too_soon:
-            candidate = customer.last_contacted_at + timedelta(hours=MIN_HOURS_BETWEEN_CONTACTS)
+            # Never defer further than the cap itself. last_contacted_at can sit
+            # in the future whenever the demo clock is wound back -- a reset, or
+            # a --reload restart, both of which drop the offset while the stored
+            # timestamp keeps the time it was written at. Deferring to
+            # last_contacted_at + 24h then pushes the action days out and the
+            # demo looks dead, when the rule only ever meant "not within 24h".
+            candidate = min(
+                customer.last_contacted_at + timedelta(hours=MIN_HOURS_BETWEEN_CONTACTS),
+                now + timedelta(hours=MIN_HOURS_BETWEEN_CONTACTS),
+            )
             defer_until = max(defer_until, candidate) if defer_until else candidate
-        detail = f"Last contacted {elapsed.total_seconds() / 3600:.1f}h ago"
+        hours = elapsed.total_seconds() / 3600
+        detail = (
+            f"Last contacted {hours:.1f}h ago"
+            if hours >= 0
+            else f"Last contact is stamped {abs(hours):.1f}h in the future "
+            f"(the clock was wound back); treating it as just now"
+        )
     else:
         detail = "Never contacted before"
     checks.append(

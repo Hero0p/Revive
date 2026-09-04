@@ -5,7 +5,7 @@ import { Box, Button, Empty, Panel, Spinner, Td, Th, inputClass } from '../compo
 
 export default function Compare({ tick, onChange }) {
   const [seed, setSeed] = useState(42)
-  const [count, setCount] = useState(200)
+  const [count, setCount] = useState(3000)
   const [data, setData] = useState(null)
   const [causes, setCauses] = useState(null)
   const [sweep, setSweep] = useState(null)

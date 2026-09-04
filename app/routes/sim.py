@@ -6,12 +6,11 @@ parallel code path -- the payload is synthetic, the pipeline is identical.
 """
 
 import json
-from datetime import datetime
 
 import httpx
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app import llm, worker
@@ -21,7 +20,7 @@ from app.db import get_session, reset_database
 from app.models import Action, Case
 from app.razorpay_client import client as razorpay
 from app.routes.webhooks import sign
-from app.rules import ERROR_CODE_REASONS, error_code_for
+from app.rules import error_code_for
 
 router = APIRouter(prefix="/api")
 
@@ -155,16 +154,37 @@ def read_clock():
 def advance_clock(body: dict, session: Session = Depends(get_session)):
     """{"days": 3} | {"minutes": 30} | {"to_next_action": true}"""
     if body.get("to_next_action"):
+        now = clock.now()
+        # Only ever jump *forward*. An action left pending in the past -- an old
+        # case, or anything scheduled before the clock was last reset -- is
+        # already due, so it needs a tick, not a rewind. Jumping back to it used
+        # to drag the clock days backwards, which put every other scheduled
+        # action in the far future and made the demo look frozen.
         target = session.scalar(
             select(Action.scheduled_for)
             .join(Case, Case.id == Action.case_id)
-            .where(Action.status == "pending", Case.run_id.is_(None))
+            .where(
+                Action.status == "pending",
+                Case.run_id.is_(None),
+                Action.scheduled_for > now,
+            )
             .order_by(Action.scheduled_for)
             .limit(1)
         )
-        if target is None:
+        overdue = session.scalar(
+            select(func.count())
+            .select_from(Action)
+            .join(Case, Case.id == Action.case_id)
+            .where(
+                Action.status == "pending",
+                Case.run_id.is_(None),
+                Action.scheduled_for <= now,
+            )
+        )
+        if target is None and not overdue:
             return {**_clock_state(), "ran": {}, "note": "nothing scheduled"}
-        clock.jump_to(target)
+        if target is not None and not overdue:
+            clock.jump_to(target)
     else:
         deltas = {k: v for k, v in body.items() if k in {"days", "hours", "minutes", "seconds"}}
         clock.advance(**(deltas or {"minutes": 5}))
@@ -176,12 +196,6 @@ def advance_clock(body: dict, session: Session = Depends(get_session)):
 @router.post("/clock/reset")
 def reset_clock():
     clock.reset()
-    return _clock_state()
-
-
-@router.post("/clock/freeze")
-def freeze_clock():
-    clock.freeze()
     return _clock_state()
 
 
@@ -207,11 +221,6 @@ def chaos_status():
         "llm_configured": LLM_ENABLED,
         "llm_model": LLM_MODEL if LLM_ENABLED else None,
     }
-
-
-@router.get("/error-reasons")
-def error_reasons():
-    return {"error_codes": ERROR_CODE_REASONS}
 
 
 @router.post("/demo/reset")

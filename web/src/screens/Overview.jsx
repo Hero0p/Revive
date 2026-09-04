@@ -4,7 +4,7 @@ import { MessagesVersusRecovered, RecoveryByCause } from '../components/charts'
 import { Box, Button, Empty, Metric, Panel, Spinner } from '../components/ui'
 
 const SEED = 42
-const COUNT = 200
+const COUNT = 3000
 
 export default function Overview({ tick, go }) {
   const [data, setData] = useState(null)
@@ -55,11 +55,13 @@ export default function Overview({ tick, go }) {
           title="No comparison has been run yet"
           action={
             <Button kind="primary" onClick={runBoth} disabled={running}>
-              {running ? 'Running…' : `Run both policies over ${COUNT} failures`}
+              {running ? 'Running… (about two minutes)' : `Run both policies over ${COUNT} failures`}
             </Button>
           }
         >
-          Both policies see the same {COUNT} synthetic failures, from seed {SEED}.
+          Both policies see the same {COUNT.toLocaleString('en-IN')} synthetic failures, from seed{' '}
+          {SEED}. Every case is driven through the real pipeline, so the run takes roughly two
+          minutes.
         </Empty>
       </>
     )
@@ -151,7 +153,7 @@ export default function Overview({ tick, go }) {
 
       <div className="flex gap-2">
         <Button onClick={runBoth} disabled={running}>
-          {running ? 'Running…' : 'Re-run both policies'}
+          {running ? 'Running… (about two minutes)' : 'Re-run both policies'}
         </Button>
         <Button kind="quiet" onClick={() => go('compare')}>
           See the full comparison

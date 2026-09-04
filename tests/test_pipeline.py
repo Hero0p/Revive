@@ -3,7 +3,7 @@
 import hashlib
 import hmac
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
@@ -759,3 +759,99 @@ class TestResumePage:
         post(client, capture_event())
         page = client.get(url.replace("http://localhost:5173", ""))
         assert "already paid" in page.text
+
+
+class TestJumpToNextAction:
+    """'Jump to next action' is the control the whole demo is driven with. It
+    must always move time forward."""
+
+    def _pending_action_at(self, when, order_id):
+        session = SessionLocal()
+        case = Case(
+            razorpay_order_id=order_id,
+            amount_paise=210000,
+            status="planned",
+            error_reason="payment_timed_out",
+            root_cause="transient_network",
+            failed_at=when,
+        )
+        session.add(case)
+        session.flush()
+        session.add(
+            Action(
+                case_id=case.id,
+                action_type="send_link",
+                channel="email",
+                message_intent="reassure_and_resume",
+                message_index=1,
+                scheduled_for=when,
+                status="pending",
+                idempotency_key=f"{order_id}:1",
+            )
+        )
+        session.commit()
+        session.close()
+
+    def test_an_action_left_in_the_past_never_drags_the_clock_backwards(self, client):
+        """A stale pending action -- an old case, or one scheduled before the
+        clock was last reset -- is already due. Jumping back to it used to
+        rewind the clock days, which pushed everything else into the far
+        future and made the demo look frozen."""
+        self._pending_action_at(clock.now() - timedelta(days=3), "order_stale")
+        before = clock.now()
+
+        client.post("/api/clock/advance", json={"to_next_action": True})
+
+        assert clock.now() >= before
+
+    def test_the_overdue_action_still_runs(self, client):
+        self._pending_action_at(clock.now() - timedelta(days=3), "order_overdue")
+
+        ran = client.post("/api/clock/advance", json={"to_next_action": True}).json()["ran"]
+
+        assert ran.get("sent") == 1
+
+    def test_a_future_action_is_still_jumped_to(self, client):
+        target = clock.now() + timedelta(days=2)
+        self._pending_action_at(target, "order_future")
+
+        client.post("/api/clock/advance", json={"to_next_action": True})
+
+        assert clock.now() >= target
+
+    def test_nothing_scheduled_says_so(self, client):
+        result = client.post("/api/clock/advance", json={"to_next_action": True}).json()
+        assert result["note"] == "nothing scheduled"
+
+
+class TestTheCheckoutEmailWins:
+    """Razorpay's modal auto-fills saved details for a returning phone number,
+    so the payment entity's email is often an older address tied to that
+    number. The recovery message has to reach the address the customer typed
+    on the merchant's own form."""
+
+    def test_the_order_note_email_beats_the_payment_entity_email(self, client):
+        event = failure_event(reason="payment_timed_out")
+        entity = event["payload"]["payment"]["entity"]
+        entity["email"] = "autofilled-by-razorpay@example.com"
+        entity["notes"]["email"] = "typed-at-checkout@example.com"
+
+        post(client, event)
+
+        session = SessionLocal()
+        customer = session.scalars(select(Customer)).one()
+        assert customer.email == "typed-at-checkout@example.com"
+        session.close()
+
+    def test_it_falls_back_to_the_entity_when_the_order_carried_no_email(self, client):
+        event = failure_event(reason="payment_timed_out")
+        entity = event["payload"]["payment"]["entity"]
+        entity["email"] = "only-from-razorpay@example.com"
+        entity["notes"].pop("email", None)
+
+        post(client, event)
+
+        session = SessionLocal()
+        customer = session.scalars(select(Customer)).one()
+        assert customer.email == "only-from-razorpay@example.com"
+        session.close()

@@ -142,10 +142,22 @@ export default function Cases({ tick, onOpenCase }) {
                   </Td>
                   <Td>
                     {c.next_action_at ? (
-                      <span className="num">
-                        {when(c.next_action_at)}
-                        <span className="ml-1.5 text-muted">{c.next_action_channel}</span>
-                      </span>
+                      <>
+                        <span className="num">
+                          {when(c.next_action_at)}
+                          <span className="ml-1.5 text-muted">{c.next_action_channel}</span>
+                        </span>
+                        {/* A 2nd message is a day out by design, and a deferred
+                            one is off the rule's schedule entirely. Saying so
+                            stops either looking like a broken delay. */}
+                        {(c.next_action_index > 1 || c.next_action_deferred) && (
+                          <div className="text-[11px] text-muted">
+                            {c.next_action_index > 1 && `follow-up (message ${c.next_action_index})`}
+                            {c.next_action_index > 1 && c.next_action_deferred && ' · '}
+                            {c.next_action_deferred && `held: ${c.next_action_deferred}`}
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <span className="text-muted">—</span>
                     )}

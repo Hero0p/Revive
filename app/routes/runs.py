@@ -54,17 +54,6 @@ def list_runs(session: Session = Depends(get_session)):
     return {"runs": [_metric_row(r) for r in rows]}
 
 
-@router.get("/runs/{run_id}/metrics")
-def run_metrics(run_id: str, session: Session = Depends(get_session)):
-    row = session.scalar(select(RunMetric).where(RunMetric.run_id == run_id))
-    if row is None:
-        raise HTTPException(404, "run not found")
-    return {
-        "stored": _metric_row(row),
-        "computed": simulator.compute_metrics(session, run_id),
-    }
-
-
 @router.get("/runs/{run_id}/by-cause")
 def by_cause(run_id: str, session: Session = Depends(get_session)):
     """Recovery broken down by failure cause. Drives the overview chart."""

@@ -62,6 +62,11 @@ def create_order(body: OrderRequest):
             notes={
                 "cart": json.dumps(body.cart),
                 "customer_name": body.customer_name,
+                # Carried so the failure arrives with the address the customer
+                # actually typed here, not whatever Razorpay's modal auto-fills
+                # for a returning phone number. See find_or_create_customer.
+                "email": body.email,
+                "contact": body.contact,
             },
         )
     except RazorpayDown as exc:

@@ -210,10 +210,18 @@ def find_or_create_customer(
     session: Session, entity: dict, run_id: str | None = None
 ) -> Customer:
     contact = entity.get("contact") or ""
-    email = entity.get("email") or ""
     notes = entity.get("notes") or {}
     name = notes.get("customer_name") or ""
     language = notes.get("language") or ""
+
+    # The address the customer typed on the merchant's own checkout form wins
+    # over the one Razorpay reports on the payment. Razorpay's modal auto-fills
+    # saved details for a returning phone number, so entity.email is routinely
+    # some earlier address tied to that number rather than the one this
+    # customer just gave this merchant -- and the recovery message has to go to
+    # the address they actually used here. Falls back to the payment entity
+    # whenever the order carried no email of its own.
+    email = notes.get("email") or entity.get("email") or ""
 
     # Scoped to the run. Two policy runs over the same synthetic batch must not
     # share contact history, or the second run inherits the first run's

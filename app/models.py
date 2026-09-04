@@ -7,7 +7,6 @@ from sqlalchemy import (
     Boolean,
     Column,
     DateTime,
-    Float,
     ForeignKey,
     Integer,
     String,
@@ -154,7 +153,11 @@ class DecisionRecord(Base):
 
     id = Column(Integer, primary_key=True)
     case_id = Column(Integer, ForeignKey("cases.id"), index=True)
-    action_id = Column(Integer, ForeignKey("actions.id"))
+    # Indexed because every send looks its record up by action_id twice (gate
+    # checks, then message meta). Unindexed, that is a full scan of a table
+    # with one row per decision -- which is what made a 3000-case run
+    # quadratic rather than linear.
+    action_id = Column(Integer, ForeignKey("actions.id"), index=True)
 
     rule_id = Column(String)  # e.g. R5_INSUFFICIENT_FUND
     inputs_json = Column(Text)  # what the rule saw

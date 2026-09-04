@@ -163,3 +163,52 @@ class TestBaselineEnforcement:
             budget=budget, enforced_checks=BASELINE_ENFORCED,
         )
         assert result.outcome == HALT
+
+
+class TestTheClockCanBeWoundBack:
+    """The demo clock can be reset, and `uvicorn --reload` resets it on every
+    code change. Either leaves customer.last_contacted_at stamped in the
+    future, and the frequency cap has to survive that without exiling the
+    action days out."""
+
+    def test_a_future_last_contact_never_defers_beyond_the_cap(self):
+        customer = Customer(id=1, last_contacted_at=NOON + timedelta(days=2))
+        result = check(make_case(), make_action(), NOON, customer=customer)
+
+        assert result.outcome == DEFER
+        # Not NOON + 3 days, which is what last_contacted_at + 24h would give.
+        assert result.defer_until <= NOON + timedelta(hours=24)
+
+    def test_it_says_so_rather_than_reporting_negative_hours(self):
+        customer = Customer(id=1, last_contacted_at=NOON + timedelta(days=2))
+        result = check(make_case(), make_action(), NOON, customer=customer)
+
+        detail = next(c for c in result.checks if c.name == "contact_frequency").detail
+        assert "-" not in detail
+        assert "future" in detail
+
+    def test_an_ordinary_recent_contact_is_unaffected(self):
+        customer = Customer(id=1, last_contacted_at=NOON - timedelta(hours=1))
+        result = check(make_case(), make_action(), NOON, customer=customer)
+
+        assert result.outcome == DEFER
+        assert result.defer_until == NOON + timedelta(hours=23)
+
+
+class TestTheContactCapIsConfigurable:
+    """24h is the product default and what every published result uses. It is
+    settable only because a live demo runs every test checkout through one
+    phone number, so they are all one customer."""
+
+    def test_the_default_is_still_twenty_four_hours(self):
+        from app.config import MIN_HOURS_BETWEEN_CONTACTS
+
+        assert MIN_HOURS_BETWEEN_CONTACTS == 24
+
+    def test_zero_lets_back_to_back_messages_through(self, monkeypatch):
+        monkeypatch.setattr("app.gate.MIN_HOURS_BETWEEN_CONTACTS", 0)
+        customer = Customer(id=1, last_contacted_at=NOON - timedelta(minutes=1))
+
+        result = check(make_case(), make_action(), NOON, customer=customer)
+
+        assert result.allowed

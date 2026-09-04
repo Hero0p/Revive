@@ -101,13 +101,32 @@ export default function App() {
   )
 }
 
+const OUTCOME_LABEL = {
+  sent: 'sent',
+  deferred: 'deferred by the gate',
+  blocked: 'stopped by the gate',
+  escalated: 'escalated to a human',
+  halted: 'run halted',
+}
+
+/** "1 sent · 2 deferred by the gate", so a tick that did nothing says why. */
+function summarise(result) {
+  if (!result) return null
+  if (result.note) return result.note
+  const parts = Object.entries(result.ran || {})
+    .filter(([key]) => key !== 'halted_run')
+    .map(([key, n]) => `${n} ${OUTCOME_LABEL[key] || key}`)
+  return parts.length ? parts.join(' · ') : 'nothing was due'
+}
+
 function ClockBar({ clock, onChange }) {
   const [busy, setBusy] = useState(false)
+  const [ran, setRan] = useState(null)
 
   const move = async (body) => {
     setBusy(true)
     try {
-      await api.advance(body)
+      setRan(await api.advance(body))
       onChange()
     } finally {
       setBusy(false)
@@ -122,6 +141,9 @@ function ClockBar({ clock, onChange }) {
           {clock ? clock.display : '—'}
         </span>
         {clock?.frozen && <span className="text-[12px] text-muted">frozen</span>}
+        {summarise(ran) && (
+          <span className="text-[12px] text-muted">{summarise(ran)}</span>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">

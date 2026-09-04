@@ -17,10 +17,10 @@ from math import exp
 from pathlib import Path
 from random import Random
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app import gate, ingest, outbox, worker
+from app import gate, ingest, worker
 from app.clock import Clock
 from app.config import ROOT
 from app.models import Action, Case, RunMetric
@@ -306,7 +306,6 @@ def run_policy(
             self_index += 1
             continue
 
-        before = _sent_action_ids(session, run_id)
         outcomes = worker.tick(
             session,
             now,
@@ -322,7 +321,7 @@ def run_policy(
             halted = True
 
         # Ask the oracle about each message that actually went out.
-        for action_id in _sent_action_ids(session, run_id) - before:
+        for action_id in _sent_at(session, run_id, now):
             _resolve_outcome(session, action_id, profiles, seed, now, run_id)
         session.commit()
 
@@ -655,22 +654,18 @@ def _write_metrics(
 def _clear_run(session: Session, run_id: str) -> None:
     from app.models import Customer, DecisionRecord
 
-    case_ids = [
-        c.id for c in session.scalars(select(Case).where(Case.run_id == run_id)).all()
-    ]
-    if case_ids:
-        for model in (DecisionRecord, Action):
-            for row in session.scalars(select(model)).all():
-                if row.case_id in case_ids:
-                    session.delete(row)
-        for case in session.scalars(select(Case).where(Case.run_id == run_id)).all():
-            session.delete(case)
+    # Bulk deletes driven by a subquery on run_id. The obvious version --
+    # loading every row of each table and filtering in Python -- costs the
+    # whole database on every re-run, and a subquery also sidesteps SQLite's
+    # cap on bound parameters, which 3000 case ids would otherwise hit.
+    case_ids = select(Case.id).where(Case.run_id == run_id).scalar_subquery()
+    for model in (DecisionRecord, Action):
+        session.execute(delete(model).where(model.case_id.in_(case_ids)))
+    session.execute(delete(Case).where(Case.run_id == run_id))
     # Customers too: re-running a run id must start with a clean contact
     # history, not the previous attempt's.
-    for customer in session.scalars(select(Customer).where(Customer.run_id == run_id)).all():
-        session.delete(customer)
-    for metric in session.scalars(select(RunMetric).where(RunMetric.run_id == run_id)).all():
-        session.delete(metric)
+    session.execute(delete(Customer).where(Customer.run_id == run_id))
+    session.execute(delete(RunMetric).where(RunMetric.run_id == run_id))
     session.commit()
 
 
@@ -697,13 +692,25 @@ def _next_due(session: Session, run_id: str) -> datetime | None:
     return session.scalar(stmt)
 
 
-def _sent_action_ids(session: Session, run_id: str) -> set[int]:
+def _sent_at(session: Session, run_id: str, now: datetime) -> list[int]:
+    """The actions this tick just sent.
+
+    `now` is the earliest pending action time each pass, and those actions stop
+    being pending once they run, so it strictly increases and executed_at == now
+    identifies exactly this tick's sends. The alternative -- diffing the set of
+    every sent action in the run, before against after -- re-read the entire
+    outbox twice per tick, which is quadratic in the batch size.
+    """
     stmt = (
         select(Action.id)
         .join(Case, Case.id == Action.case_id)
-        .where(Case.run_id == run_id, Action.status == "sent")
+        .where(
+            Case.run_id == run_id,
+            Action.status == "sent",
+            Action.executed_at == now,
+        )
     )
-    return set(session.scalars(stmt).all())
+    return list(session.scalars(stmt).all())
 
 
 def _next_day_of_month(from_date: date, day: int) -> date:

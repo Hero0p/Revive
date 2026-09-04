@@ -117,6 +117,10 @@ export default function Checkout({ onChange, onOpenCase }) {
           cart: JSON.stringify(CART),
           customer_name: form.name,
           language: 'en',
+          // The address typed on this form, so the recovery message goes here
+          // even when Razorpay's modal auto-fills a different saved one.
+          email: form.email,
+          contact: form.contact,
         },
         theme: { color: '#0F7B4F' },
         modal: {

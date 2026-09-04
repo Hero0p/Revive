@@ -475,6 +475,14 @@ def case_summary(session: Session, case: Case) -> dict:
         "resolved_at": iso(case.resolved_at),
         "next_action_at": iso(next_action.scheduled_for) if next_action else None,
         "next_action_channel": next_action.channel if next_action else None,
+        # Which message this is, and whether the gate has pushed it back. A
+        # second message is always a day out by design, and a deferred one is
+        # not on the rule's schedule at all -- without these, both look like
+        # the rule's delay being ignored.
+        "next_action_index": next_action.message_index if next_action else None,
+        "next_action_deferred": (
+            next_action.blocked_reason if next_action and next_action.blocked_reason else None
+        ),
     }
 
 

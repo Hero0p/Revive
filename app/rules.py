@@ -10,7 +10,7 @@ record. Explainability is satisfied by construction.
 
 from collections import Counter
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 
 @dataclass(frozen=True)
