@@ -20,8 +20,8 @@ from app.models import Action, Case, Customer, DecisionRecord, RawEvent
 def fresh_db():
     create_all()
     reset_database()
-    # Frozen at a Tuesday noon. Without this the tests inherit real wall-clock
-    # time and anything run after 21:00 gets deferred by the quiet-hours rule.
+    # Frozen at a Tuesday noon so scheduling assertions are stable rather than
+    # dependent on whenever the suite happens to run.
     clock.freeze(datetime(2026, 3, 3, 12, 0))
     yield
     clock.reset()

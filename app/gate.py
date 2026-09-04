@@ -3,6 +3,13 @@
 Runs before every action. Every check is recorded in the decision record
 whether it passes or fails, so the audit trail shows what the agent considered,
 not just what it did.
+
+There is deliberately no quiet-hours rule. It was here while the decision table
+still chose sms and WhatsApp, where a message at 3am wakes somebody up. Email
+does not ring: it waits in an inbox until it is read, so the same restriction
+buys nothing and costs a great deal -- it could defer a payment_timed_out
+message, whose entire value is arriving within two minutes, by twelve hours.
+The frequency cap below is what protects the customer from being pestered.
 """
 
 from dataclasses import asdict, dataclass, field
@@ -11,8 +18,6 @@ from datetime import datetime, timedelta
 from app.config import MIN_HOURS_BETWEEN_CONTACTS
 from app.models import Action, Case, Customer
 
-QUIET_START_HOUR = 21  # 21:00 IST
-QUIET_END_HOUR = 9  # 09:00 IST
 MAX_DISCOUNT_PAISE = 50_000  # INR 500
 MAX_DISCOUNT_FRACTION = 0.05  # 5% of the order
 
@@ -107,22 +112,7 @@ def check(
         )
     )
 
-    # 4. Quiet hours 21:00-09:00 IST.
-    in_quiet_hours = now.hour >= QUIET_START_HOUR or now.hour < QUIET_END_HOUR
-    if in_quiet_hours:
-        defer_until = _next_9am(now)
-    checks.append(
-        GateCheck(
-            "quiet_hours",
-            not in_quiet_hours,
-            DEFER if in_quiet_hours else ALLOW,
-            f"{now:%H:%M} is inside quiet hours, deferring to {defer_until:%d %b %H:%M}"
-            if in_quiet_hours
-            else f"{now:%H:%M} is inside contact hours",
-        )
-    )
-
-    # 5. One message per day, per customer, across all their cases.
+    # 4. One message per day, per customer, across all their cases.
     too_soon = False
     if customer and customer.last_contacted_at:
         elapsed = now - customer.last_contacted_at
@@ -152,7 +142,7 @@ def check(
         GateCheck("contact_frequency", not too_soon, DEFER if too_soon else ALLOW, detail)
     )
 
-    # 6. Run budget. This halts the run and waits for a human.
+    # 5. Run budget. This halts the run and waits for a human.
     out_of_budget = bool(budget and budget.exhausted)
     checks.append(
         GateCheck(
@@ -165,7 +155,7 @@ def check(
         )
     )
 
-    # 7. Discount authority. Anything meaningful goes to a human.
+    # 6. Discount authority. Anything meaningful goes to a human.
     discount = action.discount_paise or 0
     cap = min(MAX_DISCOUNT_PAISE, int((case.amount_paise or 0) * MAX_DISCOUNT_FRACTION))
     over_authority = discount > cap
@@ -200,9 +190,3 @@ def check(
 
     return GateResult(allowed=True, outcome=ALLOW, checks=checks)
 
-
-def _next_9am(now: datetime) -> datetime:
-    target = now.replace(hour=QUIET_END_HOUR, minute=0, second=0, microsecond=0)
-    if now.hour >= QUIET_START_HOUR:
-        target += timedelta(days=1)
-    return target

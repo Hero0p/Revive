@@ -1,5 +1,6 @@
 {
   "seed": 42,
+  "count": 3000,
   "note": "Hidden customer profiles used by the outcome oracle. These are assumptions, not measurements. The oracle never sees which policy produced an action.",
   "intent_decay_units": "per hour",
   "profiles": {

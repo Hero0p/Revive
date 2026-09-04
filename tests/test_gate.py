@@ -27,15 +27,14 @@ def names(result) -> set:
 
 
 class TestEveryCheckIsRecorded:
-    def test_all_seven_checks_run_even_when_the_first_one_blocks(self):
+    def test_all_six_checks_run_even_when_the_first_one_blocks(self):
         customer = Customer(id=1, opted_out=True)
         result = check(make_case(), make_action(), NOON, customer=customer)
-        assert len(result.checks) == 7
+        assert len(result.checks) == 6
         assert names(result) == {
             "customer_opted_out",
             "case_already_recovered",
             "message_cap",
-            "quiet_hours",
             "contact_frequency",
             "run_budget",
             "discount_authority",
@@ -70,18 +69,13 @@ class TestBlocking:
 
 
 class TestDeferring:
-    @pytest.mark.parametrize("hour", [21, 22, 23, 0, 3, 8])
-    def test_quiet_hours_defer_to_nine_in_the_morning(self, hour):
-        now = NOON.replace(hour=hour)
-        result = check(make_case(), make_action(), now, customer=Customer(id=1))
-        assert result.outcome == DEFER
-        assert result.defer_until.hour == 9
-        assert result.defer_until > now
-
-    @pytest.mark.parametrize("hour", [9, 12, 17, 20])
-    def test_contact_hours_are_allowed(self, hour):
+    @pytest.mark.parametrize("hour", [0, 3, 8, 9, 12, 17, 20, 21, 23])
+    def test_there_are_no_quiet_hours_for_email(self, hour):
+        """Deliberate. A quiet-hours rule protects someone from being woken by
+        a phone at 3am; email waits in an inbox instead. Keeping it would defer
+        a two-minute timeout message by twelve hours and buy nothing."""
         result = check(make_case(), make_action(), NOON.replace(hour=hour), customer=Customer(id=1))
-        assert result.allowed
+        assert result.allowed, f"{hour}:00 should be sendable on an email-only channel"
 
     def test_one_message_per_customer_per_day(self):
         customer = Customer(id=1, last_contacted_at=NOON - timedelta(hours=3))

@@ -9,6 +9,8 @@ import dataclasses
 import inspect
 from datetime import date, datetime, timedelta
 
+import pytest
+
 from app.simulator import (
     HiddenProfile,
     OracleAction,
@@ -148,3 +150,36 @@ class TestModelledBehaviour:
             for i in range(400)
         )
         assert second < first
+
+
+class TestTheSweepCannotSilentlyScoreZero:
+    """The sweep re-scores a stored run against the profiles that produced it.
+
+    When the profiles file was renamed, the reader was left looking for the old
+    name and returned 0 for every setting -- reporting "Revive wins 0 of 45",
+    which reads as a devastating finding rather than a missing file. A sweep
+    that cannot read its inputs has to fail loudly.
+    """
+
+    def test_missing_profiles_raise_instead_of_scoring_zero(self, tmp_path, monkeypatch):
+        from app import simulator
+        from app.db import SessionLocal
+
+        monkeypatch.setattr(simulator, "FIXTURES", tmp_path)
+        session = SessionLocal()
+        try:
+            with pytest.raises(FileNotFoundError, match="nothing to re-score"):
+                simulator._rescore(session, "router-s42-n3000", 42, 3000, 1.0, 1.0, 0.15)
+        finally:
+            session.close()
+
+    def test_the_profiles_filename_matches_what_the_run_writes(self):
+        """Writer and reader have to agree, which is the coupling that broke."""
+        import inspect
+
+        from app import simulator
+
+        writer = inspect.getsource(simulator.write_profiles_fixture)
+        reader = inspect.getsource(simulator._rescore)
+        assert 'profiles_seed{seed}_n{count}.json' in writer
+        assert 'profiles_seed{seed}_n{count}.json' in reader

@@ -17,7 +17,7 @@ same error screen, and they do not deserve the same response:
   impossible one. Only "use UPI instead" can convert.
 
 Revive reads the failure reason, picks the moment and the words, checks itself
-against seven stopping rules before acting, and records why for every decision.
+against six stopping rules before acting, and records why for every decision.
 
 ---
 
@@ -42,7 +42,7 @@ against seven stopping rules before acting, and records why for every decision.
    worker.py ........... the scheduler: what is due right now?
           |
           v
-   gate.py ............. seven stopping rules -> allow | defer | block
+   gate.py ............. six stopping rules  -> allow | defer | block
           |                                            | halt  | escalate
           v
    messages.py ......... template, or LLM prose validated against it
@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 260 tests, ~17 seconds
+pytest        # 261 tests, ~8 seconds
 ```
 
 ### Environment variables
@@ -266,7 +266,7 @@ have paid unprompted — ticks, resolves the outcome, and repeats. No time is
 spent on the empty hours between, which is how 3,000 cases across a 40-day
 horizon resolve in about a minute per policy.
 
-### The gate: seven ways to not send
+### The gate: six ways to not send
 
 Rules decide what is worth doing; the gate decides whether it is still allowed,
 and runs before **every** action.
@@ -276,10 +276,18 @@ and runs before **every** action.
 | 1 | Customer opted out | **block** — permanent, no override |
 | 2 | Case already recovered | **block** — they paid at 8:49; never message at 8:52 |
 | 3 | Message cap for this cause | **block** |
-| 4 | Quiet hours (21:00–09:00 IST) | **defer** to 09:00 |
-| 5 | Contact frequency (24 h per customer, across all their cases) | **defer** |
-| 6 | Run budget exhausted | **halt the entire run** |
-| 7 | Discount authority (₹500 / 5% cap) | **escalate to a human** |
+| 4 | Contact frequency (24 h per customer, across all their cases) | **defer** |
+| 5 | Run budget exhausted | **halt the entire run** |
+| 6 | Discount authority (₹500 / 5% cap) | **escalate to a human** |
+
+There is deliberately **no quiet-hours rule**. One was here while the decision
+table still chose SMS and WhatsApp, where a message at 3am wakes somebody up.
+Email does not ring — it waits in an inbox until it is read — so the same
+restriction buys nothing and costs a lot: it could defer a `payment_timed_out`
+message, whose entire value is arriving within two minutes, by twelve hours.
+The frequency cap is what protects a customer from being pestered. (It barely
+showed up in the published run either way: 2 of 4,582 messages fell in the old
+window, which is why removing it moved none of the numbers above.)
 
 Priority is halt → escalate → block → defer, so a run that is out of budget
 stops rather than quietly sending something smaller. A **defer** is not a
@@ -288,7 +296,7 @@ that comes due at 2am goes out at 9am instead of being lost.
 
 Two properties worth calling out. **Every check is recorded whether it passes
 or fails**, so the decision record shows what the agent considered, not just
-what it did. And **the baseline runs all seven but enforces only two**
+what it did. And **the baseline runs all six but enforces only two**
 (opt-out, run budget) — the two every merchant already has — so a baseline
 record reads `case_already_recovered: FAILED — not enforced by this policy`.
 The comparison's asymmetry is visible in the audit trail rather than buried in
@@ -430,7 +438,7 @@ app/
   clock.py            every time reference in the system
   rules.py            the decision table
   policy.py           baseline vs Revive: when and what
-  gate.py             the seven stopping rules
+  gate.py             the six stopping rules
   ingest.py           webhooks -> cases, dedup, the already-paid guard
   worker.py           the scheduler loop
   executor.py         gate -> message -> payment link -> outbox -> delivery
@@ -607,17 +615,17 @@ the delivery fields differ.
 
 ## Tests
 
-260 tests, ~17 seconds. The suite is hermetic: it forces simulated mode and
+261 tests, ~8 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
 | File | Covers |
 |---|---|
 | `test_rules.py` | every documented reason maps to a rule; every rule uses email; blocked causes always set `suggests_alt_method`; the payday window |
-| `test_oracle.py` | the oracle cannot see the policy; determinism; the modelled behaviours |
+| `test_oracle.py` | the oracle cannot see the policy; determinism; the modelled behaviours; the sweep failing loudly rather than scoring zero when it cannot read its inputs |
 | `test_messages.py` | every template against all four trust rules |
 | `test_llm.py` | schema validation, fallback on every failure mode, generated text breaking a trust rule being thrown away |
-| `test_gate.py` | all seven checks, priority order, baseline enforcement, the contact cap surviving a wound-back clock |
+| `test_gate.py` | all six checks, priority order, baseline enforcement, email being sendable at any hour, the contact cap surviving a wound-back clock |
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |
 | `test_delivery.py` | every delivery refusal, the HTTPS transport being used instead of SMTP when configured, and an API error being recorded rather than raised |
 | `test_razorpay_breaker.py` | the breaker surviving the demo clock being advanced, jumped, or reset while open; a payment_link failure never opening the order breaker |

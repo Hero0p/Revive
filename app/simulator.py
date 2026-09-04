@@ -520,7 +520,7 @@ def sensitivity_sweep(seed: int = 42, count: int = 120) -> dict:
             for policy_name in ("baseline", "router"):
                 run_id = f"{policy_name}-s{seed}-n{count}"
                 scores[policy_name] = _rescore(
-                    session, run_id, seed, decay_scale, channel_scale, payday_penalty
+                    session, run_id, seed, count, decay_scale, channel_scale, payday_penalty
                 )
             results.append(
                 {
@@ -548,14 +548,24 @@ def _rescore(
     session: Session,
     run_id: str,
     seed: int,
+    count: int,
     decay_scale: float,
     channel_scale: float,
     payday_penalty: float,
 ) -> int:
-    """Replay the run's sent messages under perturbed assumptions."""
-    profiles_path = FIXTURES / f"profiles_seed{seed}.json"
+    """Replay the run's sent messages under perturbed assumptions.
+
+    Raises rather than scoring zero when the profiles are missing. Returning 0
+    here silently turned the whole sweep into "0 of 45 settings won" -- a
+    result that looks like a devastating finding rather than a missing file.
+    A sweep that cannot read its inputs has to say so.
+    """
+    profiles_path = FIXTURES / f"profiles_seed{seed}_n{count}.json"
     if not profiles_path.exists():
-        return 0
+        raise FileNotFoundError(
+            f"{profiles_path.name} is missing, so the sweep has nothing to re-score. "
+            f"Run the {count}-case seed-{seed} comparison first."
+        )
     raw = json.loads(profiles_path.read_text(encoding="utf-8"))["profiles"]
 
     cases = {c.id: c for c in session.scalars(select(Case).where(Case.run_id == run_id)).all()}
