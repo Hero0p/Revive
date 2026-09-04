@@ -95,28 +95,24 @@ DELIVERY_ALLOWLIST = [
     if entry.strip()
 ]
 
-# Gmail: turn on 2-step verification, then create an App Password.
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_APP_PASSWORD = os.getenv("SMTP_APP_PASSWORD", "")
-SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "Blue Tokai Coffee")
-
-# Delivery over HTTPS instead of SMTP.
+# --- Email transport -----------------------------------------------------
+# Brevo's transactional API over HTTPS.
 #
-# Most hosting platforms block outbound SMTP (ports 25/465/587) to keep
-# spammers off their address space, and Render is one of them -- a deployed
-# instance fails every send with "[Errno 101] Network is unreachable" no matter
-# how correct the Gmail credentials are. An email API speaks HTTPS on 443,
-# which is never blocked, so that is the transport a deployment needs.
+# SMTP is not an option here. Render, like most hosting platforms, blocks
+# outbound SMTP ports (25/465/587) to keep spammers off its address space, so
+# a deployed instance failed every send with "[Errno 101] Network is
+# unreachable" however correct the credentials were. An HTTPS API on port 443
+# is never blocked.
 #
-# SMTP stays the default because it needs no third-party account to demo
-# locally. Setting RESEND_API_KEY switches transports.
-RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
-# Resend's shared sender works with no domain of your own, which is enough for
-# a demo that emails its operator. A verified domain is needed to send to
-# anyone else.
-RESEND_FROM = os.getenv("RESEND_FROM", "onboarding@resend.dev")
+# Brevo specifically because its free tier verifies a single *sender address*
+# rather than a whole domain, so mail can go to real recipients without owning
+# one. Verify the address you put in EMAIL_FROM_ADDRESS from Brevo's Senders
+# page before the first send, or the API rejects it.
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+# Must be an address verified on the Brevo account. No default: a wrong sender
+# fails at send time with a message nobody expects, and a placeholder here
+# would make that more likely, not less.
+EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS", "")
+EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME", "Blue Tokai Coffee")
 
-EMAIL_CONFIGURED = bool(RESEND_API_KEY) or bool(SMTP_USER and SMTP_APP_PASSWORD)
-EMAIL_TRANSPORT = "resend" if RESEND_API_KEY else "smtp"
+EMAIL_CONFIGURED = bool(BREVO_API_KEY and EMAIL_FROM_ADDRESS)

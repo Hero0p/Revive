@@ -27,7 +27,7 @@ os.environ["RAZORPAY_KEY_SECRET"] = "test-key-secret"
 # Same reasoning for delivery: a real .env would otherwise decide the outcome
 # of these tests, and a real allowlist would make them fail for the wrong
 # reason. Each test opts into what it needs with monkeypatch.
-for _key in ("DELIVERY_ALLOWLIST", "SMTP_USER", "SMTP_APP_PASSWORD"):
+for _key in ("DELIVERY_ALLOWLIST", "BREVO_API_KEY", "EMAIL_FROM_ADDRESS"):
     os.environ[_key] = ""
 os.environ["DELIVER_FOR_REAL"] = "false"
 

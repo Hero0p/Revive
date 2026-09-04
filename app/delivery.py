@@ -21,36 +21,26 @@ Email is the only channel, by design. Real SMS to Indian numbers needs DLT
 registration with a telecom operator, which is a commercial process rather
 than an API key, so it was never implemented.
 
-There are two transports for it. SMTP is the default and needs no third-party
-account, which is what makes a local demo easy. It is also unusable on most
-hosting platforms: Render and friends block outbound SMTP ports outright, so
-every send from a deployed instance fails with "Network is unreachable" no
-matter how correct the credentials are. Setting RESEND_API_KEY switches to an
-email API over HTTPS, which nothing blocks.
+It sends over Brevo's transactional HTTPS API. SMTP is not an option: Render,
+like most hosting platforms, blocks outbound SMTP ports, so every send from a
+deployed instance failed with "[Errno 101] Network is unreachable" however
+correct the credentials were. Port 443 is never blocked.
 """
-
-import smtplib
-from email.message import EmailMessage
-from email.utils import formataddr, make_msgid
 
 import httpx
 
 from app.config import (
+    BREVO_API_KEY,
     DELIVER_FOR_REAL,
     DELIVERY_ALLOWLIST,
     EMAIL_CONFIGURED,
-    EMAIL_TRANSPORT,
-    RESEND_API_KEY,
-    RESEND_FROM,
-    SMTP_APP_PASSWORD,
-    SMTP_FROM_NAME,
-    SMTP_HOST,
-    SMTP_PORT,
-    SMTP_USER,
+    EMAIL_FROM_ADDRESS,
+    EMAIL_FROM_NAME,
 )
 from app.models import Action, Case, Customer
 
 TIMEOUT = 15.0
+API_URL = "https://api.brevo.com/v3/smtp/email"
 
 # One line, no marketing. The body carries the detail.
 SUBJECTS = {
@@ -90,7 +80,7 @@ def deliver(
         return "skipped", None, f"channel {action.channel!r} is not supported, email only"
 
     if not EMAIL_CONFIGURED:
-        return "skipped", None, "no email transport configured (RESEND_API_KEY, or SMTP_USER / SMTP_APP_PASSWORD)"
+        return "skipped", None, "BREVO_API_KEY / EMAIL_FROM_ADDRESS not set"
 
     body = action.message_body or ""
     if not body:
@@ -106,52 +96,44 @@ def deliver(
     try:
         provider_id = _send_email(recipient, action, body)
     except Exception as exc:  # noqa: BLE001 -- delivery must never break the run
-        return "failed", None, f"{type(exc).__name__}: {exc}"
+        # Redacted: this string is written to the action, shown in the
+        # dashboard, and printed in logs. None of those should ever be able to
+        # carry the API key.
+        return "failed", None, _redact(f"{type(exc).__name__}: {exc}")
 
     return "sent", provider_id, f"emailed {recipient}"
 
 
 def _send_email(recipient: str, action: Action, body: str) -> str:
-    subject = SUBJECTS.get(action.message_intent, "About your recent order")
-    if EMAIL_TRANSPORT == "resend":
-        return _send_via_resend(recipient, subject, body)
-    return _send_via_smtp(recipient, subject, body)
-
-
-def _send_via_resend(recipient: str, subject: str, body: str) -> str:
-    """One HTTPS call. Raises on any non-2xx so deliver() records the reason."""
+    """One HTTPS call. Returns Brevo's message id, raises on anything else."""
     response = httpx.post(
-        "https://api.resend.com/emails",
-        headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+        API_URL,
+        headers={
+            "api-key": BREVO_API_KEY,
+            "accept": "application/json",
+            "content-type": "application/json",
+        },
         json={
-            "from": formataddr((SMTP_FROM_NAME, RESEND_FROM)),
-            "to": [recipient],
-            "subject": subject,
-            "text": body,
+            "sender": {"name": EMAIL_FROM_NAME, "email": EMAIL_FROM_ADDRESS},
+            "to": [{"email": recipient}],
+            "subject": SUBJECTS.get(action.message_intent, "About your recent order"),
+            "textContent": body,
         },
         timeout=TIMEOUT,
     )
     if response.status_code >= 300:
-        raise ConnectionError(f"resend {response.status_code}: {response.text}")
-    return response.json().get("id", "")
+        # The body carries the real reason -- an unverified sender, a spent
+        # daily quota, a bad key -- and it is the only useful thing to record.
+        raise ConnectionError(f"brevo {response.status_code}: {_redact(response.text)}")
+
+    return response.json().get("messageId", "")
 
 
-def _send_via_smtp(recipient: str, subject: str, body: str) -> str:
-    message = EmailMessage()
-    message["Subject"] = subject
-    message["From"] = formataddr((SMTP_FROM_NAME, SMTP_USER))
-    message["To"] = recipient
-    # Set explicitly: without it the audit trail records no usable id, and
-    # this is the only handle on the message once it has left.
-    message["Message-ID"] = make_msgid(domain="revive.local")
-    message.set_content(body)
-
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=TIMEOUT) as server:
-        server.starttls()
-        server.login(SMTP_USER, SMTP_APP_PASSWORD)
-        server.send_message(message)
-
-    return message["Message-ID"]
+def _redact(text: str) -> str:
+    """Strip the API key out of anything that might be shown or logged."""
+    if BREVO_API_KEY and BREVO_API_KEY in text:
+        text = text.replace(BREVO_API_KEY, "***")
+    return text
 
 
 def status() -> dict:
@@ -161,9 +143,9 @@ def status() -> dict:
     return {
         "deliver_for_real": DELIVER_FOR_REAL,
         "email_configured": EMAIL_CONFIGURED,
-        "transport": EMAIL_TRANSPORT,
+        "transport": "brevo",
         "allowlist": DELIVERY_ALLOWLIST,
-        "from_email": (RESEND_FROM if EMAIL_TRANSPORT == "resend" else SMTP_USER) or None,
+        "from_email": EMAIL_FROM_ADDRESS or None,
         "public_base_url": PUBLIC_BASE_URL,
         # Surfaced because a link pointing at localhost is useless to whoever
         # receives the message, and that is invisible from the outbox alone.

@@ -12,7 +12,6 @@ from app.config import (
     CORS_ORIGINS,
     DELIVER_FOR_REAL,
     DEMO_SEED_COUNT,
-    EMAIL_TRANSPORT,
     LIVE_RAZORPAY,
     LLM_ENABLED,
     LLM_MODEL,
@@ -40,12 +39,6 @@ async def lifespan(app: FastAPI):
             "[startup] WARNING: real delivery is on but PUBLIC_BASE_URL is "
             f"{PUBLIC_BASE_URL!r}. Recovery messages will link somewhere the "
             "recipient cannot open. Set PUBLIC_BASE_URL to the public address."
-        )
-    if DELIVER_FOR_REAL and EMAIL_TRANSPORT == "smtp":
-        print(
-            "[startup] note: delivering over SMTP. Most hosting platforms block "
-            "outbound SMTP ports -- set RESEND_API_KEY to deliver over HTTPS if "
-            "sends fail with 'Network is unreachable'."
         )
     task = asyncio.create_task(worker.worker_loop())
     yield

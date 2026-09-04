@@ -2,14 +2,14 @@
 
     python scripts/send_test_email.py [address]
 
-Bypasses Razorpay entirely -- this tests only the SMTP path, so it still works
-even when the Razorpay circuit breaker is open (e.g. the test-mode payment
-link daily limit). Address defaults to the first entry in DELIVERY_ALLOWLIST,
-or SMTP_USER if the allowlist is empty.
+Bypasses Razorpay entirely -- this exercises only the delivery path, so it
+still works when the Razorpay circuit breaker is open (e.g. the test-mode
+payment link daily limit). Address defaults to the first entry in
+DELIVERY_ALLOWLIST, or EMAIL_FROM_ADDRESS if the allowlist is empty.
 
 This is the ground truth for "am I actually receiving these": a printed
-Message-ID means Gmail's SMTP server accepted the message for delivery. It
-does not guarantee the inbox over spam, so check both.
+message id means Brevo accepted the message for delivery. It does not
+guarantee the inbox over spam, so check both.
 """
 
 import sys
@@ -19,18 +19,23 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app import delivery, messages
-from app.config import DELIVER_FOR_REAL, DELIVERY_ALLOWLIST, EMAIL_CONFIGURED, SMTP_USER
+from app.config import (
+    DELIVER_FOR_REAL,
+    DELIVERY_ALLOWLIST,
+    EMAIL_CONFIGURED,
+    EMAIL_FROM_ADDRESS,
+)
 from app.models import Action, Case, Customer
 
 print(f"DELIVER_FOR_REAL : {DELIVER_FOR_REAL}")
-print(f"EMAIL_CONFIGURED : {EMAIL_CONFIGURED} ({SMTP_USER or 'no SMTP_USER set'})")
+print(f"EMAIL_CONFIGURED : {EMAIL_CONFIGURED} (from {EMAIL_FROM_ADDRESS or 'no EMAIL_FROM_ADDRESS set'})")
 print(f"DELIVERY_ALLOWLIST: {DELIVERY_ALLOWLIST or '(empty -- everyone is allowed)'}")
 
 if not EMAIL_CONFIGURED:
-    print("\nSMTP_USER / SMTP_APP_PASSWORD are not set in .env. Nothing to test.")
+    print("\nBREVO_API_KEY / EMAIL_FROM_ADDRESS are not set in .env. Nothing to test.")
     raise SystemExit(1)
 
-recipient = sys.argv[1] if len(sys.argv) > 1 else (DELIVERY_ALLOWLIST[0] if DELIVERY_ALLOWLIST else SMTP_USER)
+recipient = sys.argv[1] if len(sys.argv) > 1 else (DELIVERY_ALLOWLIST[0] if DELIVERY_ALLOWLIST else EMAIL_FROM_ADDRESS)
 if DELIVERY_ALLOWLIST and recipient.lower() not in DELIVERY_ALLOWLIST:
     print(f"\n{recipient} is not on DELIVERY_ALLOWLIST -- delivery.deliver() will refuse it.")
     print(f"Either add it to DELIVERY_ALLOWLIST in .env, or run with no argument to use "
@@ -80,4 +85,7 @@ if status == "sent":
 elif status == "skipped":
     print("\nNothing was sent. The 'detail' line above says exactly why.")
 else:
-    print("\nSMTP rejected it. The 'detail' line above has the real error from Gmail.")
+    print(
+        "\nBrevo rejected it. The 'detail' line above carries the real reason -- "
+        "most often an unverified sender address or a spent daily quota."
+    )

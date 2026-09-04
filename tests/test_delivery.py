@@ -82,7 +82,7 @@ class TestMissingConfiguration:
         monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", False)
         status, _, detail = delivery.deliver(*make("email"))
         assert status == "skipped"
-        assert "SMTP" in detail
+        assert "BREVO_API_KEY" in detail
 
     def test_a_customer_with_no_address_is_skipped(self, monkeypatch):
         monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
@@ -161,58 +161,53 @@ class TestEverySubjectExists:
 
 class TestTheHttpsTransport:
     """SMTP is unusable on hosting platforms that block outbound mail ports --
-    Render fails every send with "[Errno 101] Network is unreachable". An email
-    API over HTTPS is the transport a deployed instance needs."""
+    Render failed every send with "[Errno 101] Network is unreachable". The
+    whole transport is an HTTPS API for that reason."""
 
-    def _resend_mode(self, monkeypatch):
+    def _configured(self, monkeypatch):
         monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
         monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", True)
-        monkeypatch.setattr(delivery, "EMAIL_TRANSPORT", "resend")
-        monkeypatch.setattr(delivery, "RESEND_API_KEY", "re_test_key")
+        monkeypatch.setattr(delivery, "BREVO_API_KEY", "secret-key-value")
+        monkeypatch.setattr(delivery, "EMAIL_FROM_ADDRESS", "merchant@example.com")
         monkeypatch.setattr(delivery, "DELIVERY_ALLOWLIST", [])
 
-    def test_it_posts_to_the_email_api_instead_of_opening_smtp(self, monkeypatch):
-        self._resend_mode(monkeypatch)
+    def test_it_posts_the_message_to_the_email_api(self, monkeypatch):
+        self._configured(monkeypatch)
         sent = {}
 
         class Response:
-            status_code = 200
+            status_code = 201
 
             @staticmethod
             def json():
-                return {"id": "resend-123"}
+                return {"messageId": "<brevo-123@smtp>"}
 
         def fake_post(url, **kwargs):
-            sent["url"] = url
-            sent["json"] = kwargs["json"]
-            sent["auth"] = kwargs["headers"]["Authorization"]
+            sent.update(url=url, json=kwargs["json"], headers=kwargs["headers"])
             return Response()
 
         monkeypatch.setattr(delivery.httpx, "post", fake_post)
-        # Any attempt to open SMTP here is the bug this transport exists to avoid.
-        monkeypatch.setattr(
-            delivery.smtplib,
-            "SMTP",
-            lambda *a, **k: pytest.fail("SMTP must not be used when RESEND_API_KEY is set"),
-        )
 
         action, case, customer = make()
         customer.email = "someone@example.com"
         status, provider_id, detail = delivery.deliver(action, case, customer)
 
         assert status == "sent"
-        assert provider_id == "resend-123"
-        assert sent["url"] == "https://api.resend.com/emails"
-        assert sent["json"]["to"] == ["someone@example.com"]
-        assert sent["json"]["subject"]
-        assert sent["auth"] == "Bearer re_test_key"
+        assert provider_id == "<brevo-123@smtp>"
+        assert sent["url"] == "https://api.brevo.com/v3/smtp/email"
+        assert sent["json"]["to"] == [{"email": "someone@example.com"}]
+        assert sent["json"]["sender"]["email"] == "merchant@example.com"
+        # The subject and body are the ones the pipeline produced, unchanged.
+        assert sent["json"]["subject"] == delivery.SUBJECTS["soft_cart_reminder"]
+        assert sent["json"]["textContent"] == "Your cart is saved."
+        assert sent["headers"]["api-key"] == "secret-key-value"
 
     def test_an_api_error_is_recorded_rather_than_raised(self, monkeypatch):
-        self._resend_mode(monkeypatch)
+        self._configured(monkeypatch)
 
         class Response:
-            status_code = 422
-            text = "domain not verified"
+            status_code = 400
+            text = '{"message":"Sender email is not valid"}'
 
         monkeypatch.setattr(delivery.httpx, "post", lambda url, **kw: Response())
 
@@ -221,15 +216,48 @@ class TestTheHttpsTransport:
         status, _, detail = delivery.deliver(action, case, customer)
 
         assert status == "failed"
-        assert "422" in detail and "domain not verified" in detail
+        assert "400" in detail and "Sender email is not valid" in detail
+
+    def test_the_api_key_never_reaches_the_recorded_detail(self, monkeypatch):
+        """The detail is stored on the action, rendered in the dashboard and
+        printed in logs. A provider echoing the key back must not leak it."""
+        self._configured(monkeypatch)
+
+        class Response:
+            status_code = 401
+            text = 'unauthorised for key secret-key-value'
+
+        monkeypatch.setattr(delivery.httpx, "post", lambda url, **kw: Response())
+
+        action, case, customer = make()
+        customer.email = "someone@example.com"
+        status, _, detail = delivery.deliver(action, case, customer)
+
+        assert status == "failed"
+        assert "secret-key-value" not in detail
+        assert "***" in detail
+
+    def test_a_transport_failure_is_recorded_without_the_key(self, monkeypatch):
+        self._configured(monkeypatch)
+
+        def explode(url, **kwargs):
+            raise ConnectionError("connect failed using secret-key-value")
+
+        monkeypatch.setattr(delivery.httpx, "post", explode)
+
+        action, case, customer = make()
+        customer.email = "someone@example.com"
+        status, _, detail = delivery.deliver(action, case, customer)
+
+        assert status == "failed"
+        assert "secret-key-value" not in detail
 
 
 class TestTheDeliveryStatusExposesMisconfiguration:
     def test_it_flags_a_localhost_link(self, monkeypatch):
         """A message linking to localhost is useless to whoever gets it, and
         that is invisible from the outbox alone."""
-        monkeypatch.setattr(delivery, "EMAIL_TRANSPORT", "smtp")
         status = delivery.status()
         assert "public_base_url" in status
         assert "public_base_url_is_local" in status
-        assert status["transport"] in ("smtp", "resend")
+        assert status["transport"] == "brevo"

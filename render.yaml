@@ -33,10 +33,12 @@ services:
       - key: PUBLIC_BASE_URL
         sync: false
 
-      # Render blocks outbound SMTP, so Gmail credentials cannot deliver from
-      # here -- every send fails with "Network is unreachable". Set this to
-      # deliver over HTTPS instead. Get a key at resend.com.
-      - key: RESEND_API_KEY
+      # Email over HTTPS. Render blocks outbound SMTP, so this is the only way
+      # mail leaves this service. EMAIL_FROM_ADDRESS must be an address
+      # verified on the Brevo account.
+      - key: BREVO_API_KEY
+        sync: false
+      - key: EMAIL_FROM_ADDRESS
         sync: false
 
       # Set in the Render dashboard, never committed.
@@ -57,8 +59,4 @@ services:
       - key: DELIVER_FOR_REAL
         value: "false"
       - key: DELIVERY_ALLOWLIST
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_APP_PASSWORD
         sync: false
