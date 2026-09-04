@@ -3,6 +3,11 @@
 *.db-journal
 *.db-shm
 *.db-wal
+
+# Every run writes its scripted profiles out. Only the published run's file is
+# part of the project -- the rest are byproducts of whatever anyone last ran.
+fixtures/profiles_seed*.json
+!fixtures/profiles_seed42_n3000.json
 .pytest_tmp/
 __pycache__/
 *.pyc

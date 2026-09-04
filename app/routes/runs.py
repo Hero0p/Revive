@@ -17,13 +17,14 @@ import time
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app import simulator
 from app.clock import iso
+from app.config import DEMO_SEED_COUNT, SEED
 from app.db import SessionLocal, get_session
-from app.models import RunMetric
+from app.models import Case, RunMetric
 
 router = APIRouter(prefix="/api")
 
@@ -87,6 +88,42 @@ def _set_step(step: str) -> None:
 def run_status():
     """What the background job is doing. The dashboard polls this."""
     return _snapshot()
+
+
+def seed_demo_if_empty() -> bool:
+    """Populate an empty database with a small comparison, in the background.
+
+    Called once at startup. A deployed instance begins with nothing in it, so
+    without this the Cases, Outbox and Audit screens are empty until somebody
+    waits out a full run. Returns whether a seed run was started.
+    """
+    if DEMO_SEED_COUNT <= 0:
+        return False
+
+    session = SessionLocal()
+    try:
+        already_has_cases = session.scalar(select(func.count()).select_from(Case))
+    finally:
+        session.close()
+    if already_has_cases:
+        return False
+
+    def work(job_session: Session) -> dict:
+        run_ids = []
+        for index, policy in enumerate(("baseline", "router"), start=1):
+            _set_step(f"{policy} ({index} of 2)")
+            run_ids.append(
+                simulator.run_policy(
+                    job_session, policy, count=DEMO_SEED_COUNT, seed=SEED
+                )
+            )
+        return {"run_ids": run_ids, "seeded": True}
+
+    try:
+        _start_job(f"seeding {DEMO_SEED_COUNT} demo cases", work)
+    except HTTPException:
+        return False  # something else is already running; it will fill the database
+    return True
 
 
 class RunRequest(BaseModel):

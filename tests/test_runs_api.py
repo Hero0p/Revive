@@ -10,11 +10,11 @@ import time
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.db import SessionLocal, create_all, reset_database
 from app.main import app
-from app.models import RunMetric
+from app.models import Case, RunMetric
 from app.routes import runs as runs_route
 
 
@@ -92,3 +92,29 @@ class TestTheRunIsBackgrounded:
 
         assert final["state"] == "error"
         assert "simulator exploded" in final["error"]
+
+
+class TestColdStartSeeding:
+    """A deployed instance boots with an empty database every time, so the
+    Cases, Outbox and Audit screens would be blank for the first visitor."""
+
+    def test_an_empty_database_gets_seeded(self):
+        assert runs_route.seed_demo_if_empty() is True
+        final = _drain()
+        assert final["state"] == "done", final.get("error")
+        assert final["result"]["seeded"] is True
+
+        session = SessionLocal()
+        cases = session.scalar(select(func.count()).select_from(Case))
+        session.close()
+        assert cases > 0
+
+    def test_a_database_that_already_has_cases_is_left_alone(self, api):
+        api.post("/api/runs", json={"policy": "router", "count": 20, "seed": 4})
+        _drain()
+        # Second boot against the same data must not redo the work.
+        assert runs_route.seed_demo_if_empty() is False
+
+    def test_seeding_can_be_switched_off(self, monkeypatch):
+        monkeypatch.setattr(runs_route, "DEMO_SEED_COUNT", 0)
+        assert runs_route.seed_demo_if_empty() is False

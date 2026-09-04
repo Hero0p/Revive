@@ -2,7 +2,7 @@
 
 The honest part: customer intent is scripted. Every number the oracle produces
 is a modelled outcome, not a measurement. The profiles are written to
-fixtures/profiles_seed42.json so anyone can read the assumptions.
+fixtures/profiles_seed42_n3000.json so anyone can read the assumptions.
 
 The critical property: would_convert() cannot see which policy produced the
 action. It is handed an OracleCase and an OracleAction, neither of which has a
@@ -223,14 +223,23 @@ def generate_batch(
     return events, profiles
 
 
-def write_profiles_fixture(profiles: dict[str, HiddenProfile], seed: int) -> Path:
-    """Judges can read exactly what the customers were scripted to do."""
+def write_profiles_fixture(
+    profiles: dict[str, HiddenProfile], seed: int, count: int
+) -> Path:
+    """Judges can read exactly what the customers were scripted to do.
+
+    Keyed by size as well as seed. The published run is seed 42 at 3,000
+    cases, and the startup seeding uses that same seed at 200 -- with the
+    filename keyed on seed alone, the small run silently overwrote the
+    assumptions behind the numbers this project reports.
+    """
     FIXTURES.mkdir(exist_ok=True)
-    path = FIXTURES / f"profiles_seed{seed}.json"
+    path = FIXTURES / f"profiles_seed{seed}_n{count}.json"
     path.write_text(
         json.dumps(
             {
                 "seed": seed,
+                "count": count,
                 "note": "Hidden customer profiles used by the outcome oracle. "
                 "These are assumptions, not measurements. The oracle never sees "
                 "which policy produced an action.",
@@ -263,7 +272,7 @@ def run_policy(
     _clear_run(session, run_id)
 
     events, profiles = generate_batch(count, seed, start)
-    write_profiles_fixture(profiles, seed)
+    write_profiles_fixture(profiles, seed, count)
 
     sim = Clock()
     sim.freeze(start)

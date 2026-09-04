@@ -8,7 +8,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import worker
 from app.clock import clock, iso
-from app.config import CORS_ORIGINS, LIVE_RAZORPAY, LLM_ENABLED, LLM_MODEL, PUBLIC_BASE_URL
+from app.config import (
+    CORS_ORIGINS,
+    DEMO_SEED_COUNT,
+    LIVE_RAZORPAY,
+    LLM_ENABLED,
+    LLM_MODEL,
+    PUBLIC_BASE_URL,
+)
 from app.db import create_all
 from app.razorpay_client import client
 from app.routes import cases, orders, runs, sim, webhooks
@@ -17,6 +24,11 @@ from app.routes import cases, orders, runs, sim, webhooks
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_all()
+    # An empty database gets a small comparison in the background, so the
+    # Cases, Outbox and Audit screens have real rows the moment anyone looks.
+    # Returns immediately; the run happens on its own thread.
+    if runs.seed_demo_if_empty():
+        print(f"[startup] empty database -- seeding {DEMO_SEED_COUNT} demo cases in the background")
     task = asyncio.create_task(worker.worker_loop())
     yield
     task.cancel()

@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 251 tests, ~10 seconds
+pytest        # 254 tests, ~17 seconds
 ```
 
 ### Environment variables
@@ -98,6 +98,7 @@ starts and the full dashboard works with an empty `.env`.
 | `DATABASE_URL` | Another SQLite file | `recovery.db` in the project root |
 | `DELIVER_FOR_REAL` | Actually sending email | `false`. Messages render to the outbox only |
 | `DELIVERY_ALLOWLIST` | Restricting who can ever be contacted | empty. **Set this while demoing** |
+| `DEMO_SEED_COUNT` | Cases generated at startup when the database is empty | `200`. A deployed instance boots empty, so without this the Cases, Outbox and Audit screens are blank until someone runs a comparison. `0` disables it |
 | `MIN_HOURS_BETWEEN_CONTACTS` | Loosening the per-customer contact cap for a demo | `24`, the product default every published result assumes. Live test checkouts share one phone number, so they are one customer and each after the first is deferred a day; set `0` to demo back-to-back checkouts |
 | `SMTP_USER` / `SMTP_APP_PASSWORD` | Real email through Gmail | Email is skipped and the reason recorded |
 | `LLM_MODEL` / `LLM_REASONING_EFFORT` / `LLM_TIMEOUT_SECONDS` | Overriding the model, its thinking budget, its deadline | `openai/gpt-oss-20b`, `low`, `2.0` |
@@ -365,7 +366,7 @@ webhook. Real email over SMTP, behind two safety switches.
 **Modelled.** Customer intent: every hidden profile (base intent, payday,
 responsiveness, decay, whether they would have paid unprompted) is generated
 from a seed and readable in
-[`fixtures/profiles_seed42.json`](fixtures/profiles_seed42.json). Whether a
+[`fixtures/profiles_seed42_n3000.json`](fixtures/profiles_seed42_n3000.json). Whether a
 message converts, decided by `would_convert()` in `app/simulator.py`. And the
 batch itself: 3,000 generated failures with a plausible cause mix, not real
 traffic.
@@ -553,7 +554,10 @@ the wiring.
    `RAZORPAY_WEBHOOK_SECRET`.
 3. Open the Vercel URL. The Overview already shows results — see below.
 
-**The Overview never shows an empty page.** It opens with a committed run
+**Nothing is empty on a cold instance.** The Overview and the case-level
+screens need different treatment.
+
+*The Overview* never shows an empty page. It opens with a committed run
 (`web/src/data/comparison.json`, exported by
 [`scripts/export_comparison.py`](scripts/export_comparison.py)) that ships
 inside the frontend bundle, so a first visitor sees the numbers immediately
@@ -588,7 +592,7 @@ difference between a bug costing nothing and a bug emailing a stranger.
 
 ## Tests
 
-251 tests, ~10 seconds. The suite is hermetic: it forces simulated mode and
+254 tests, ~17 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
@@ -602,8 +606,8 @@ never make the tests bill a real account or change their outcome.
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |
 | `test_delivery.py` | every delivery refusal, including a non-email channel refused rather than rerouted |
 | `test_razorpay_breaker.py` | the breaker surviving the demo clock being advanced, jumped, or reset while open; a payment_link failure never opening the order breaker |
+| `test_runs_api.py` | a comparison is backgrounded, answers in under a second, keeps the API answerable, refuses a concurrent run, reports failures instead of hanging, and an empty database seeds itself while one with data is left alone |
 | `test_published_comparison.py` | the committed run the Overview opens with still matches the figures this README quotes |
-| `test_runs_api.py` | a comparison is backgrounded, answers in under a second, keeps the API answerable, refuses a concurrent run, and reports a failure instead of hanging |
 | `test_clock_lint.py` | no `datetime.now()` outside `clock.py` |
 
 ---

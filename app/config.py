@@ -45,6 +45,16 @@ LLM_ENABLED = bool(GROQ_API_KEY)
 SEED = 42
 LIVE_RAZORPAY = bool(RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET)
 
+# On startup, if the database holds no cases at all, run a small comparison in
+# the background so the Cases, Outbox and Audit screens have real rows to show.
+#
+# A deployed instance starts empty every time -- the disk is ephemeral, and a
+# free one is rebuilt whenever it wakes from idle -- so without this the first
+# visitor can read the Overview (which ships with a committed run) but finds
+# every other screen blank. Small on purpose: this must not tie up a small
+# instance for minutes. Set to 0 to disable.
+DEMO_SEED_COUNT = int(os.getenv("DEMO_SEED_COUNT", "200"))
+
 # The gate's per-customer contact cap, in hours. 24 is the product default and
 # what every published result uses -- one message per customer per day, across
 # all of their cases, is the whole anti-spam position.
