@@ -8,7 +8,7 @@ payment link daily limit). Address defaults to the first entry in
 DELIVERY_ALLOWLIST, or EMAIL_FROM_ADDRESS if the allowlist is empty.
 
 This is the ground truth for "am I actually receiving these": a printed
-message id means Brevo accepted the message for delivery. It does not
+message id means Resend accepted the message for delivery. It does not
 guarantee the inbox over spam, so check both.
 """
 
@@ -32,7 +32,7 @@ print(f"EMAIL_CONFIGURED : {EMAIL_CONFIGURED} (from {EMAIL_FROM_ADDRESS or 'no E
 print(f"DELIVERY_ALLOWLIST: {DELIVERY_ALLOWLIST or '(empty -- everyone is allowed)'}")
 
 if not EMAIL_CONFIGURED:
-    print("\nBREVO_API_KEY / EMAIL_FROM_ADDRESS are not set in .env. Nothing to test.")
+    print("\nRESEND_API_KEY is not set in .env. Nothing to test.")
     raise SystemExit(1)
 
 recipient = sys.argv[1] if len(sys.argv) > 1 else (DELIVERY_ALLOWLIST[0] if DELIVERY_ALLOWLIST else EMAIL_FROM_ADDRESS)
@@ -86,6 +86,6 @@ elif status == "skipped":
     print("\nNothing was sent. The 'detail' line above says exactly why.")
 else:
     print(
-        "\nBrevo rejected it. The 'detail' line above carries the real reason -- "
-        "most often an unverified sender address or a spent daily quota."
+        "\nResend rejected it. The 'detail' line above carries the real reason -- "
+        "most often an unverified sending domain or a spent quota."
     )

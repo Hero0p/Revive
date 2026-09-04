@@ -94,7 +94,8 @@ starts and the full dashboard works with an empty `.env`.
 | `GROQ_API_KEY` | LLM-written message bodies. Free key from [console.groq.com/keys](https://console.groq.com/keys) | Hand-written templates, labelled as such in the outbox |
 | `RESUME_TOKEN_SECRET` | Signing resume links | A dev default; set any random string before anything real |
 | `PUBLIC_BASE_URL` | The domain in message links | Falls back to `RENDER_EXTERNAL_URL` when deployed, then `http://localhost:5173`. **A message linking to localhost is useless to whoever gets it** |
-| `BREVO_API_KEY` / `EMAIL_FROM_ADDRESS` | Sending email at all. Free tier at [brevo.com](https://www.brevo.com), 300/day | Email is skipped and the reason recorded |
+| `RESEND_API_KEY` | Sending email at all. Free tier at [resend.com](https://resend.com) | Email is skipped and the reason recorded |
+| `EMAIL_FROM_ADDRESS` | Sending from a different address | `revive@calmcat.in`, the domain verified for this project |
 | `EMAIL_FROM_NAME` | The display name on the message | `Blue Tokai Coffee` |
 | `CORS_ORIGINS` | A dashboard served from another origin | localhost only |
 | `DATABASE_URL` | Another SQLite file | `recovery.db` in the project root |
@@ -595,18 +596,18 @@ Set `DELIVERY_ALLOWLIST` to your own address **first**, then
 `DELIVER_FOR_REAL=true`. The allowlist is the difference between a bug costing
 nothing and a bug emailing a stranger.
 
-Mail goes out over **Brevo's transactional HTTPS API**. SMTP is deliberately
-not supported: Render, like most hosting platforms, blocks outbound SMTP ports
-to keep spammers off its address space, so a deployed instance failed every
-send with `[Errno 101] Network is unreachable` however correct the credentials
-were. Port 443 is never blocked.
+Mail goes out over **Resend's HTTPS API**. SMTP is deliberately not supported:
+Render, like most hosting platforms, blocks outbound SMTP ports to keep
+spammers off its address space, so a deployed instance failed every send with
+`[Errno 101] Network is unreachable` however correct the credentials were.
+Port 443 is never blocked.
 
-Brevo rather than the better-known options because its free tier verifies a
-single sender **address** rather than a whole domain — so mail reaches real
-recipients without owning one. Sign up, add your address on the Senders page,
-click the confirmation link, create an API key, then set `BREVO_API_KEY` and
-`EMAIL_FROM_ADDRESS`. Delivery to an unverified sender is rejected by the API,
-and the rejection is recorded on the action like any other refusal.
+Set `RESEND_API_KEY` and that is the whole configuration — the sender defaults
+to `revive@calmcat.in`, on a domain already verified with Resend, which is what
+lets messages reach any recipient rather than only the account owner. Point
+`EMAIL_FROM_ADDRESS` somewhere else and you are responsible for verifying that
+domain too; Resend rejects an unverified sender, and the rejection is recorded
+on the action like any other refusal.
 
 Nothing else about a message changes with the transport: the same triggers, the
 same recipients, the same subjects and the same bodies. Only the delivery

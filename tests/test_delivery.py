@@ -82,7 +82,7 @@ class TestMissingConfiguration:
         monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", False)
         status, _, detail = delivery.deliver(*make("email"))
         assert status == "skipped"
-        assert "BREVO_API_KEY" in detail
+        assert "RESEND_API_KEY" in detail
 
     def test_a_customer_with_no_address_is_skipped(self, monkeypatch):
         monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
@@ -167,8 +167,8 @@ class TestTheHttpsTransport:
     def _configured(self, monkeypatch):
         monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
         monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", True)
-        monkeypatch.setattr(delivery, "BREVO_API_KEY", "secret-key-value")
-        monkeypatch.setattr(delivery, "EMAIL_FROM_ADDRESS", "merchant@example.com")
+        monkeypatch.setattr(delivery, "RESEND_API_KEY", "secret-key-value")
+        monkeypatch.setattr(delivery, "EMAIL_FROM_ADDRESS", "revive@calmcat.in")
         monkeypatch.setattr(delivery, "DELIVERY_ALLOWLIST", [])
 
     def test_it_posts_the_message_to_the_email_api(self, monkeypatch):
@@ -180,7 +180,7 @@ class TestTheHttpsTransport:
 
             @staticmethod
             def json():
-                return {"messageId": "<brevo-123@smtp>"}
+                return {"id": "resend-123"}
 
         def fake_post(url, **kwargs):
             sent.update(url=url, json=kwargs["json"], headers=kwargs["headers"])
@@ -193,21 +193,21 @@ class TestTheHttpsTransport:
         status, provider_id, detail = delivery.deliver(action, case, customer)
 
         assert status == "sent"
-        assert provider_id == "<brevo-123@smtp>"
-        assert sent["url"] == "https://api.brevo.com/v3/smtp/email"
-        assert sent["json"]["to"] == [{"email": "someone@example.com"}]
-        assert sent["json"]["sender"]["email"] == "merchant@example.com"
+        assert provider_id == "resend-123"
+        assert sent["url"] == "https://api.resend.com/emails"
+        assert sent["json"]["to"] == ["someone@example.com"]
+        assert "revive@calmcat.in" in sent["json"]["from"]
         # The subject and body are the ones the pipeline produced, unchanged.
         assert sent["json"]["subject"] == delivery.SUBJECTS["soft_cart_reminder"]
-        assert sent["json"]["textContent"] == "Your cart is saved."
-        assert sent["headers"]["api-key"] == "secret-key-value"
+        assert sent["json"]["text"] == "Your cart is saved."
+        assert sent["headers"]["Authorization"] == "Bearer secret-key-value"
 
     def test_an_api_error_is_recorded_rather_than_raised(self, monkeypatch):
         self._configured(monkeypatch)
 
         class Response:
             status_code = 400
-            text = '{"message":"Sender email is not valid"}'
+            text = '{"message":"The calmcat.in domain is not verified"}'
 
         monkeypatch.setattr(delivery.httpx, "post", lambda url, **kw: Response())
 
@@ -216,7 +216,7 @@ class TestTheHttpsTransport:
         status, _, detail = delivery.deliver(action, case, customer)
 
         assert status == "failed"
-        assert "400" in detail and "Sender email is not valid" in detail
+        assert "400" in detail and "not verified" in detail
 
     def test_the_api_key_never_reaches_the_recorded_detail(self, monkeypatch):
         """The detail is stored on the action, rendered in the dashboard and
@@ -260,4 +260,4 @@ class TestTheDeliveryStatusExposesMisconfiguration:
         status = delivery.status()
         assert "public_base_url" in status
         assert "public_base_url_is_local" in status
-        assert status["transport"] == "brevo"
+        assert status["transport"] == "resend"

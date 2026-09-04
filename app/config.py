@@ -96,23 +96,22 @@ DELIVERY_ALLOWLIST = [
 ]
 
 # --- Email transport -----------------------------------------------------
-# Brevo's transactional API over HTTPS.
+# Resend's HTTPS API.
 #
 # SMTP is not an option here. Render, like most hosting platforms, blocks
 # outbound SMTP ports (25/465/587) to keep spammers off its address space, so
 # a deployed instance failed every send with "[Errno 101] Network is
-# unreachable" however correct the credentials were. An HTTPS API on port 443
-# is never blocked.
-#
-# Brevo specifically because its free tier verifies a single *sender address*
-# rather than a whole domain, so mail can go to real recipients without owning
-# one. Verify the address you put in EMAIL_FROM_ADDRESS from Brevo's Senders
-# page before the first send, or the API rejects it.
-BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
-# Must be an address verified on the Brevo account. No default: a wrong sender
-# fails at send time with a message nobody expects, and a placeholder here
-# would make that more likely, not less.
-EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS", "")
+# unreachable" however correct the credentials were. Port 443 is never
+# blocked.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+
+# The sender address, which must sit on a domain verified with Resend --
+# calmcat.in is verified for this project. Defaulted rather than required
+# because, unlike PUBLIC_BASE_URL, this is a property of the merchant rather
+# than of the environment: it is the same address locally and deployed, so a
+# default cannot be silently wrong in one of them. Override it and you are
+# responsible for verifying that domain too.
+EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS", "revive@calmcat.in")
 EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME", "Blue Tokai Coffee")
 
-EMAIL_CONFIGURED = bool(BREVO_API_KEY and EMAIL_FROM_ADDRESS)
+EMAIL_CONFIGURED = bool(RESEND_API_KEY and EMAIL_FROM_ADDRESS)

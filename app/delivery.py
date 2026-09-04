@@ -21,26 +21,28 @@ Email is the only channel, by design. Real SMS to Indian numbers needs DLT
 registration with a telecom operator, which is a commercial process rather
 than an API key, so it was never implemented.
 
-It sends over Brevo's transactional HTTPS API. SMTP is not an option: Render,
-like most hosting platforms, blocks outbound SMTP ports, so every send from a
-deployed instance failed with "[Errno 101] Network is unreachable" however
-correct the credentials were. Port 443 is never blocked.
+It sends over Resend's HTTPS API. SMTP is not an option: Render, like most
+hosting platforms, blocks outbound SMTP ports, so every send from a deployed
+instance failed with "[Errno 101] Network is unreachable" however correct the
+credentials were. Port 443 is never blocked.
 """
+
+from email.utils import formataddr
 
 import httpx
 
 from app.config import (
-    BREVO_API_KEY,
     DELIVER_FOR_REAL,
     DELIVERY_ALLOWLIST,
     EMAIL_CONFIGURED,
     EMAIL_FROM_ADDRESS,
     EMAIL_FROM_NAME,
+    RESEND_API_KEY,
 )
 from app.models import Action, Case, Customer
 
 TIMEOUT = 15.0
-API_URL = "https://api.brevo.com/v3/smtp/email"
+API_URL = "https://api.resend.com/emails"
 
 # One line, no marketing. The body carries the detail.
 SUBJECTS = {
@@ -80,7 +82,7 @@ def deliver(
         return "skipped", None, f"channel {action.channel!r} is not supported, email only"
 
     if not EMAIL_CONFIGURED:
-        return "skipped", None, "BREVO_API_KEY / EMAIL_FROM_ADDRESS not set"
+        return "skipped", None, "RESEND_API_KEY / EMAIL_FROM_ADDRESS not set"
 
     body = action.message_body or ""
     if not body:
@@ -105,34 +107,33 @@ def deliver(
 
 
 def _send_email(recipient: str, action: Action, body: str) -> str:
-    """One HTTPS call. Returns Brevo's message id, raises on anything else."""
+    """One HTTPS call. Returns Resend's message id, raises on anything else."""
     response = httpx.post(
         API_URL,
         headers={
-            "api-key": BREVO_API_KEY,
-            "accept": "application/json",
-            "content-type": "application/json",
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
         },
         json={
-            "sender": {"name": EMAIL_FROM_NAME, "email": EMAIL_FROM_ADDRESS},
-            "to": [{"email": recipient}],
+            "from": formataddr((EMAIL_FROM_NAME, EMAIL_FROM_ADDRESS)),
+            "to": [recipient],
             "subject": SUBJECTS.get(action.message_intent, "About your recent order"),
-            "textContent": body,
+            "text": body,
         },
         timeout=TIMEOUT,
     )
     if response.status_code >= 300:
-        # The body carries the real reason -- an unverified sender, a spent
-        # daily quota, a bad key -- and it is the only useful thing to record.
-        raise ConnectionError(f"brevo {response.status_code}: {_redact(response.text)}")
+        # The body carries the real reason -- an unverified sending domain, a
+        # spent quota, a bad key -- and it is the only useful thing to record.
+        raise ConnectionError(f"resend {response.status_code}: {_redact(response.text)}")
 
-    return response.json().get("messageId", "")
+    return response.json().get("id", "")
 
 
 def _redact(text: str) -> str:
     """Strip the API key out of anything that might be shown or logged."""
-    if BREVO_API_KEY and BREVO_API_KEY in text:
-        text = text.replace(BREVO_API_KEY, "***")
+    if RESEND_API_KEY and RESEND_API_KEY in text:
+        text = text.replace(RESEND_API_KEY, "***")
     return text
 
 
@@ -143,7 +144,7 @@ def status() -> dict:
     return {
         "deliver_for_real": DELIVER_FOR_REAL,
         "email_configured": EMAIL_CONFIGURED,
-        "transport": "brevo",
+        "transport": "resend",
         "allowlist": DELIVERY_ALLOWLIST,
         "from_email": EMAIL_FROM_ADDRESS or None,
         "public_base_url": PUBLIC_BASE_URL,

@@ -34,11 +34,9 @@ services:
         sync: false
 
       # Email over HTTPS. Render blocks outbound SMTP, so this is the only way
-      # mail leaves this service. EMAIL_FROM_ADDRESS must be an address
-      # verified on the Brevo account.
-      - key: BREVO_API_KEY
-        sync: false
-      - key: EMAIL_FROM_ADDRESS
+      # mail leaves this service. The sender address defaults to the verified
+      # one in config.py, so only the key has to be set here.
+      - key: RESEND_API_KEY
         sync: false
 
       # Set in the Render dashboard, never committed.
