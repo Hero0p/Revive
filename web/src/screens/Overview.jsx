@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
-import { api, rupeesShort } from '../api'
+import { COMPARISON_COUNT, COMPARISON_SEED, api, awaitJob, jobProgress, rupeesShort } from '../api'
 import { MessagesVersusRecovered, RecoveryByCause } from '../components/charts'
 import { Box, Button, Empty, Metric, Panel, Spinner } from '../components/ui'
 
-const SEED = 42
-const COUNT = 3000
+const SEED = COMPARISON_SEED
+const COUNT = COMPARISON_COUNT
 
 export default function Overview({ tick, go }) {
   const [data, setData] = useState(null)
   const [causes, setCauses] = useState({ baseline: null, router: null })
   const [loading, setLoading] = useState(true)
   const [running, setRunning] = useState(false)
+  const [job, setJob] = useState(null)
+  const [failed, setFailed] = useState(null)
 
   const load = async () => {
     try {
@@ -34,11 +36,20 @@ export default function Overview({ tick, go }) {
 
   const runBoth = async () => {
     setRunning(true)
+    setJob(null)
+    setFailed(null)
     try {
+      // The server starts the run and answers straight away; the result
+      // arrives by polling, because the run itself outlives any request.
       await api.createRun({ policy: 'both', count: COUNT, seed: SEED })
+      const final = await awaitJob(setJob)
+      if (final.state === 'error') setFailed(final.error)
       await load()
+    } catch (err) {
+      setFailed(err.message)
     } finally {
       setRunning(false)
+      setJob(null)
     }
   }
 
@@ -55,13 +66,15 @@ export default function Overview({ tick, go }) {
           title="No comparison has been run yet"
           action={
             <Button kind="primary" onClick={runBoth} disabled={running}>
-              {running ? 'Running… (about two minutes)' : `Run both policies over ${COUNT} failures`}
+              {running ? `Running… ${jobProgress(job)}` : `Run both policies over ${COUNT} failures`}
             </Button>
           }
         >
           Both policies see the same {COUNT.toLocaleString('en-IN')} synthetic failures, from seed{' '}
-          {SEED}. Every case is driven through the real pipeline, so the run takes roughly two
-          minutes.
+          {SEED}. Every case is driven through the real pipeline, so the run takes a couple of
+          minutes locally and longer on a small hosted instance. It keeps running if you navigate
+          away.
+          {failed && <div className="mt-3 text-atrisk">The run failed: {failed}</div>}
         </Empty>
       </>
     )
@@ -153,7 +166,7 @@ export default function Overview({ tick, go }) {
 
       <div className="flex gap-2">
         <Button onClick={runBoth} disabled={running}>
-          {running ? 'Running… (about two minutes)' : 'Re-run both policies'}
+          {running ? `Running… ${jobProgress(job)}` : 'Re-run both policies'}
         </Button>
         <Button kind="quiet" onClick={() => go('compare')}>
           See the full comparison

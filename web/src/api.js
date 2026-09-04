@@ -46,9 +46,47 @@ export const api = {
 
   runs: () => req('/api/runs'),
   createRun: (body) => post('/api/runs', body),
+  runStatus: () => req('/api/runs/status'),
   byCause: (id) => req(`/api/runs/${id}/by-cause`),
   compare: (seed, count) => req(`/api/runs/compare/${seed}/${count}`),
   sweep: (body) => post('/api/runs/sweep', body),
+}
+
+/** How many synthetic failures the dashboard compares over.
+ *
+ * 3,000 is the number every published result uses. It is overridable at build
+ * time (VITE_COMPARISON_COUNT) only because a small free hosting instance can
+ * take a long while to chew through that many, and a deployed demo that never
+ * finishes its first run is worse than one that compares fewer cases. */
+export const COMPARISON_COUNT = Number(import.meta.env.VITE_COMPARISON_COUNT) || 3000
+export const COMPARISON_SEED = Number(import.meta.env.VITE_COMPARISON_SEED) || 42
+
+/** Waits for the background comparison to finish, reporting each poll.
+ *
+ * A run takes minutes, which is longer than a browser or a hosting proxy will
+ * hold a request open, so the server starts it and we poll instead. A failed
+ * poll is ignored rather than fatal: an instance that has just woken up drops
+ * the occasional request, and the job is still running regardless. */
+export async function awaitJob(onProgress, { intervalMs = 2000 } = {}) {
+  for (;;) {
+    await new Promise((resolve) => setTimeout(resolve, intervalMs))
+    let status
+    try {
+      status = await api.runStatus()
+    } catch {
+      continue
+    }
+    onProgress?.(status)
+    if (status.state !== 'running') return status
+  }
+}
+
+/** "router (2 of 2) · 41s" for the progress line under a running job. */
+export function jobProgress(job) {
+  if (!job) return ''
+  const step = job.step ? policyLabel(job.step.split(' ')[0]) + job.step.slice(job.step.indexOf(' ')) : ''
+  const secs = job.elapsed_seconds != null ? `${Math.round(job.elapsed_seconds)}s` : ''
+  return [step, secs].filter(Boolean).join(' · ')
 }
 
 /** 400000 -> "₹4,000", with Indian digit grouping. */

@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 235 tests, ~5 seconds
+pytest        # 241 tests, ~10 seconds
 ```
 
 ### Environment variables
@@ -450,8 +450,10 @@ POST /api/razorpay/sync          polls the Payments API, feeds failures to the w
 POST /api/cases/{id}/reclassify  human-only: assign a cause to an escalated live case
 POST /api/sim/inject             builds a payload and sends it through that same route
 POST /api/clock/advance          {"days": 3} | {"minutes": 30} | {"to_next_action": true}
-POST /api/runs                   {"policy": "both", "count": 3000, "seed": 42}
-POST /api/runs/sweep             the sensitivity sweep
+POST /api/runs                   {"policy": "both", "count": 3000, "seed": 42}. Returns 202
+                                 immediately; the run happens on a background thread
+GET  /api/runs/status            progress of the running comparison or sweep
+POST /api/runs/sweep             the sensitivity sweep, backgrounded the same way
 POST /api/chaos                  {"razorpay_down": true} | {"llm_down": true}
 POST /api/demo/reset             wipe everything and put the clock back
 GET  /api/cases, /api/cases/{id}, /api/cases/{id}/timeline
@@ -550,7 +552,16 @@ the wiring.
    `payment.failed` and `payment.captured`, and use the same secret as
    `RAZORPAY_WEBHOOK_SECRET`.
 3. Open the Vercel URL and press **Run both policies** to populate the
-   comparison. Expect a few minutes on a free instance.
+   comparison.
+
+A run takes minutes, which is far longer than Vercel's proxy or the browser
+will hold a request open — so `POST /api/runs` returns `202` straight away, the
+work happens on a background thread, and the dashboard polls
+`/api/runs/status`. You can navigate away and come back; it keeps going. On a
+free instance 3,000 cases is slow, so if you would rather the deployed demo
+compare fewer, set `VITE_COMPARISON_COUNT` (e.g. `500`) in Vercel's environment
+variables and redeploy — the Overview and Compare screens both read it, so they
+stay in step. The numbers in this README are the 3,000-case run.
 
 If you would rather point the dashboard straight at the API instead of using
 the rewrites, set `CORS_ORIGINS` on Render to your Vercel URL. That is what it
@@ -568,7 +579,7 @@ difference between a bug costing nothing and a bug emailing a stranger.
 
 ## Tests
 
-235 tests, ~5 seconds. The suite is hermetic: it forces simulated mode and
+241 tests, ~10 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
@@ -582,6 +593,7 @@ never make the tests bill a real account or change their outcome.
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |
 | `test_delivery.py` | every delivery refusal, including a non-email channel refused rather than rerouted |
 | `test_razorpay_breaker.py` | the breaker surviving the demo clock being advanced, jumped, or reset while open; a payment_link failure never opening the order breaker |
+| `test_runs_api.py` | a comparison is backgrounded, answers in under a second, keeps the API answerable, refuses a concurrent run, and reports a failure instead of hanging |
 | `test_clock_lint.py` | no `datetime.now()` outside `clock.py` |
 
 ---

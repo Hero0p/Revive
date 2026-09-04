@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
-import { api, policyLabel, rupees, rupeesShort } from '../api'
+import { COMPARISON_COUNT, COMPARISON_SEED, api, awaitJob, jobProgress, policyLabel, rupees, rupeesShort } from '../api'
 import { MoneyByCause } from '../components/charts'
 import { Box, Button, Empty, Panel, Spinner, Td, Th, inputClass } from '../components/ui'
 
 export default function Compare({ tick, onChange }) {
-  const [seed, setSeed] = useState(42)
-  const [count, setCount] = useState(3000)
+  const [seed, setSeed] = useState(COMPARISON_SEED)
+  const [count, setCount] = useState(COMPARISON_COUNT)
   const [data, setData] = useState(null)
   const [causes, setCauses] = useState(null)
   const [sweep, setSweep] = useState(null)
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [job, setJob] = useState(null)
+  const [failed, setFailed] = useState(null)
 
   const load = async () => {
     setLoading(true)
@@ -34,21 +36,36 @@ export default function Compare({ tick, onChange }) {
 
   const run = async () => {
     setBusy(true)
+    setJob(null)
+    setFailed(null)
     try {
       await api.createRun({ policy: 'both', count: Number(count), seed: Number(seed) })
+      const final = await awaitJob(setJob)
+      if (final.state === 'error') setFailed(final.error)
       await load()
       onChange()
+    } catch (err) {
+      setFailed(err.message)
     } finally {
       setBusy(false)
+      setJob(null)
     }
   }
 
   const runSweep = async () => {
     setBusy(true)
+    setJob(null)
+    setFailed(null)
     try {
-      setSweep(await api.sweep({ policy: 'both', count: Number(count), seed: Number(seed) }))
+      await api.sweep({ policy: 'both', count: Number(count), seed: Number(seed) })
+      const final = await awaitJob(setJob)
+      if (final.state === 'error') setFailed(final.error)
+      else setSweep(final.result)
+    } catch (err) {
+      setFailed(err.message)
     } finally {
       setBusy(false)
+      setJob(null)
     }
   }
 
@@ -83,11 +100,12 @@ export default function Compare({ tick, onChange }) {
           />
         </label>
         <Button kind="primary" onClick={run} disabled={busy}>
-          {busy ? 'Running…' : 'Run both policies'}
+          {busy ? `Running… ${jobProgress(job)}` : 'Run both policies'}
         </Button>
         <Button onClick={runSweep} disabled={busy}>
           Run the sensitivity sweep
         </Button>
+        {failed && <span className="text-[13px] text-atrisk">Failed: {failed}</span>}
       </div>
 
       {loading ? (

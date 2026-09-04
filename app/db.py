@@ -25,6 +25,12 @@ def _sqlite_pragmas(dbapi_connection, _record) -> None:
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA journal_mode=WAL")
     cursor.execute("PRAGMA synchronous=NORMAL")
+    # A comparison run now happens on a background thread while the dashboard
+    # keeps polling, so a reader and the writer genuinely overlap. WAL lets
+    # them, but a second *writer* (a live webhook arriving mid-run) still has
+    # to wait its turn -- without a busy timeout that is an instant
+    # "database is locked" instead of a short wait.
+    cursor.execute("PRAGMA busy_timeout=15000")
     cursor.close()
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
