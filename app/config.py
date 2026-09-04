@@ -14,7 +14,7 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
 RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "dev-webhook-secret")
 RESUME_TOKEN_SECRET = os.getenv("RESUME_TOKEN_SECRET", "dev-resume-secret")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:5173").rstrip("/")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://revive-eight-orpin.vercel.app/").rstrip("/")
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{ROOT / 'recovery.db'}")
 
@@ -26,7 +26,11 @@ CORS_ORIGINS = [
     origin.strip().rstrip("/")
     for origin in os.getenv("CORS_ORIGINS", "").split(",")
     if origin.strip()
-] + ["http://localhost:5173", "http://127.0.0.1:5173"]
+] + [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://revive-eight-orpin.vercel.app",
+]
 
 LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
 # Only meaningful for reasoning models. Blank it when pointing LLM_MODEL at a
