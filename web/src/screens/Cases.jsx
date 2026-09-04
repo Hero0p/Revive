@@ -127,9 +127,8 @@ export default function Cases({ tick, onOpenCase }) {
                 <tr
                   key={c.id}
                   onClick={() => onOpenCase(c.id)}
-                  className={`cursor-pointer hover:bg-[#f6f5f1] ${
-                    c.status === 'suppressed' ? 'text-blocked' : ''
-                  }`}
+                  className={`cursor-pointer hover:bg-[#f6f5f1] ${c.status === 'suppressed' ? 'text-blocked' : ''
+                    }`}
                 >
                   <Td right>{rupees(c.amount_paise)}</Td>
                   <Td>

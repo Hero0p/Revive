@@ -163,10 +163,10 @@ export default function Simulate({ tick, onChange, onOpenCase }) {
                 detail={
                   chaos
                     ? `breaker ${chaos.razorpay.breaker} · ${chaos.razorpay.consecutive_failures} consecutive failures` +
-                      (chaos.razorpay.breaker === 'open'
-                        ? ` · reopens in ${chaos.razorpay.reopens_in_seconds}s`
-                        : '') +
-                      (chaos.razorpay.last_error ? ` · last: ${chaos.razorpay.last_error}` : '')
+                    (chaos.razorpay.breaker === 'open'
+                      ? ` · reopens in ${chaos.razorpay.reopens_in_seconds}s`
+                      : '') +
+                    (chaos.razorpay.last_error ? ` · last: ${chaos.razorpay.last_error}` : '')
                     : ''
                 }
                 onClick={() => toggleChaos('razorpay_down')}

@@ -178,15 +178,15 @@ export default function Checkout({ onChange, onOpenCase }) {
               setThisCheckoutCase(found)
               note(
                 "Razorpay's response carried no reason the decision table recognises (see " +
-                  'fixtures/captured/README.md — this is routine in test mode). Assign one below ' +
-                  'to continue the demo.',
+                'fixtures/captured/README.md — this is routine in test mode). Assign one below ' +
+                'to continue the demo.',
                 'atrisk',
               )
             }
           } else {
             note(
               'Case not found yet. It may still be arriving -- try "Pull recent payments" below in ' +
-                'a moment.',
+              'a moment.',
               'muted',
             )
           }
@@ -220,17 +220,17 @@ export default function Checkout({ onChange, onOpenCase }) {
       const result = await api.reclassify(caseId, body)
       note(
         `Case #${caseId} reclassified to ${readable(result.error_reason)} (${result.rule_id}), ` +
-          `scheduled for ${when(result.next_action_at)}.`,
+        `scheduled for ${when(result.next_action_at)}.`,
         'recovered',
       )
       setSynced((prev) =>
         prev
           ? {
-              ...prev,
-              cases: prev.cases.map((c) =>
-                c.case_id === caseId ? { ...c, case_status: result.status } : c,
-              ),
-            }
+            ...prev,
+            cases: prev.cases.map((c) =>
+              c.case_id === caseId ? { ...c, case_status: result.status } : c,
+            ),
+          }
           : prev,
       )
       setThisCheckoutCase((prev) => (prev?.id === caseId ? null : prev))

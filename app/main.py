@@ -37,7 +37,7 @@ app.include_router(sim.router)
 app.include_router(runs.router)
 app.include_router(orders.router)
 
-
+@app.get("/")
 @app.get("/api/health")
 def health():
     return {
