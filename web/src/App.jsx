@@ -58,7 +58,7 @@ export default function App() {
     <div className="flex min-h-full">
       <aside className="w-[196px] shrink-0 border-r border-rule px-5 py-6">
         <div className="mb-8">
-          <div className="text-[15px] font-semibold tracking-[-0.01em]">Recovery Router</div>
+          <div className="text-[15px] font-semibold tracking-[-0.01em]">Revive</div>
           <div className="mt-0.5 text-[12px] text-muted">Cause-aware payment recovery</div>
         </div>
 

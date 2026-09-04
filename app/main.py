@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="Recovery Router", version="1.0", lifespan=lifespan)
+app = FastAPI(title="Revive", version="1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
