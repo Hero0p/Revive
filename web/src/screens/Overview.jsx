@@ -113,13 +113,13 @@ export default function Overview({ tick, go }) {
         <Box className="grid grid-cols-2 gap-6 px-6 py-5 lg:grid-cols-4">
           <Metric label="Amount at risk" value={rupeesShort(router.amount_at_risk_paise)} tone="atrisk" />
           <Metric
-            label="Recovered by the router"
+            label="Recovered by Revive"
             value={rupeesShort(router.amount_recovered_paise)}
             tone="recovered"
             hint={`${router.cases_recovered} of ${router.case_count} cases`}
           />
           <Metric
-            label="Recovered by the baseline"
+            label="Recovered by Baseline"
             value={rupeesShort(baseline.amount_recovered_paise)}
             hint={`${baseline.cases_recovered} of ${baseline.case_count} cases`}
           />

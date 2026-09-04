@@ -1,4 +1,4 @@
-import { gapFrom, when } from '../api'
+import { gapFrom, policyLabel, when } from '../api'
 
 /**
  * The signature element: one failed payment, two lanes.
@@ -74,7 +74,7 @@ function Axis({ maxHours, at, origin }) {
 
 function Lane({ lane, at, now, origin }) {
   const recovered = lane.status === 'recovered'
-  const label = lane.policy === 'baseline' ? 'Baseline' : 'Router'
+  const label = policyLabel(lane.policy)
 
   return (
     <div className="mb-2 border-t border-rule pt-4 first:border-t-0">

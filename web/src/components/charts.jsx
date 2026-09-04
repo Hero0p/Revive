@@ -8,12 +8,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { causeLabel, rupeesShort } from '../api'
+import { causeLabel, policyLabel, rupeesShort } from '../api'
 
 /**
  * Two series, validated as a categorical pair (CVD ΔE 13.4 deutan / 13.8
  * tritan, normal-vision ΔE 23.9, both above the chroma floor and 3:1 contrast).
- * Baseline gets a non-status identity hue; the router keeps the recovered
+ * Baseline gets a non-status identity hue; Revive keeps the recovered
  * green, because that series really is the money that came back.
  */
 export const SERIES = {
@@ -84,7 +84,7 @@ export function RecoveryByCause({ baseline, router }) {
           iconSize={8}
         />
         <Bar dataKey="baseline" name="Baseline" fill={SERIES.baseline} radius={[0, 4, 4, 0]} />
-        <Bar dataKey="router" name="Router" fill={SERIES.router} radius={[0, 4, 4, 0]} />
+        <Bar dataKey="router" name="Revive" fill={SERIES.router} radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )
@@ -95,7 +95,7 @@ export function MessagesVersusRecovered({ policies }) {
   const data = ['baseline', 'router']
     .filter((p) => policies?.[p])
     .map((p) => ({
-      policy: p === 'baseline' ? 'Baseline' : 'Router',
+      policy: policyLabel(p),
       messages: policies[p].messages_sent,
       recovered: policies[p].cases_recovered,
     }))

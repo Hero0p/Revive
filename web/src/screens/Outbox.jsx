@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, causeLabel, rupees, when } from '../api'
+import { api, causeLabel, rupees, runLabel, when } from '../api'
 import { Box, Empty, Panel, Spinner, Status, inputClass } from '../components/ui'
 
 export default function Outbox({ tick, onOpenCase }) {
@@ -38,7 +38,7 @@ export default function Outbox({ tick, onOpenCase }) {
             <option value="live">Live and injected</option>
             {runs.map((r) => (
               <option key={r.run_id} value={r.run_id}>
-                {r.run_id}
+                {runLabel(r.run_id)}
               </option>
             ))}
           </select>

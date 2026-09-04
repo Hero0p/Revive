@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, causeLabel, rupees, when } from '../api'
+import { api, causeLabel, policyLabel, rupees, runLabel, when } from '../api'
 import { Box, Button, Empty, Spinner, Status, Td, Th, inputClass } from '../components/ui'
 
 const CAUSES = [
@@ -87,7 +87,7 @@ export default function Cases({ tick, onOpenCase }) {
             <option value="live">Live and injected</option>
             {runs.map((r) => (
               <option key={r.run_id} value={r.run_id}>
-                {r.run_id}
+                {runLabel(r.run_id)}
               </option>
             ))}
           </select>
@@ -163,7 +163,7 @@ export default function Cases({ tick, onOpenCase }) {
                     )}
                   </Td>
                   <Td className="num text-muted">{when(c.failed_at)}</Td>
-                  <Td className="text-muted">{c.policy}</Td>
+                  <Td className="text-muted">{policyLabel(c.policy)}</Td>
                 </tr>
               ))}
             </tbody>

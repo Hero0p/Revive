@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, rupees, rupeesShort } from '../api'
+import { api, policyLabel, rupees, rupeesShort } from '../api'
 import { MoneyByCause } from '../components/charts'
 import { Box, Button, Empty, Panel, Spinner, Td, Th, inputClass } from '../components/ui'
 
@@ -108,7 +108,7 @@ export default function Compare({ tick, onChange }) {
                   <tr>
                     <Th>Metric</Th>
                     <Th right>Baseline</Th>
-                    <Th right>Router</Th>
+                    <Th right>Revive</Th>
                     <Th>&nbsp;</Th>
                   </tr>
                 </thead>
@@ -155,7 +155,7 @@ export default function Compare({ tick, onChange }) {
                   <tr>
                     <Th>Metric</Th>
                     <Th right>Baseline</Th>
-                    <Th right>Router</Th>
+                    <Th right>Revive</Th>
                     <Th>&nbsp;</Th>
                   </tr>
                 </thead>
@@ -197,7 +197,7 @@ export default function Compare({ tick, onChange }) {
             >
               <Box className="px-5 py-4">
                 <p className="text-[15px]">
-                  The router wins{' '}
+                  Revive wins{' '}
                   <span className="num font-semibold text-recovered">
                     {sweep.router_wins} of {sweep.settings_tested}
                   </span>{' '}
@@ -216,7 +216,7 @@ export default function Compare({ tick, onChange }) {
                           <td
                             className={`py-1 pl-4 ${r.router_wins ? 'text-recovered' : 'text-atrisk'}`}
                           >
-                            {r.router_wins ? 'router' : 'baseline'}
+                            {policyLabel(r.router_wins ? 'router' : 'baseline')}
                           </td>
                         </tr>
                       ))}
@@ -228,7 +228,7 @@ export default function Compare({ tick, onChange }) {
           )}
 
           {causes && (
-            <Panel title="Where the money is" note="Router run, by failure cause.">
+            <Panel title="Where the money is" note="Revive run, by failure cause.">
               <Box className="px-4 py-4">
                 <MoneyByCause causes={causes} />
               </Box>

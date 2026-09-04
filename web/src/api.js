@@ -106,3 +106,19 @@ export const CAUSE_LABEL = {
 }
 
 export const causeLabel = (c) => CAUSE_LABEL[c] || c || '—'
+
+/** The cause-aware policy is the product, and it is called Revive.
+ *
+ * The stored value stays "router": it is the API contract, the `policy` column
+ * on every case, and the prefix of every run id. Only the label changes. */
+export const policyLabel = (p) =>
+  ({ router: 'Revive', baseline: 'Baseline' }[p] || p || '—')
+
+/** "router-s42-n3000" -> "Revive · seed 42 · 3,000 cases". Falls back to the
+ *  raw id for anything that does not match the shape. */
+export function runLabel(runId) {
+  const parts = /^([a-z]+)-s(\d+)-n(\d+)$/.exec(runId || '')
+  if (!parts) return runId
+  const [, policy, seed, count] = parts
+  return `${policyLabel(policy)} · seed ${seed} · ${Number(count).toLocaleString('en-IN')} cases`
+}

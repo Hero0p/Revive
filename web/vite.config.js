@@ -9,9 +9,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': 'http://localhost:8000',
-      '/orders': 'http://localhost:8000',
-      '/webhooks': 'http://localhost:8000',
+      '/api': 'https://revive-revenue.onrender.com/',
+      '/orders': 'https://revive-revenue.onrender.com/',
+      '/webhooks': 'https://revive-revenue.onrender.com/',
     },
   },
 })
