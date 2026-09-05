@@ -1,3 +1,5 @@
+live at : https://revive-eight-orpin.vercel.app/
+
 # Revive
 
 **Razorpay's Failed Payment Recovery sends every failed payment the same link
@@ -21,40 +23,212 @@ against six stopping rules before acting, and records why for every decision.
 
 ---
 
-## The shape of the system
+## Architecture at a glance
 
-```
-   Razorpay webhook                    (real, signature-verified)
-          |
-          v
-   ingest.py ........... one case per checkout, retries folded in
-          |
-          v
-   rules.py ............ WHY did it fail?  ->  root cause
-          |               no match? -> escalate to a human, never guess
-          v
-   policy.py ........... WHEN to send, WHAT to say  ->  a scheduled action
-          |
-          v
-   outbox.py ........... the row is written BEFORE anything is sent
-          |
-          v
-   worker.py ........... the scheduler: what is due right now?
-          |
-          v
-   gate.py ............. six stopping rules  -> allow | defer | block
-          |                                            | halt  | escalate
-          v
-   messages.py ......... template, or LLM prose validated against it
-          |
-          v
-   delivery.py ......... real email, behind two safety switches
-          |
-          v
-   the outcome returns as another webhook -> the loop closes
+Six views of the same system, from the whole loop down to the parts worth
+looking at closely. The prose behind each one is in
+[How it works](#how-it-works) further down.
+
+### 1. The whole loop
+
+A failed payment goes in, a recovered payment comes back out as another
+webhook. Every arrow writes a row, so nothing happens to a payment outside
+this trail.
+
+```mermaid
+flowchart TD
+    PAY["Customer's card fails<br/>at Razorpay checkout"] --> WH["POST /webhooks/razorpay<br/>HMAC verified over raw bytes"]
+    WH --> RAW[("raw_events<br/>stored whole, before processing")]
+    RAW --> ING["ingest.py<br/>one case per checkout<br/>retries folded together"]
+
+    ING --> ASK{"rules.py<br/>Do we recognise<br/>this failure reason?"}
+    ASK -->|"no"| ESC["Escalate to a human<br/>never guess a cause"]
+    ASK -->|"yes"| POL["policy.py<br/>WHEN to send · WHAT to say"]
+
+    POL --> OUT[("outbox<br/>pending row written<br/>BEFORE anything sends")]
+    OUT --> WRK["worker.py — the scheduler<br/>what is due right now?"]
+    WRK --> GATE{"gate.py<br/>six stopping rules"}
+
+    GATE -->|"defer"| OUT
+    GATE -->|"block · halt · escalate"| STOP["Recorded with a reason.<br/>Nothing sent."]
+    GATE -->|"allow"| MSG["messages.py<br/>look up pre-written copy<br/>fill in this customer's details"]
+
+    MSG --> DEL["delivery.py<br/>Resend HTTPS API"]
+    DEL --> INBOX["Customer's inbox"]
+    INBOX --> RESUME["Resume page<br/>on the merchant's own domain"]
+    RESUME --> CHECKOUT["Razorpay checkout"]
+    CHECKOUT --> CAP["payment.captured webhook"]
+    CAP -.->|"case marked recovered"| ING
+
+    style ESC fill:#fde68a,stroke:#b45309
+    style STOP fill:#fde68a,stroke:#b45309
+    style INBOX fill:#bbf7d0,stroke:#15803d
+    style CAP fill:#bbf7d0,stroke:#15803d
 ```
 
-Every arrow writes a row. Nothing happens to a payment outside that trail.
+### 2. Reading the failure — the decision table
+
+This is the product. `app/rules.py` is a plain dict: no model, no inference.
+The same failure reason always produces the same decision, and the reasoning
+is stored on every case.
+
+```mermaid
+flowchart LR
+    F["Failure<br/>reason"] --> C{"What kind of<br/>problem is it?"}
+
+    C -->|"transient<br/>network dropped"| T["Reach them NOW<br/>2 min · 2 messages"]
+    C -->|"data entry<br/>card typo"| D["Trivially fixable<br/>2 min · 2 messages"]
+    C -->|"bank check<br/>did not finish"| A["Let it settle<br/>15 min · offer UPI"]
+    C -->|"gateway<br/>was down"| G["Wait for the outage<br/>45 min"]
+    C -->|"no money<br/>in the account"| B["Wait for PAYDAY<br/>never say why"]
+    C -->|"card blocked<br/>for online use"| K["'Try again' cannot work<br/>60 min · name UPI"]
+    C -->|"bank refused,<br/>no reason given"| R["Low odds<br/>120 min · 1 message"]
+    C -->|"closed the modal<br/>on purpose"| Q["Lowest intent<br/>6 h · one quiet nudge"]
+    C -->|"reason we<br/>do not recognise"| U["Human review queue"]
+
+    style B fill:#dbeafe,stroke:#1d4ed8
+    style K fill:#dbeafe,stroke:#1d4ed8
+    style U fill:#fde68a,stroke:#b45309
+```
+
+The two that carry the argument: **insufficient funds** waits for the
+customer's observed payday, because messaging today guarantees a second
+failure. A **card blocked for online payments** can never succeed on a retry,
+so the only message that can convert names a different method.
+
+### 3. The scheduler — nothing sends immediately
+
+Four different things decide *when*, and a deferral is not a cancellation.
+
+```mermaid
+flowchart TD
+    RULE["Matched rule"] --> WHEN{"Which timing<br/>strategy?"}
+    WHEN -->|"most rules"| FIX["now + 2 min … 6 h"]
+    WHEN -->|"insufficient funds"| PD["Payday window<br/>modal day of past payments<br/>10:30 local"]
+    WHEN -->|"2nd message"| FU["first message + 24 h"]
+
+    FIX --> ROW[("Action row · status: pending<br/>scheduled_for = that moment")]
+    PD --> ROW
+    FU --> ROW
+
+    ROW --> TICK{"worker.py<br/>pending AND<br/>scheduled_for &lt;= now?"}
+    TICK -->|"not yet"| WAIT["Waits"]
+    WAIT --> TICK
+    TICK -->|"due"| RUN["Run it"]
+    RUN --> DEFER{"Gate says<br/>defer?"}
+    DEFER -->|"yes"| PUSH["New scheduled_for<br/>still pending — not lost"]
+    PUSH --> TICK
+    DEFER -->|"no"| SEND["Send"]
+
+    style PD fill:#dbeafe,stroke:#1d4ed8
+```
+
+The clock itself is the demo's trick: **every time reference goes through
+`app/clock.py`**, so the dashboard can advance three days in ten seconds. A
+lint test fails the build if anything else calls `datetime.now()`.
+
+### 4. The gate — six ways to not send
+
+Runs before **every** action. Each check is recorded whether it passes or
+fails, so the audit trail shows what the agent considered, not just what it
+did.
+
+```mermaid
+flowchart TD
+    START["Action is due"] --> C1{"1 · Customer<br/>opted out?"}
+    C1 -->|"yes"| BLOCK["BLOCK<br/>permanent"]
+    C1 -->|"no"| C2{"2 · Already paid?"}
+    C2 -->|"yes"| BLOCK2["BLOCK<br/>they paid at 8:49;<br/>never message at 8:52"]
+    C2 -->|"no"| C3{"3 · Message cap<br/>for this cause?"}
+    C3 -->|"reached"| BLOCK3["BLOCK"]
+    C3 -->|"room left"| C4{"4 · Contacted in<br/>the last 24 h?"}
+    C4 -->|"yes"| DEFER["DEFER<br/>rescheduled, not dropped"]
+    C4 -->|"no"| C5{"5 · Run budget<br/>exhausted?"}
+    C5 -->|"yes"| HALT["HALT THE WHOLE RUN<br/>wait for a human"]
+    C5 -->|"no"| C6{"6 · Discount over<br/>₹500 / 5%?"}
+    C6 -->|"yes"| ESCALATE["ESCALATE<br/>to a human"]
+    C6 -->|"no"| SEND["ALLOW → send"]
+
+    style SEND fill:#bbf7d0,stroke:#15803d
+    style HALT fill:#fecaca,stroke:#b91c1c
+    style ESCALATE fill:#fde68a,stroke:#b45309
+    style DEFER fill:#dbeafe,stroke:#1d4ed8
+```
+
+Priority is **halt → escalate → block → defer**, so a run that is out of budget
+stops rather than quietly sending something smaller. The baseline policy runs
+all six and enforces only two — opt-out and budget — which is why the
+comparison's asymmetry is visible in the audit trail instead of hidden in a
+constant.
+
+### 5. Where the words come from
+
+The send path makes **no model call**. Every message the system can produce is
+written ahead of time, reviewed as a diff, and looked up.
+
+```mermaid
+flowchart LR
+    subgraph OFFLINE["Written once, ahead of time"]
+        AUTHOR["10 reasons × 3 languages<br/>× 8 verticals × 3 variants"] --> CHECK["Trust rules +<br/>placeholder check"]
+        CHECK --> FILE[("copy/approved.json<br/>720 templates<br/>reviewed in a PR")]
+    end
+
+    subgraph RUNTIME["At send time — no network"]
+        LOOK{"Look up<br/>rule + language + vertical"}
+        LOOK -->|"exact match"| T1["Tier 1"]
+        LOOK -->|"no vertical"| T2["Tier 2 · generic"]
+        LOOK -->|"no language"| T3["Tier 3 · en/generic"]
+        LOOK -->|"nothing, or broken"| T4["Tier 4 · hand-written<br/>template. Always works."]
+        T1 --> FILL["Fill the slots:<br/>name, order id, amount,<br/>last 4, time, link"]
+        T2 --> FILL
+        T3 --> FILL
+        FILL --> VAL{"Trust rules again<br/>on the filled text"}
+        VAL -->|"fails"| T4
+        VAL -->|"passes"| OUT2["Send"]
+        T4 --> OUT2
+    end
+
+    FILE -.->|"loaded at startup"| LOOK
+
+    style FILE fill:#dbeafe,stroke:#1d4ed8
+    style T4 fill:#fde68a,stroke:#b45309
+    style OUT2 fill:#bbf7d0,stroke:#15803d
+```
+
+Three consequences worth stating: cost is flat whether it is 100 failures or a
+million, **no customer data ever reaches a model**, and a person can actually
+review 720 messages where nobody can review a million.
+
+### One failed payment, end to end
+
+```mermaid
+sequenceDiagram
+    participant C as Customer
+    participant RZP as Razorpay
+    participant API as Revive
+    participant DB as Database
+    participant MAIL as Email
+
+    C->>RZP: Pays — card fails
+    RZP->>API: payment.failed webhook
+    API->>API: Verify signature over raw bytes
+    API->>DB: Store raw event, create case
+    API->>API: Match rule → "gateway was down, wait 45 min"
+    API->>DB: Write pending action + why
+    Note over API,DB: Nothing sent yet
+
+    API->>API: 45 minutes later, action is due
+    API->>API: Gate: six checks, all recorded
+    API->>API: Look up copy, fill the slots
+    API->>DB: Write outbox row FIRST
+    API->>MAIL: Send
+    MAIL->>C: "Your order is saved…"
+
+    C->>API: Opens resume page on merchant's domain
+    API->>RZP: Real Razorpay checkout
+    RZP->>API: payment.captured webhook
+    API->>DB: Case recovered — loop closes
+```
 
 ---
 
