@@ -442,8 +442,12 @@ class TestCustomerNameIsASnapshotNotALiveJoin:
 
         outbox = client.get("/api/outbox?run_id=live").json()["messages"]
         sent = next(m for m in outbox if m["order_id"] == "order_t1")
-        assert "Hi loki" in sent["message_body"]
+        # The greeting is capitalised for the customer; the heading shows the
+        # name as it was actually recorded. Different presentation, same
+        # person -- which is the thing that broke before.
+        assert "Hi Loki" in sent["message_body"]
         assert sent["customer_name"] == "loki"
+        assert sent["customer_name"].lower() in sent["message_body"].lower()
 
 
 class TestReclassifyIsHumanOnly:

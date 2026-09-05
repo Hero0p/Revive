@@ -13,7 +13,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app import llm, worker
+from app import copy_cache, worker
 from app.clock import clock, iso
 from app.config import LLM_ENABLED, LLM_MODEL
 from app.db import get_session, reset_database
@@ -204,12 +204,12 @@ def chaos(body: dict):
     """{"razorpay_down": true} | {"llm_down": true} | {"reset": true}"""
     if body.get("reset"):
         razorpay.chaos_down = False
-        llm.chaos_llm_down = False
+        copy_cache.chaos_copy_down = False
         razorpay.reset_breaker()
     if "razorpay_down" in body:
         razorpay.chaos_down = bool(body["razorpay_down"])
     if "llm_down" in body:
-        llm.chaos_llm_down = bool(body["llm_down"])
+        copy_cache.chaos_copy_down = bool(body["llm_down"])
     return chaos_status()
 
 
@@ -217,7 +217,7 @@ def chaos(body: dict):
 def chaos_status():
     return {
         "razorpay": razorpay.status(),
-        "llm_down": llm.chaos_llm_down,
+        "llm_down": copy_cache.chaos_copy_down,
         "llm_configured": LLM_ENABLED,
         "llm_model": LLM_MODEL if LLM_ENABLED else None,
     }
@@ -229,7 +229,7 @@ def demo_reset():
     reset_database()
     clock.reset()
     razorpay.chaos_down = False
-    llm.chaos_llm_down = False
+    copy_cache.chaos_copy_down = False
     razorpay.reset_breaker()
     return {"ok": True, **_clock_state()}
 

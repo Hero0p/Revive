@@ -139,7 +139,11 @@ def _redact(text: str) -> str:
 
 def status() -> dict:
     """What the dashboard shows about delivery configuration."""
-    from app.config import PUBLIC_BASE_URL, PUBLIC_BASE_URL_IS_LOCAL
+    from app.config import (
+        EMAIL_FROM_IS_PUBLIC_MAILBOX,
+        PUBLIC_BASE_URL,
+        PUBLIC_BASE_URL_IS_LOCAL,
+    )
 
     return {
         "deliver_for_real": DELIVER_FOR_REAL,
@@ -147,6 +151,8 @@ def status() -> dict:
         "transport": "resend",
         "allowlist": DELIVERY_ALLOWLIST,
         "from_email": EMAIL_FROM_ADDRESS or None,
+        # A public mailbox address can never be a verified sender.
+        "from_email_unusable": EMAIL_FROM_IS_PUBLIC_MAILBOX,
         "public_base_url": PUBLIC_BASE_URL,
         # Surfaced because a link pointing at localhost is useless to whoever
         # receives the message, and that is invisible from the outbox alone.

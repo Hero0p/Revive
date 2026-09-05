@@ -261,3 +261,75 @@ class TestTheDeliveryStatusExposesMisconfiguration:
         assert "public_base_url" in status
         assert "public_base_url_is_local" in status
         assert status["transport"] == "resend"
+
+
+class TestAPublicMailboxSenderIsFlagged:
+    """Resend rejects a gmail.com sender with "The gmail.com domain is not
+    verified", which reads as though the *sending domain* failed verification
+    rather than as "the wrong address is configured". This is the case that
+    actually happened, so it is worth naming."""
+
+    @pytest.mark.parametrize(
+        "address", ["revive@gmail.com", "someone@outlook.com", "x@yahoo.com"]
+    )
+    def test_a_public_mailbox_address_is_detected(self, address, monkeypatch):
+        import importlib
+
+        import app.config as config
+
+        monkeypatch.setenv("EMAIL_FROM_ADDRESS", address)
+        monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: None)
+        reloaded = importlib.reload(config)
+        try:
+            assert reloaded.EMAIL_FROM_IS_PUBLIC_MAILBOX is True
+        finally:
+            monkeypatch.undo()
+            importlib.reload(config)
+
+    def test_the_projects_own_sender_is_fine(self, monkeypatch):
+        import importlib
+
+        import app.config as config
+
+        monkeypatch.setenv("EMAIL_FROM_ADDRESS", "revive@calmcat.in")
+        monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: None)
+        reloaded = importlib.reload(config)
+        try:
+            assert reloaded.EMAIL_FROM_IS_PUBLIC_MAILBOX is False
+        finally:
+            monkeypatch.undo()
+            importlib.reload(config)
+
+
+class TestAnEmptyAllowlistMeansEveryone:
+    """The allowlist is a demo guard, not a product rule. Clearing it is the
+    supported way to reach an arbitrary recipient -- and the guard that
+    actually matters, refusing synthetic runs, is independent of it."""
+
+    def test_an_empty_allowlist_lets_any_recipient_through(self, monkeypatch):
+        monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
+        monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", True)
+        monkeypatch.setattr(delivery, "DELIVERY_ALLOWLIST", [])
+        monkeypatch.setattr(delivery, "_send_email", lambda r, a, b: "id-1")
+
+        action, case, customer = make()
+        customer.email = "a-total-stranger@example.com"
+        status, _, detail = delivery.deliver(action, case, customer)
+
+        assert status == "sent"
+        assert "a-total-stranger@example.com" in detail
+
+    def test_a_synthetic_run_is_still_refused_with_no_allowlist(self, monkeypatch):
+        """The 3,000-case comparison must never email anybody, allowlist or not."""
+        monkeypatch.setattr(delivery, "DELIVER_FOR_REAL", True)
+        monkeypatch.setattr(delivery, "EMAIL_CONFIGURED", True)
+        monkeypatch.setattr(delivery, "DELIVERY_ALLOWLIST", [])
+        monkeypatch.setattr(
+            delivery, "_send_email", lambda r, a, b: pytest.fail("a synthetic run must never send")
+        )
+
+        action, case, customer = make(run_id="router-s42-n3000")
+        status, _, detail = delivery.deliver(action, case, customer)
+
+        assert status == "skipped"
+        assert "synthetic run" in detail

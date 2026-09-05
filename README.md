@@ -79,7 +79,7 @@ For a **real** failed payment, copy `.env.example` to `.env`, add Razorpay test
 keys, restart the API, and use the **Checkout** screen.
 
 ```bash
-pytest        # 263 tests, ~8 seconds
+pytest        # 296 tests, ~19 seconds
 ```
 
 ### Environment variables
@@ -100,7 +100,7 @@ starts and the full dashboard works with an empty `.env`.
 | `CORS_ORIGINS` | A dashboard served from another origin | localhost only |
 | `DATABASE_URL` | Another SQLite file | `recovery.db` in the project root |
 | `DELIVER_FOR_REAL` | Actually sending email | `false`. Messages render to the outbox only |
-| `DELIVERY_ALLOWLIST` | Restricting who can ever be contacted | empty. **Set this while demoing** |
+| `DELIVERY_ALLOWLIST` | Restricting who can ever be contacted to a few addresses | empty, meaning **any** address on a live case can be emailed. Set it while developing; clear it deliberately to demo to a real recipient |
 | `DEMO_SEED_COUNT` | Cases generated at startup when the database is empty | `200`. A deployed instance boots empty, so without this the Cases, Outbox and Audit screens are blank until someone runs a comparison. `0` disables it |
 | `MIN_HOURS_BETWEEN_CONTACTS` | Loosening the per-customer contact cap for a demo | `24`, the product default every published result assumes. Live test checkouts share one phone number, so they are one customer and each after the first is deferred a day; set `0` to demo back-to-back checkouts |
 | `LLM_MODEL` / `LLM_REASONING_EFFORT` / `LLM_TIMEOUT_SECONDS` | Overriding the model, its thinking budget, its deadline | `openai/gpt-oss-20b`, `low`, `2.0` |
@@ -303,23 +303,59 @@ record reads `case_already_recovered: FAILED — not enforced by this policy`.
 The comparison's asymmetry is visible in the audit trail rather than buried in
 a constant.
 
-### The LLM
+### The copy is written before the failure happens
 
-**Groq, `openai/gpt-oss-20b`, writes the message body.** That is its entire
-job. It does not decide who to contact, when, or whether to contact at all —
-rules decide that, and the model is handed a fully-decided action and asked to
-phrase it.
+The send path makes **no model call**. It used to: one failed payment, one
+request to Groq, under a two-second deadline, with the customer's name, order
+id, amount and card digits in the body. A million failures meant a million
+calls.
 
-What comes back is never trusted. It must be strict JSON matching a fixed
-schema, it must self-report that it used no urgency, and the body is then run
-through the same four trust rules as every template. Anything failing any check
-falls back to the hand-written template, with the rejection reason recorded on
-the decision record and shown in the UI.
+But the wording only varies along three axes — the failure reason (10), the
+language (3), and the kind of business (8) — so with three variants each the
+entire space is **720 strings**. They live in
+[`copy/approved.json`](copy/approved.json), are reviewed as a diff, and are
+loaded into memory at startup. Sending is a dictionary lookup and a slot fill:
 
-**The system runs fully without an API key**, using the eight hand-written
-templates and saying so on every screen. Every action taken on money is
-traceable to a rule with its inputs recorded; there is no "the model decided"
-anywhere in the audit trail.
+    {customer_name} {merchant_name} {order_id} {item_names} {amount}
+    {last4} {attempt_time} {resume_url} {alt_method}
+
+What that buys:
+
+- **Cost is flat.** Zero calls whether it is 100 failures or a million.
+- **No customer data leaves the system.** The table holds slots, never values —
+  a test asserts no stored template contains an `@` or a `₹`.
+- **A person can actually check it.** Nobody reviews a million messages;
+  anyone can review 720, and the diff is where that review happens.
+- **No deadline.** Copy written offline is not racing a two-second budget, so
+  it can be better than anything a small fast model produces in flight.
+
+Lookup degrades rather than fails, because a missing cell must never stop a
+message going out:
+
+| Tier | Match |
+|---|---|
+| 1 | exact — rule, locale, vertical |
+| 2 | same rule and locale, vertical `generic` |
+| 3 | same rule, `en`, `generic` |
+| 4 | the hand-written template in `messages.py` |
+
+**Tier 4 is why the eight hand-written templates stay.** A missing file, a
+malformed placeholder, or stored copy that no longer passes the trust rules all
+land there, and the message still sends. The tier used is recorded on the
+action and shown in the audit log, because a table quietly serving nothing
+looks — from the message alone — exactly like one serving everything.
+`/api/health` reports coverage for the same reason.
+
+The trust rules run twice: once at build time against the template, where a
+literal rupee figure or an unknown placeholder is rejected outright, and again
+after slot filling, where a value can introduce something the template could
+not — most obviously an item name carrying its own price.
+
+`app/llm.py` remains as the client for generating the table offline, and
+`tests/test_llm.py` asserts nothing on the send path imports it. The copy
+shipped today was written by hand rather than generated, so what is committed
+is what a person wrote; `scripts/build_copy_table.py` rebuilds it, and
+`--check` fails if the committed file has drifted from the source.
 
 ### Trust design
 
@@ -445,7 +481,8 @@ app/
   executor.py         gate -> message -> payment link -> outbox -> delivery
   outbox.py           every message is a row before it is sent
   messages.py         8 templates + the four trust rules
-  llm.py              writes the body, nothing else
+  copy_cache.py       the 720 pre-written messages, and the four-tier lookup
+  llm.py              offline copy generation only -- never called while sending
   delivery.py         the only file that talks to a mail server
   simulator.py        synthetic cases, the outcome oracle, the runner
   razorpay_client.py  SDK wrapper, per-operation circuit breaker, chaos toggle
@@ -593,8 +630,16 @@ is for.
 ### Before turning on real email
 
 Set `DELIVERY_ALLOWLIST` to your own address **first**, then
-`DELIVER_FOR_REAL=true`. The allowlist is the difference between a bug costing
-nothing and a bug emailing a stranger.
+`DELIVER_FOR_REAL=true`. While developing, the allowlist is the difference
+between a bug costing nothing and a bug emailing a stranger.
+
+Clearing it (`DELIVERY_ALLOWLIST=`) lets messages reach any address a live case
+carries, which is what a demo to someone else's inbox needs. That is a
+deliberate mode rather than an accident: the API warns at startup when real
+delivery is on with no allowlist. The guard that actually matters is unaffected
+either way — `delivery.py` refuses every synthetic run outright, so a
+3,000-case comparison can never email anybody no matter how the allowlist is
+set.
 
 Mail goes out over **Resend's HTTPS API**. SMTP is deliberately not supported:
 Render, like most hosting platforms, blocks outbound SMTP ports to keep
@@ -609,6 +654,13 @@ lets messages reach any recipient rather than only the account owner. Point
 domain too; Resend rejects an unverified sender, and the rejection is recorded
 on the action like any other refusal.
 
+One trap worth naming, because it happened: setting `EMAIL_FROM_ADDRESS` to a
+Gmail address fails with `The gmail.com domain is not verified`, which reads as
+though the *sending* domain failed verification rather than as "the wrong
+address is configured". Nobody can verify a public mailbox domain. The app
+detects those addresses and warns at startup, and `/api/health` reports
+`from_email_unusable`.
+
 Nothing else about a message changes with the transport: the same triggers, the
 same recipients, the same subjects and the same bodies. Only the delivery
 fields on the outbox row differ.
@@ -617,7 +669,7 @@ fields on the outbox row differ.
 
 ## Tests
 
-263 tests, ~8 seconds. The suite is hermetic: it forces simulated mode and
+296 tests, ~19 seconds. The suite is hermetic: it forces simulated mode and
 overrides delivery, credentials and the contact cap, so a populated `.env` can
 never make the tests bill a real account or change their outcome.
 
@@ -625,7 +677,7 @@ never make the tests bill a real account or change their outcome.
 |---|---|
 | `test_rules.py` | every documented reason maps to a rule; every rule uses email; blocked causes always set `suggests_alt_method`; the payday window |
 | `test_oracle.py` | the oracle cannot see the policy; determinism; the modelled behaviours; the sweep failing loudly rather than scoring zero when it cannot read its inputs |
-| `test_messages.py` | every template against all four trust rules |
+| `test_messages.py` | every template against all four trust rules; the greeting name capitalised, reduced to a first name, and falling back to "there" for anything that is not one |
 | `test_llm.py` | schema validation, fallback on every failure mode, generated text breaking a trust rule being thrown away |
 | `test_gate.py` | all six checks, priority order, baseline enforcement, email being sendable at any hour, the contact cap surviving a wound-back clock |
 | `test_pipeline.py` | signature verification over raw bytes, tampered webhooks logged, dedup, the already-paid guard, the resume page, the review queue, reclassification, jump-to-next-action only moving forward, the checkout email winning over Razorpay's |

@@ -1,8 +1,9 @@
-"""The LLM writes prose and nothing else, and it is never trusted.
+"""The model client, which no longer runs while sending.
 
-Every path that could put an unvalidated sentence in front of a customer is
-covered here, including the one where the model returns something plausible
-that quietly breaks a trust rule.
+Copy is written ahead of time into copy/approved.json, so a failed payment
+costs no API call. app/llm.py remains as the client for producing that table
+offline, and its parsing stays strict -- anything unexpected from a model is
+discarded rather than written into the table.
 """
 
 import json
@@ -91,97 +92,36 @@ class TestSchemaValidation:
         assert llm._parse(raw) is None
 
 
-class TestFallback:
-    def test_no_api_key_means_templates(self, case, action, customer, monkeypatch):
-        monkeypatch.setattr(llm, "GROQ_API_KEY", "")
-        body, source, _, model = messages.write_body(
-            case, action, customer, RESUME_URL, use_llm=True
-        )
-        assert source == "template"
-        assert model is None
-        assert "blocked for online payments" in body
+class TestNothingCallsItWhileSending:
+    """app/llm.py is the client for writing the copy table offline. It is not
+    on the send path any more, and these assert that rather than trusting it:
+    the point of pre-writing the copy is that sending costs no model call."""
 
-    def test_the_chaos_toggle_forces_templates(self, case, action, customer, monkeypatch):
-        monkeypatch.setattr(llm, "chaos_llm_down", True)
-        _, source, _, _ = messages.write_body(case, action, customer, RESUME_URL, use_llm=True)
-        assert source == "template"
+    def test_messages_does_not_import_the_llm(self):
+        import inspect
 
-    def test_a_transport_error_falls_back_rather_than_raising(
+        from app import messages
+
+        assert "write_message_llm" not in inspect.getsource(messages)
+
+    def test_the_executor_does_not_import_the_llm(self):
+        import inspect
+
+        from app import executor
+
+        source = inspect.getsource(executor)
+        assert "llm" not in source.replace("use_llm", "")
+
+    def test_writing_a_body_makes_no_call_even_with_a_key_configured(
         self, case, action, customer, monkeypatch
     ):
-        def explode(*args, **kwargs):
-            raise ConnectionError("groq unreachable")
-
-        monkeypatch.setattr(llm, "write_message_llm", explode, raising=True)
-        # write_body imports the function at call time, so patch the module it
-        # reaches for and confirm a failure never escapes to the executor.
-        try:
-            messages.write_body(case, action, customer, RESUME_URL, use_llm=True)
-        except ConnectionError:
-            pytest.fail("an LLM transport error must never reach the executor")
-
-
-class TestGeneratedTextIsNeverTrusted:
-    """The model can return something fluent that still breaks a trust rule.
-    When it does, the template goes out and the reason is recorded."""
-
-    def _with_llm_saying(self, monkeypatch, body):
+        monkeypatch.setattr(llm, "GROQ_API_KEY", "gsk_pretend_this_is_real")
         monkeypatch.setattr(
-            llm,
-            "write_message_llm",
-            lambda *a, **k: (body, "a rationale", "llama-3.1-8b-instant"),
+            llm, "write_message_llm",
+            lambda *a, **k: pytest.fail("sending must not reach the model"),
         )
-
-    def test_a_valid_message_is_used(self, case, action, customer, monkeypatch):
-        good = (
-            f"Hi Aarav, your card ending 4321 is blocked for online payments, so retrying it "
-            f"will not work. You can pay ₹4,000 by UPI here: {RESUME_URL}"
+        written = messages.write_body(
+            case, action, customer, RESUME_URL, rule_id="R6_CARD_BLOCKED_ONLINE"
         )
-        self._with_llm_saying(monkeypatch, good)
-        body, source, rationale, model = messages.write_body(
-            case, action, customer, RESUME_URL, use_llm=True
-        )
-        assert source == "llm"
-        assert model == "llama-3.1-8b-instant"
-        assert body == good
-
-    def test_urgency_is_rejected_even_when_the_model_denies_it(
-        self, case, action, customer, monkeypatch
-    ):
-        self._with_llm_saying(
-            monkeypatch,
-            f"Hurry! Your order order_test123 for ₹4,000 expires soon: {RESUME_URL}",
-        )
-        body, source, rationale, _ = messages.write_body(
-            case, action, customer, RESUME_URL, use_llm=True
-        )
-        assert source == "template"
-        assert "rejected" in rationale
-        assert "hurry" in rationale.lower() or "expire" in rationale.lower()
-
-    def test_a_changed_amount_is_rejected(self, case, action, customer, monkeypatch):
-        self._with_llm_saying(
-            monkeypatch, f"Hi Aarav, order order_test123 is saved at ₹3,200: {RESUME_URL}"
-        )
-        _, source, rationale, _ = messages.write_body(
-            case, action, customer, RESUME_URL, use_llm=True
-        )
-        assert source == "template"
-        assert "not the order amount" in rationale
-
-    def test_asking_for_an_otp_is_rejected(self, case, action, customer, monkeypatch):
-        self._with_llm_saying(
-            monkeypatch,
-            f"Hi Aarav, order order_test123, ₹4,000. Reply with the OTP: {RESUME_URL}",
-        )
-        _, source, _, _ = messages.write_body(case, action, customer, RESUME_URL, use_llm=True)
-        assert source == "template"
-
-    def test_a_message_that_drops_the_merchant_link_is_rejected(
-        self, case, action, customer, monkeypatch
-    ):
-        self._with_llm_saying(
-            monkeypatch, "Hi Aarav, pay ₹4,000 for order_test123 at http://bit.ly/x9f"
-        )
-        _, source, _, _ = messages.write_body(case, action, customer, RESUME_URL, use_llm=True)
-        assert source == "template"
+        assert written.body
+        assert written.source in ("copy", "template")

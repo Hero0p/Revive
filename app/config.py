@@ -115,3 +115,15 @@ EMAIL_FROM_ADDRESS = os.getenv("EMAIL_FROM_ADDRESS", "revive@calmcat.in")
 EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME", "Blue Tokai Coffee")
 
 EMAIL_CONFIGURED = bool(RESEND_API_KEY and EMAIL_FROM_ADDRESS)
+
+# Nobody can verify a public mailbox provider's domain, so sending *from* one
+# is rejected outright -- "The gmail.com domain is not verified", which reads
+# like the sending domain failed verification rather than like the wrong
+# address is configured. Worth catching before a send rather than after.
+PUBLIC_MAILBOX_DOMAINS = (
+    "gmail.com", "googlemail.com", "yahoo.com", "outlook.com",
+    "hotmail.com", "live.com", "icloud.com", "proton.me", "protonmail.com",
+)
+EMAIL_FROM_IS_PUBLIC_MAILBOX = EMAIL_FROM_ADDRESS.lower().endswith(
+    tuple(f"@{domain}" for domain in PUBLIC_MAILBOX_DOMAINS)
+)

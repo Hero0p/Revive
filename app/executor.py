@@ -83,26 +83,31 @@ def execute(
     except Exception as exc:  # noqa: BLE001 -- non-fatal, see the note above
         payment_link_error = str(exc)
 
-    body, source, rationale, model = messages.write_body(
+    written = messages.write_body(
         case,
         action,
         customer,
         resume_url,
         mention_reason=(rule.mention_reason if rule else True),
         use_llm=use_llm,
+        rule_id=rule.rule_id if rule else None,
     )
     outbox.mark_sent(
         session,
         action,
-        body,
-        source,
+        written.body,
+        written.source,
         now,
         link_id=link.get("id"),
         resume_url=resume_url,
         payment_link_error=payment_link_error,
         customer_name=customer.name if customer else None,
+        copy_tier=written.tier,
+        copy_variant=written.variant,
     )
-    outbox.attach_message_meta(session, action, rationale, model)
+    outbox.attach_message_meta(
+        session, action, written.detail, None, written.tier, written.variant
+    )
 
     # The outbox row exists whether or not this sends anything, so the audit
     # trail is the same either way. Only the delivery fields differ.

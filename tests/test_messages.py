@@ -9,6 +9,7 @@ from datetime import datetime
 
 import pytest
 
+from app import messages
 from app.messages import (
     TEMPLATES,
     MessageContext,
@@ -142,3 +143,46 @@ class TestRupeeFormatting:
     )
     def test_indian_digit_grouping(self, paise, expected):
         assert format_rupees(paise) == expected
+
+
+class TestTheGreetingName:
+    """Whatever gets typed into a checkout form ends up in the greeting.
+    Messages went out reading "Hi nish," -- a real merchant capitalises."""
+
+    @pytest.mark.parametrize(
+        "typed, expected",
+        [
+            ("nish", "Nish"),
+            ("NISHANT", "Nishant"),
+            ("NISHANT ", "Nishant"),
+            ("  aarav sharma ", "Aarav"),
+            ("Aarav Sharma", "Aarav"),
+            ("loki", "Loki"),
+        ],
+    )
+    def test_it_is_capitalised_and_reduced_to_the_first_name(self, typed, expected):
+        assert messages._greeting_name(Customer(id=1, name=typed)) == expected
+
+    @pytest.mark.parametrize("typed", ["McDonald", "O'Neill", "deSouza"])
+    def test_deliberate_mixed_case_is_left_alone(self, typed):
+        assert messages._greeting_name(Customer(id=1, name=typed)) == typed
+
+    @pytest.mark.parametrize(
+        "typed", ["", "   ", "someone@example.com", "12345", None]
+    )
+    def test_anything_that_is_not_a_name_falls_back_to_there(self, typed):
+        """'Hi someone@example.com,' is worse than no name at all."""
+        assert messages._greeting_name(Customer(id=1, name=typed)) == "there"
+
+    def test_no_customer_at_all_still_greets(self):
+        assert messages._greeting_name(None) == "there"
+
+    def test_the_rendered_message_uses_it(self):
+        case = Case(
+            id=1, razorpay_order_id="order_x", amount_paise=210000,
+            cart_json='[{"name": "Coffee"}]', failed_at=datetime(2026, 3, 3, 14, 59),
+        )
+        ctx = build_context(case, Customer(id=1, name="nish"), "https://x/y")
+        body = render_template("bank_was_down_try_now", ctx)
+        assert body.startswith("Hi Nish,")
+        assert "Hi nish," not in body

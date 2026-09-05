@@ -286,7 +286,17 @@ export default function Checkout({ onChange, onOpenCase }) {
                   <input className={inputClass} value={form.contact} onChange={set('contact')} />
                 </Field>
                 <Field label="Email">
-                  <input className={inputClass} value={form.email} onChange={set('email')} />
+                  {/* autoComplete off because the browser cheerfully replaces
+                      this with the signed-in account's address, and the
+                      recovery message then goes there rather than to whoever
+                      you meant to test with. Chrome does not always honour
+                      it, so check the field before paying. */}
+                  <input
+                    className={inputClass}
+                    value={form.email}
+                    onChange={set('email')}
+                    autoComplete="off"
+                  />
                 </Field>
               </div>
 

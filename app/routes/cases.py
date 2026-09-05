@@ -192,6 +192,8 @@ def _lane(session: Session, case: Case) -> dict:
                 "channel": action.channel,
                 "status": action.status,
                 "message_body": action.message_body,
+                "copy_tier": action.copy_tier,
+                "copy_variant": action.copy_variant,
                 "suggests_alt_method": action.suggests_alt_method,
             }
         )
@@ -371,7 +373,7 @@ def audit_log(
                     "title": f"Message sent on {action.channel}",
                     "detail": action.message_body,
                     "case_id": action.case_id,
-                    "ref": f"written by {action.message_source}",
+                    "ref": _copy_ref(action),
                     "delivery_status": action.delivery_status,
                     "delivery_detail": action.delivery_detail,
                     "delivery_id": action.delivery_id,
@@ -436,6 +438,18 @@ def review_queue(session: Session = Depends(get_session)):
         session.scalars(select(Case).where(Case.status == "escalated").order_by(Case.id.desc())).all()
     )
     return {"cases": [case_summary(session, c) for c in cases]}
+
+
+def _copy_ref(action: Action) -> str:
+    """Where the words came from, for the audit line.
+
+    The tier is worth showing: every message quietly arriving on tier 4 means
+    the pre-written table is not being used at all, and the text alone looks
+    identical either way.
+    """
+    if action.message_source != "copy":
+        return "written by a hand-written template (tier 4)"
+    return f"pre-written copy, tier {action.copy_tier}, variant {action.copy_variant}"
 
 
 def case_summary(session: Session, case: Case) -> dict:
@@ -503,6 +517,8 @@ def action_dict(action: Action) -> dict:
         "resume_url": action.resume_url,
         "message_body": action.message_body,
         "message_source": action.message_source,
+        "copy_tier": action.copy_tier,
+        "copy_variant": action.copy_variant,
         "blocked_reason": action.blocked_reason,
         "delivery_status": action.delivery_status,
         "delivery_detail": action.delivery_detail,

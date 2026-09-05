@@ -81,6 +81,8 @@ def mark_sent(
     resume_url: str | None = None,
     payment_link_error: str | None = None,
     customer_name: str | None = None,
+    copy_tier: int | None = None,
+    copy_variant: str | None = None,
 ) -> None:
     action.message_body = body
     action.message_source = source
@@ -88,6 +90,8 @@ def mark_sent(
     action.payment_link_error = payment_link_error
     action.resume_url = resume_url
     action.customer_name_snapshot = customer_name
+    action.copy_tier = copy_tier
+    action.copy_variant = copy_variant
     action.executed_at = now
     action.status = "sent"
     # A retry that finally succeeds is not a blocked action. Clearing this
@@ -120,7 +124,12 @@ def attach_gate_checks(session: Session, action: Action, result: GateResult) -> 
 
 
 def attach_message_meta(
-    session: Session, action: Action, rationale: str | None, model: str | None
+    session: Session,
+    action: Action,
+    rationale: str | None,
+    model: str | None,
+    copy_tier: int | None = None,
+    copy_variant: str | None = None,
 ) -> None:
     record = session.scalar(
         select(DecisionRecord).where(DecisionRecord.action_id == action.id)
@@ -128,6 +137,8 @@ def attach_message_meta(
     if record is not None:
         record.llm_rationale = rationale
         record.llm_model = model
+        record.copy_tier = copy_tier
+        record.copy_variant = copy_variant
         session.flush()
 
 

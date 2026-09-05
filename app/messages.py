@@ -11,14 +11,19 @@ Four rules, enforced by validate() and covered by tests:
   - never ask for information
   - always link to the merchant's own domain
 
-Templates are the ground truth. The LLM (see write_body) only rephrases, and
-anything it produces that fails validate() is thrown away.
+The eight templates here are the floor, not the ceiling. What normally goes
+out is pre-written copy from copy_cache -- the whole space of messages, written
+and reviewed ahead of time -- filled with this case's details. These templates
+are what a missing or unusable cell falls back to, which is why they stay.
 """
 
 import json
 import re
+import string
 from dataclasses import dataclass
+from typing import NamedTuple
 
+from app import copy_cache
 from app.models import Action, Case, Customer
 
 MERCHANT_NAME = "Blue Tokai Coffee"
@@ -74,6 +79,29 @@ def _clock_time(dt) -> str:
     return f"{hour}:{dt.minute:02d} {'AM' if dt.hour < 12 else 'PM'}"
 
 
+def _greeting_name(customer: Customer | None) -> str:
+    """The name the message opens with.
+
+    Whatever someone typed into a checkout form is what arrives here: "nish",
+    "NISHANT", "  aarav sharma ". A merchant writing to a customer capitalises
+    the name and uses the first one only. Echoing the raw string back is what
+    makes a real message read like an unfinished mail merge, and "Hi nish," is
+    exactly that.
+
+    Mixed case is left alone, because it is usually deliberate -- McDonald and
+    O'Neill are not improved by capitalize().
+    """
+    raw = ((customer.name if customer else None) or "").strip()
+    first = raw.split(" ")[0] if raw else ""
+
+    # An address or a number is not a name, and "Hi nishant03115@gmail.com,"
+    # is worse than no name at all.
+    if not first or "@" in first or not any(char.isalpha() for char in first):
+        return "there"
+
+    return first.capitalize() if first.isupper() or first.islower() else first
+
+
 def build_context(case: Case, customer: Customer | None, resume_url: str) -> MessageContext:
     try:
         items = json.loads(case.cart_json or "[]")
@@ -82,9 +110,8 @@ def build_context(case: Case, customer: Customer | None, resume_url: str) -> Mes
     names = [str(i.get("name", "")) for i in items if isinstance(i, dict) and i.get("name")]
     items_display = ", ".join(names[:3]) if names else "your saved cart"
 
-    first_name = (customer.name or "there").split()[0] if customer and customer.name else "there"
     return MessageContext(
-        customer_name=first_name,
+        customer_name=_greeting_name(customer),
         order_id=case.razorpay_order_id or f"case-{case.id}",
         amount_display=format_rupees(case.amount_paise),
         items_display=items_display,
@@ -176,6 +203,65 @@ def _amount_value(text: str) -> str:
     return value or "0"
 
 
+def validate_template(template: str, allowed: frozenset[str]) -> list[str]:
+    """The trust rules as they can be checked *before* the slots are filled.
+
+    Two of the four survive unchanged here: a template cannot contain urgency
+    language or ask for information whatever gets substituted in. The other two
+    are about concrete values that do not exist yet, so they become structural
+    checks -- the link has to be present as a placeholder, and a literal rupee
+    figure must not appear at all, because the only correct way to state the
+    amount is {amount}.
+
+    They are checked again after slot filling, since a filled value can
+    introduce a second amount that no template inspection would catch.
+    """
+    problems = []
+    low = template.lower()
+
+    for marker in URGENCY_MARKERS:
+        if marker in low:
+            problems.append(f"urgency language: '{marker.strip()}'")
+
+    for marker in INFO_REQUEST_MARKERS:
+        if marker in low:
+            problems.append(f"asks for information: '{marker.strip()}'")
+
+    for found in RUPEE_AMOUNT.findall(template):
+        problems.append(f"literal amount {found!r} -- use the {{amount}} slot")
+
+    try:
+        fields = {name for _, name, _, _ in string.Formatter().parse(template) if name}
+    except ValueError as exc:  # unbalanced braces
+        return problems + [f"malformed placeholders: {exc}"]
+
+    unknown = fields - allowed
+    if unknown:
+        problems.append(f"unknown placeholder(s): {', '.join(sorted(unknown))}")
+    if "resume_url" not in fields:
+        problems.append("does not link to the merchant's resume page")
+    if not ({"order_id", "item_names"} & fields):
+        problems.append("no merchant-only detail (order id or item names)")
+
+    return problems
+
+
+def fill(template: str, ctx: MessageContext) -> str:
+    """Slot-fill a stored template. Raises on a bad placeholder so the caller
+    can fall through to the next tier rather than send a broken message."""
+    return template.format(
+        customer_name=ctx.customer_name,
+        merchant_name=ctx.merchant,
+        order_id=ctx.order_id,
+        item_names=ctx.items_display,
+        amount=ctx.amount_display,
+        last4=ctx.card_last4,
+        attempt_time=ctx.attempt_time,
+        resume_url=ctx.resume_url,
+        alt_method="UPI, net banking or a different card",
+    )
+
+
 def validate(body: str, case: Case, ctx: MessageContext | None = None) -> list[str]:
     """Returns the trust rules this message breaks. Empty list means it is safe
     to send."""
@@ -204,6 +290,16 @@ def validate(body: str, case: Case, ctx: MessageContext | None = None) -> list[s
     return problems
 
 
+class Written(NamedTuple):
+    """What went out, and where the words came from."""
+
+    body: str
+    source: str  # "copy" (pre-written table) | "template" (hand-written)
+    tier: int  # 1 exact cell, 2 generic vertical, 3 en/generic, 4 template
+    variant: str | None
+    detail: str | None  # why a tier was skipped, when one was
+
+
 def write_body(
     case: Case,
     action: Action,
@@ -211,37 +307,56 @@ def write_body(
     resume_url: str,
     mention_reason: bool = True,
     use_llm: bool = True,
-) -> tuple[str, str, str | None, str | None]:
-    """Returns (body, source, llm_rationale, llm_model).
+    rule_id: str | None = None,
+    locale: str | None = None,
+    vertical: str | None = None,
+) -> Written:
+    """Pick the wording for one message. Makes no network call.
 
-    Falls back to the template whenever the LLM is unavailable, slow, or writes
-    something that breaks a trust rule. The template path needs no network at
-    all, which is why it was built first."""
+    The copy is written ahead of time and looked up here (see copy_cache);
+    the eight hand-written templates are tier 4, the floor that a missing
+    cell, a malformed placeholder, or a stored string that no longer passes
+    the trust rules all land on.
+
+    `use_llm` is kept as the parameter name because it is part of the run API
+    and every caller passes it. It now means "consult the pre-written copy" --
+    false goes straight to the hand-written template, which is what the
+    synthetic comparison runs want.
+    """
     ctx = build_context(case, customer, resume_url)
     template_body = render_template(action.message_intent, ctx)
 
-    if use_llm:
-        # Nothing that happens in the LLM layer may stop a message going out.
-        # It is the most replaceable part of the system, so the boundary is
-        # guarded here rather than trusting it to handle its own failures.
-        try:
-            from app.llm import write_message_llm
+    if not use_llm or rule_id is None:
+        return Written(template_body, "template", 4, None, None)
 
-            candidate = write_message_llm(case, action, customer, ctx, mention_reason)
-        except Exception as exc:  # noqa: BLE001
-            return template_body, "template", f"LLM layer failed: {exc}", None
+    locale = locale or (customer.language if customer else None) or copy_cache.FALLBACK_LOCALE
+    vertical = vertical or copy_cache.DEFAULT_VERTICAL
+    # Deterministic per case, so re-running a demo picks the same wording and
+    # a case detail page never disagrees with the message that went out.
+    seed_key = f"{case.run_id or 'live'}:{case.id}"
 
-        if candidate is not None:
-            body, rationale, model = candidate
-            problems = validate(body, case, ctx)
-            if not problems:
-                return body, "llm", rationale, model
-            # Rejected. The template goes out instead and the reason is logged.
-            return (
-                template_body,
-                "template",
-                f"LLM output rejected: {'; '.join(problems)}",
-                None,
-            )
+    entry, tier = copy_cache.lookup(rule_id, locale, vertical, seed_key)
+    if entry is None:
+        return Written(template_body, "template", 4, None, None)
 
-    return template_body, "template", None, None
+    try:
+        body = fill(entry["body_template"], ctx)
+    except (KeyError, IndexError) as exc:
+        # A bad placeholder in stored copy must never raise mid-send.
+        return Written(
+            template_body, "template", 4, None, f"copy {entry['key']} has a bad slot: {exc}"
+        )
+
+    # The second pass. A filled value can introduce something the template
+    # could not: most obviously a second rupee amount from the item names.
+    problems = validate(body, case, ctx)
+    if problems:
+        return Written(
+            template_body,
+            "template",
+            4,
+            None,
+            f"copy {entry['key']} rejected after filling: {'; '.join(problems)}",
+        )
+
+    return Written(body, "copy", tier, entry["variant"], None)

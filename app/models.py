@@ -127,7 +127,13 @@ class Action(Base):
     payment_link_error = Column(String)
     resume_url = Column(String)
     message_body = Column(Text)
-    message_source = Column(String)  # template | llm
+    message_source = Column(String)  # copy | template
+    # Which pre-written cell produced this, and how exactly it matched.
+    # Tier 4 means nothing was found and the hand-written template went out --
+    # the number worth watching, because a table quietly serving nothing looks
+    # identical to one serving everything.
+    copy_tier = Column(Integer)
+    copy_variant = Column(String)
     blocked_reason = Column(String)
     discount_paise = Column(Integer, default=0)
 
@@ -167,6 +173,8 @@ class DecisionRecord(Base):
     gate_checks_json = Column(Text)  # every check and its result
     llm_rationale = Column(Text)
     llm_model = Column(String)
+    copy_tier = Column(Integer)
+    copy_variant = Column(String)
     created_at = Column(DateTime)  # clock time, not wall time
 
 
